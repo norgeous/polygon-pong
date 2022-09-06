@@ -17,7 +17,7 @@ const MainMenu = ({ open, onClose }) => {
               </A>
             </div>
           </FlexR>
-          <Button onClick={onClose}><span>🕹️</span><span>Join Multiplayer (WIP)</span></Button>
+          <Button onClick={onClose}><span>👬</span><span>Join Multiplayer (WIP)</span></Button>
         </Modal>
       )}
     </>
