@@ -11,9 +11,9 @@ const MainMenu = ({ open, onClose }) => {
           <FlexR>
             <img src="icon.svg" width="80" />
             <div>
-              <Heading>gh-pages-pwa!</Heading>
-              <A href="https://github.com/norgeous/gh-pages-pwa/" target="_blank">
-                norgeous/gh-pages-pwa
+              <Heading>Polygon Pong</Heading>
+              <A href="https://github.com/norgeous/polygon-pong/" target="_blank">
+                norgeous/polygon-pong
               </A>
             </div>
           </FlexR>

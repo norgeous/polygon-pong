@@ -1,8 +1,8 @@
 // importScripts('https://unpkg.com/@babel/standalone@7.18.13/babel.min.js');
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.18.13/babel.min.js');
 
-const CACHE_PREFIX = 'MY-PWA';
-const CACHE_VERSION = '0.0.1'; // increase to invalidate old caches on clientside
+const CACHE_PREFIX = 'POLYGON-PONG';
+const CACHE_VERSION = '0.0.0'; // increase to invalidate old caches on clientside
 const CACHE_NAME = `${CACHE_PREFIX}@${CACHE_VERSION}`;
 
 const isDev = location.hostname === 'localhost';
