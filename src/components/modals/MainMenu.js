@@ -9,7 +9,7 @@ const MainMenu = ({ open, onClose }) => {
       {open && (
         <Modal onClose={onClose}>
           <FlexR>
-            <img src="icon.svg" width="80" />
+            <img src="icon.svg" width="60" />
             <div>
               <Heading>Polygon Pong</Heading>
               <A href="https://github.com/norgeous/polygon-pong/" target="_blank">

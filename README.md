@@ -1,8 +1,8 @@
-# gh-pages-pwa
+# Polygon Pong
 
 ## demo
 
-https://norgeous.github.io/gh-pages-pwa
+https://norgeous.github.io/Polygon Pong
 
 ## features
 
