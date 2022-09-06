@@ -48,8 +48,8 @@ class Game extends Phaser.Scene {
 
     this.ball = this.matter.add.gameObject(ball, { shape: { type: 'circle', radius: 26 }});
     this.ball
-      .setFrictionAir(0)
-      .setBounce(1)
+      .setFrictionAir(0.0001)
+      .setBounce(.5)
       .setVelocity(20);
 
 
@@ -86,6 +86,10 @@ class Game extends Phaser.Scene {
     //   // console.log(thing);
     //   setScore(s => s + 1);
     // });
+    var text = this.add.text(100, 0, 'Phaser 3', { font: '32px Arial', fill: '#00ff00' });
+    var matterText = this.matter.add.gameObject(text, { shape: { type: 'polygon', sides: 8, radius: 64 } })
+      .setFrictionAir(0.001)
+      .setBounce(0.9);
   }
 
   update () {
