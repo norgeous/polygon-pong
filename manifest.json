@@ -3,7 +3,7 @@
   "short_name": "PWA",
   "description": "Github pages PWA",
   "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "scope": "./",
   "start_url": "./",
   "display": "fullscreen",
