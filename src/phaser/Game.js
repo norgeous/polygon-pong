@@ -93,10 +93,10 @@ class Game extends Phaser.Scene {
 
     // ball min speed
     const { x, y } = this.ball.body.velocity;
-    if(x>0 && x<5) this.ball.setVelocityX(5);
-    if(x<0 && x>-5) this.ball.setVelocityX(-5);
-    if(y>0 && y<5) this.ball.setVelocityY(5);
-    if(y<0 && y>-5) this.ball.setVelocityY(-5);
+    if(x>0 && x<5) this.ball.setVelocityX(2);
+    if(x<0 && x>-5) this.ball.setVelocityX(-2);
+    if(y>0 && y<5) this.ball.setVelocityY(2);
+    if(y<0 && y>-5) this.ball.setVelocityY(-2);
 
   }
 }
