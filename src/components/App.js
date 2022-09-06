@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import styled from 'styled-components';
+
 import usePeer from '../hooks/usePeer';
 import usePhaser from '../hooks/usePhaser';
 
@@ -8,6 +10,13 @@ import Settings from './modals/Settings';
 import Network from './modals/Network';
 import { TopLeft, TopRight, BottomRight, Bottom, BottomLeft } from './styled/layout';
 import { Button } from './styled/common';
+
+const Div = styled.div`
+  background-color: #111;
+  canvas {
+    image-rendering: pixelated;
+  }
+`;
 
 const App = () => {
   const [route, setRoute] = useState('MAINMENU');
@@ -64,7 +73,7 @@ const App = () => {
         />
       </Bottom>
       <BottomLeft>❤️❤️🖤</BottomLeft> 
-      <div id="phaser"></div>
+      <Div id="phaser"></Div>
     </>
   );
 };

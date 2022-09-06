@@ -1,6 +1,6 @@
 function preload () {
   this.load.setBaseURL('https://labs.phaser.io');
-  this.load.image('sky', 'assets/skies/space3.png');
+  // this.load.image('sky', 'assets/skies/space3.png');
   // this.load.image('logo', 'assets/sprites/phaser3-logo.png');
   this.load.image('red', 'assets/particles/fire1.png');
 }
@@ -10,7 +10,7 @@ const getConfig = ({ setScore }) => {
   const height = window.innerHeight * window.devicePixelRatio;
 
   function create () {
-    this.add.image(width/2, height/2, 'sky');
+    // this.add.image(width/2, height/2, 'sky');
     const particles = this.add.particles('red');
     const emitter = particles.createEmitter({
       speed: 100,
