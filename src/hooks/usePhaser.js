@@ -27,7 +27,7 @@ const usePhaser = () => {
         default: 'arcade',
         arcade: {
           // debug: true,
-          gravity: { y: 200 }
+          // gravity: { y: 200 }
         }
       },
       scene: [Game],
