@@ -2,7 +2,7 @@
 
 ## demo
 
-https://norgeous.github.io/Polygon Pong
+https://norgeous.github.io/polygon-pong
 
 ## features
 
