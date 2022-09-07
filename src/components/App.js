@@ -34,6 +34,8 @@ const App = () => {
     player.setVelocity(p,0);
   };
 
+  console.log(game);
+
   return (
     <>
       <MainMenu

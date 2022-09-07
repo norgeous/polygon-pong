@@ -86,10 +86,12 @@ class Game extends Phaser.Scene {
     //   // console.log(thing);
     //   setScore(s => s + 1);
     // });
-    var text = this.add.text(100, 0, 'Phaser 3', { font: '32px Arial', fill: '#00ff00' });
-    var matterText = this.matter.add.gameObject(text, { shape: { type: 'polygon', sides: 8, radius: 64 } })
+    var text = this.add.text(width/2, height-50, 'P1', { font: '20px Arial', fill: '#00ff00' });
+    var player1 = this.matter.add.gameObject(text, { shape: { type: 'rectangle', width: 200, height: 30 }, isStatic: false })
       .setFrictionAir(0.001)
-      .setBounce(0.9);
+      .setBounce(0.9)
+      // .setVelocity(20)
+      .setMass(100);
   }
 
   update () {
