@@ -36,8 +36,9 @@ const App = () => {
 
   const setPlayerPosition = p => {
     setPosition(p);
-    const player = game.scene.scenes[0].physics.world.bodies.entries.find(({gameObject}) => gameObject.name === 'player');
-    console.log({game, player});
+    // console.log(game.scene.scenes[0].children.list.find(({name}) => name === 'player'))
+    const player = game.scene.scenes[0].children.list.find(({name}) => name === 'player');
+    // console.log({game, player});
     player.setVelocity(p,0);
   };
 
@@ -74,8 +75,8 @@ const App = () => {
         <pre>{JSON.stringify(peerData, null, 2)}</pre>
         <input
           type="range"
-          min={-500}
-          max={500}
+          min={-50}
+          max={50}
           step={1}
           value={position}
           onChange={e => setPlayerPosition(e.target.value)}

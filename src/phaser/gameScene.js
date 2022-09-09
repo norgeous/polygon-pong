@@ -86,6 +86,7 @@ export function create () {
       .setBounce(0.9)
       // .setVelocity(20)
       .setMass(100);
+    player1.name = 'player';
   }
 
 export function update () {
