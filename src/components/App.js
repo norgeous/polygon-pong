@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import usePeer from '../hooks/usePeer';
 import usePhaser from '../hooks/usePhaser';
 import useBattery from '../hooks/useBattery';
+import useClock from '../hooks/useClock';
 
 import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
@@ -42,6 +43,7 @@ const App = () => {
 
   // console.log(game);
   const batteryPercent = useBattery();
+  const clock = useClock();
 
   return (
     <>
@@ -62,10 +64,9 @@ const App = () => {
         connections2={connections2}
         broadcast={broadcast}
       />
-      <TopLeft>{1000000 + score} {fps}fps</TopLeft>
+      <TopLeft>{1000000 + score} {fps}fps ❤️❤️🖤</TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
-        {batteryPercent > 50 ? '🔋' : '🪫'}{batteryPercent}%
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
       </TopRight>
       <BottomRight>🪙x22</BottomRight>
@@ -82,7 +83,7 @@ const App = () => {
           onMouseUp={() => setPlayerPosition(0)}
         />
       </Bottom>
-      <BottomLeft>❤️❤️🖤</BottomLeft> 
+      <BottomLeft>{clock} {batteryPercent > 50 ? '🔋' : '🪫'}{batteryPercent}%</BottomLeft> 
       <Div id="phaser"></Div>
     </>
   );
