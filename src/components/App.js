@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import usePeer from '../hooks/usePeer';
 import usePhaser from '../hooks/usePhaser';
+import useBattery from '../hooks/useBattery';
 
 import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
@@ -40,6 +41,7 @@ const App = () => {
   };
 
   // console.log(game);
+  const batteryPercent = useBattery();
 
   return (
     <>
@@ -63,6 +65,7 @@ const App = () => {
       <TopLeft>{1000000 + score} {fps}fps</TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
+        {batteryPercent > 50 ? '🔋' : '🪫'}{batteryPercent}%
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
       </TopRight>
       <BottomRight>🪙x22</BottomRight>
