@@ -21,8 +21,13 @@ const Div = styled.div`
 const App = () => {
   const [route, setRoute] = useState('MAINMENU');
   const [position, setPosition] = useState(0);
+  const [fps, setFps] = useState(0);
 
-  const { score, game } = usePhaser();
+  const update = (scene) => {
+    setFps(Math.round(scene.game.loop.actualFps));
+  };
+
+  const { score, game } = usePhaser({ update });
   const { hardCodedPeerIds, peerId, connections2, broadcast, peerData } = usePeer();
 
   useEffect(() => broadcast({ position }), [position]);
@@ -34,7 +39,7 @@ const App = () => {
     player.setVelocity(p,0);
   };
 
-  console.log(game);
+  // console.log(game);
 
   return (
     <>
@@ -55,7 +60,7 @@ const App = () => {
         connections2={connections2}
         broadcast={broadcast}
       />
-      <TopLeft>{1000000 + score}</TopLeft>
+      <TopLeft>{1000000 + score} {fps}fps</TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
