@@ -1,4 +1,7 @@
 import playTone from '../../sound/playTone';
+import createOscillator from '../../sound/createOscillator';
+
+const oscillator = createOscillator();
 
 function preload () {
   this.load.setBaseURL('https://labs.phaser.io');
@@ -45,7 +48,10 @@ function create () {
     .setFrictionAir(0.0001)
     .setBounce(.5)
     .setVelocity(20);
-  this.ball.setOnCollide(() => playTone({volume: 0.5, frequency:(Math.random()*440)+220}));
+  this.ball.setOnCollide(() => oscillator({
+    volume: 0.5,
+    frequency: (Math.random() * 440) + 220,
+  }));
 
 
   // const matterText = this.matter.add.gameObject(ball, { shape: { type: 'circle', radius: 64 } })

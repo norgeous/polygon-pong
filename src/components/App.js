@@ -42,9 +42,7 @@ const App = () => {
     player.setVelocity(p,0);
   };
 
-  console.log(game);
-
-  // if (!game) return null;
+  // console.log(game);
 
   return (
     <>
