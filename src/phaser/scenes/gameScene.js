@@ -28,7 +28,7 @@ function create () {
 
 
 
-  const ball = this.add.text(width/2, height/4, '🥴', { font: '50px Arial', align: 'center' }).setOrigin(0.5);
+  const ball = this.add.text(width/2, height/4, Math.random()>.5?'🥴':'🤕', { font: '50px Arial', align: 'center' }).setOrigin(0.5);
   emitter.startFollow(ball);
   // this.physics.world.enable(ball);
   // ball.body.setCircle(26, 5);

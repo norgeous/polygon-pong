@@ -13,7 +13,7 @@ const useBattery = () => {
     return () => clearInterval(t);
   }, []);
 
-  const batteryPercent = Math.round((battery?.level || 0) * 100);
+  const batteryPercent = Math.floor((battery?.level || 0) * 100);
 
   return batteryPercent;
 };
