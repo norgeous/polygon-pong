@@ -1,4 +1,3 @@
-import playTone from '../../sound/playTone';
 import createOscillator from '../../sound/createOscillator';
 
 const oscillator = createOscillator();
@@ -19,9 +18,8 @@ function create () {
   // this.cameras.main.setZoom(1.1);
   this.cameras.main.centerOn(width/2, height);
 
-  // this.add.image(width/2, height/2, 'sky');
   const particles = this.add.particles('red');
-  const emitter = particles.createEmitter({
+  this.emitter = particles.createEmitter({
     speed: 100,
     scale: { start: 0.25, end: 0 },
     blendMode: 'ADD'
@@ -34,14 +32,7 @@ function create () {
 
 
   const ball = this.add.text(width/2, height/4, Math.random()>.5?'🥴':'🤕', { font: '50px Arial', align: 'center' }).setOrigin(0.5);
-  emitter.startFollow(ball);
-  // this.physics.world.enable(ball);
-  // ball.body.setCircle(26, 5);
-  // ball.body.setBounce(1, 1);
-  // ball.body.setVelocity(100, -200);
-  // ball.body.setMaxVelocity(500);
-  // ball.body.collideWorldBounds = true;
-  // ball.body.onWorldBounds = true;
+  this.emitter.startFollow(ball);
 
   this.ball = this.matter.add.gameObject(ball, { shape: { type: 'circle', radius: 26 }});
   this.ball
@@ -54,39 +45,6 @@ function create () {
   }));
 
 
-  // const matterText = this.matter.add.gameObject(ball, { shape: { type: 'circle', radius: 64 } })
-  //   .setFrictionAir(0.001)
-  //   .setBounce(0.9)
-  //   .setCollideWorldBounds(true);
-  // var matterText2 = this.matter.add.gameObject(text2).setFrictionAir(0.001).setBounce(0.9);
-
-
-
-  // const player = this.add.rectangle(
-  //   this.physics.world.bounds.width/2,
-  //   this.physics.world.bounds.height - 25,
-  //   150, 20,
-  //   0x6666ff,
-  // );    
-  // this.physics.add.existing(player);
-  // player.name = 'player';
-  // // player.body.setBounce(1, 1);
-  // player.body.setImmovable();
-  // player.body.setAllowGravity(false);
-  // // player.body.setGravity(false);
-  // player.body.collideWorldBounds = true;
-
-
-
-
-
-  // this.physics.add.collider(player, ball);
-  // this.cameras.main.startFollow(player, false, 0.2, 0.2);
-
-  // this.physics.world.on('worldbounds', thing => {
-  //   // console.log(thing);
-  //   setScore(s => s + 1);
-  // });
   const text = this.add.text(width/2, height-50, 'P1', { font: '20px Arial', fill: '#00ff00' });
   const player1 = this.matter.add.gameObject(
     text,
@@ -110,10 +68,15 @@ function create () {
 function update () {
   // ball min speed
   const { x, y } = this.ball.body.velocity;
-  if(x>0 && x<5) this.ball.setVelocityX(2);
-  if(x<0 && x>-5) this.ball.setVelocityX(-2);
-  if(y>0 && y<5) this.ball.setVelocityY(2);
-  if(y<0 && y>-5) this.ball.setVelocityY(-2);
+  if(x>0 && x<2) this.ball.setVelocityX(2);
+  if(x<0 && x>-2) this.ball.setVelocityX(-2);
+  if(y>0 && y<2) this.ball.setVelocityY(2);
+  if(y<0 && y>-2) this.ball.setVelocityY(-2);
+
+  console.log(this.emitter);
+  if (x>4 || x<-4 || y>4 || y<-4) this.emitter.on = true;
+  else this.emitter.on = false;
+
 
   this.additionalFunctions.update(this);
 }

@@ -1,9 +1,10 @@
 const createAudioContext = () => {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-  // oscillator -> gainNode -> destination
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
+
+  // oscillator -> gainNode -> destination
   oscillator.connect(gainNode);
   gainNode.connect(audioCtx.destination);
   
@@ -13,8 +14,9 @@ const createAudioContext = () => {
   return { audioCtx, oscillator, gainNode };
 };
 
-let context;
 const createOscillator = () => {
+  let context;
+
   return ({
     frequency = 261.626, // C4
     type = 'triangle', // or 'sine' or 'square'

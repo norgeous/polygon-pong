@@ -65,10 +65,10 @@ const App = () => {
         peerData={peerData}
       />
       <TopLeft>
-        ❤️❤️🖤
+        ❤️❤️🖤 {1000000 + score}
         <br/>
         <br/>
-        {1000000 + score} {fps}/{game?.loop?.targetFps}fps
+        {fps}/{game?.loop?.targetFps}fps
       </TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
