@@ -88,7 +88,14 @@ function create () {
   //   setScore(s => s + 1);
   // });
   const text = this.add.text(width/2, height-50, 'P1', { font: '20px Arial', fill: '#00ff00' });
-  const player1 = this.matter.add.gameObject(text, { shape: { type: 'rectangle', width: 200, height: 30 }, isStatic: false })
+  const player1 = this.matter.add.gameObject(
+    text,
+    {
+      shape: { type: 'rectangle', width: 200, height: 30 },
+      isStatic: false,
+      chamfer: { radius: 15},
+    },
+  )
     .setFrictionAir(0.001)
     .setBounce(0.9)
     .setMass(100);
