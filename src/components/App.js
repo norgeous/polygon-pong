@@ -21,6 +21,8 @@ const Div = styled.div`
 `;
 
 const App = () => {
+  const batteryPercent = useBattery();
+  const clock = useClock();
   const [route, setRoute] = useState('MAINMENU');
   const [position, setPosition] = useState(0);
   const [fps, setFps] = useState(0);
@@ -42,9 +44,9 @@ const App = () => {
     player.setVelocity(p,0);
   };
 
-  // console.log(game);
-  const batteryPercent = useBattery();
-  const clock = useClock();
+  console.log(game);
+
+  if (!game) return null;
 
   return (
     <>
@@ -65,7 +67,7 @@ const App = () => {
         connections2={connections2}
         broadcast={broadcast}
       />
-      <TopLeft>{1000000 + score} {fps}fps ❤️❤️🖤</TopLeft>
+      <TopLeft>{1000000 + score} {fps}/{game.loop.targetFps}fps ❤️❤️🖤</TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
