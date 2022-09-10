@@ -46,7 +46,7 @@ const App = () => {
 
   console.log(game);
 
-  if (!game) return null;
+  // if (!game) return null;
 
   return (
     <>
@@ -67,7 +67,7 @@ const App = () => {
         connections2={connections2}
         broadcast={broadcast}
       />
-      <TopLeft>{1000000 + score} {fps}/{game.loop.targetFps}fps ❤️❤️🖤</TopLeft>
+      <TopLeft>{1000000 + score} {fps}/{game?.loop?.targetFps}fps ❤️❤️🖤</TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
