@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const useSystemInfo = () => {
   const cores = navigator.hardwareConcurrency;
   const ram = navigator.deviceMemory;
-  const [timeTaken, setTimeTaken] = useState(0);
+  const [timeTaken, setTimeTaken] = useState(1000);
 
   useEffect(() => {
     const start = new Date().getTime();;
@@ -15,10 +15,13 @@ const useSystemInfo = () => {
     setTimeTaken(duration);
   }, []);
 
+  const hostFitness = cores + ram - timeTaken;
+
   return {
     cores,
     ram,
     timeTaken,
+    hostFitness,
   };
 };
 
