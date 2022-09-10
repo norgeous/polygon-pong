@@ -45,7 +45,7 @@ function create () {
   }));
 
 
-  const text = this.add.text(width/2, height-50, 'P1', { font: '20px Arial', fill: '#00ff00' });
+  const text = this.add.text(width/2, height-50, 'Player 1', { font: '20px Arial', fill: '#00ff00' });
   const player1 = this.matter.add.gameObject(
     text,
     {
