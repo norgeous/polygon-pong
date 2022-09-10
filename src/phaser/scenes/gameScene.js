@@ -1,3 +1,5 @@
+import playTone from '../../sound/playTone';
+
 function preload () {
   this.load.setBaseURL('https://labs.phaser.io');
   this.load.image('red', 'assets/particles/red.png');
@@ -43,6 +45,7 @@ function create () {
     .setFrictionAir(0.0001)
     .setBounce(.5)
     .setVelocity(20);
+  this.ball.setOnCollide(() => playTone());
 
 
   // const matterText = this.matter.add.gameObject(ball, { shape: { type: 'circle', radius: 64 } })
