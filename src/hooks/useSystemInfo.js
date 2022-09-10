@@ -15,7 +15,7 @@ const useSystemInfo = () => {
     setTimeTaken(duration);
   }, []);
 
-  const hostFitness = cores + ram - timeTaken;
+  const hostFitness = ((cores + ram)*10) - timeTaken;
 
   return {
     cores,
