@@ -22,7 +22,6 @@ const createOscillator = () => {
     delay = 0,
     duration = 0.05,
   } = {}) => {
-    console.log({context});
     if (!context || context.audioCtx.state === 'suspended') context = createAudioContext();
   
     const { audioCtx, oscillator, gainNode } = context;

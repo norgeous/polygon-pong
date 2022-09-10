@@ -50,7 +50,7 @@ function create () {
     .setVelocity(20);
   this.ball.setOnCollide(() => oscillator({
     volume: 0.5,
-    frequency: (Math.random() * 440) + 220,
+    frequency: 440,
   }));
 
 
@@ -89,13 +89,15 @@ function create () {
   // });
   const text = this.add.text(width/2, height-50, 'P1', { font: '20px Arial', fill: '#00ff00' });
   const player1 = this.matter.add.gameObject(text, { shape: { type: 'rectangle', width: 200, height: 30 }, isStatic: false })
-    // .setFillStyle('#ff0000')
     .setFrictionAir(0.001)
     .setBounce(0.9)
     .setMass(100);
-  console.log({player1});
   player1.name = 'player';
-  player1.body.render.fillColor = 0x00ffff
+
+  player1.setOnCollide(() => oscillator({
+    volume: 0.5,
+    frequency: 300,
+  }));
 }
 
 function update () {
