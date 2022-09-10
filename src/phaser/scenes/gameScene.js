@@ -45,7 +45,7 @@ function create () {
     .setFrictionAir(0.0001)
     .setBounce(.5)
     .setVelocity(20);
-  this.ball.setOnCollide(() => playTone());
+  this.ball.setOnCollide(() => playTone({frequency:(Math.random()*440)+220}));
 
 
   // const matterText = this.matter.add.gameObject(ball, { shape: { type: 'circle', radius: 64 } })
