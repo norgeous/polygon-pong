@@ -5,7 +5,7 @@ import { Button } from '../styled/menu';
 
 const Network = ({
   open, onClose,
-  hardCodedPeerIds, peerId, connections2, broadcast,
+  hardCodedPeerIds, peerId, connections2, broadcast, peerData,
 }) => {
   return (
     <>
@@ -23,6 +23,7 @@ const Network = ({
               <Button onClick={()=>broadcast(`click from ${peerId}`)}>{conn ? '✅' : '❌'} {id.replace('my-pwa-multiplayer-id-','')}</Button>
             );
           })}
+          <pre>{JSON.stringify(peerData, null, 2)}</pre>
         </Modal>
       )}
     </>

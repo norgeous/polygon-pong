@@ -66,15 +66,21 @@ const App = () => {
         peerId={peerId}
         connections2={connections2}
         broadcast={broadcast}
+        peerData={peerData}
       />
-      <TopLeft>{1000000 + score} {fps}/{game?.loop?.targetFps}fps ❤️❤️🖤</TopLeft>
+      <TopLeft>
+        ❤️❤️🖤
+        <br/>
+        <br/>
+        {1000000 + score} {fps}/{game?.loop?.targetFps}fps
+      </TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
+        {batteryPercent > 50 ? '🔋' : '🪫'}{batteryPercent}%
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
       </TopRight>
       <BottomRight>🪙x22</BottomRight>
       <Bottom>
-        <pre>{JSON.stringify(peerData, null, 2)}</pre>
         <input
           type="range"
           min={-50}
@@ -86,7 +92,7 @@ const App = () => {
           onMouseUp={() => setPlayerPosition(0)}
         />
       </Bottom>
-      <BottomLeft>{clock} {batteryPercent > 50 ? '🔋' : '🪫'}{batteryPercent}%</BottomLeft> 
+      <BottomLeft>{clock}</BottomLeft> 
       <Div id="phaser"></Div>
     </>
   );
