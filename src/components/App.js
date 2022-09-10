@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import styled from 'styled-components';
-
 import usePeer from '../hooks/usePeer';
 import usePhaser from '../hooks/usePhaser';
 import useBattery from '../hooks/useBattery';
 import useClock from '../hooks/useClock';
+import useSystemInfo from '../hooks/useSystemInfo';
 
 import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
@@ -23,6 +22,8 @@ import { Button } from './styled/common';
 const App = () => {
   const batteryPercent = useBattery();
   const clock = useClock();
+  const hostFitness = useSystemInfo();
+
   const [route, setRoute] = useState('MAINMENU');
   const [position, setPosition] = useState(0);
   const [fps, setFps] = useState(0);
@@ -75,7 +76,11 @@ const App = () => {
         {batteryPercent > 50 ? '🔋' : '🪫'}{batteryPercent}%
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
       </TopRight>
-      <BottomRight>🪙x22</BottomRight>
+      <BottomRight>
+        🪙x22
+        <br/>
+        <pre>{JSON.stringify(hostFitness,null,2)}</pre>
+      </BottomRight>
       <Bottom>
         <input
           type="range"

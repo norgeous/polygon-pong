@@ -73,7 +73,6 @@ function update () {
   if(y>0 && y<2) this.ball.setVelocityY(2);
   if(y<0 && y>-2) this.ball.setVelocityY(-2);
 
-  console.log(this.emitter);
   if (x>6 || x<-6 || y>6 || y<-6) this.emitter.on = true;
   else this.emitter.on = false;
 
