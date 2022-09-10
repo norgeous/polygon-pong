@@ -79,9 +79,9 @@ const App = () => {
       <Bottom>
         <input
           type="range"
-          min={-50}
-          max={50}
-          step={1}
+          min={-7}
+          max={7}
+          step={0.1}
           value={position}
           onChange={e => setPlayerPosition(e.target.value)}
           onTouchEnd={() => setPlayerPosition(0)}
