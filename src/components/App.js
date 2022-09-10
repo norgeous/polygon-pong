@@ -10,15 +10,15 @@ import useClock from '../hooks/useClock';
 import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
 import Network from './modals/Network';
-import { TopLeft, TopRight, BottomRight, Bottom, BottomLeft } from './styled/layout';
+import {
+  TopLeft,
+  TopRight,
+  BottomRight,
+  Bottom,
+  BottomLeft,
+  PhaserDiv,
+} from './styled/layout';
 import { Button } from './styled/common';
-
-const Div = styled.div`
-  background-color: #111;
-  canvas {
-    image-rendering: pixelated;
-  }
-`;
 
 const App = () => {
   const batteryPercent = useBattery();
@@ -38,9 +38,7 @@ const App = () => {
 
   const setPlayerPosition = p => {
     setPosition(p);
-    // console.log(game.scene.scenes[0].children.list.find(({name}) => name === 'player'))
     const player = game.scene.scenes[0].children.list.find(({name}) => name === 'player');
-    // console.log({game, player});
     player.setVelocity(p,0);
   };
 
@@ -93,7 +91,7 @@ const App = () => {
         />
       </Bottom>
       <BottomLeft>{clock}</BottomLeft> 
-      <Div id="phaser"></Div>
+      <PhaserDiv />
     </>
   );
 };

@@ -63,3 +63,10 @@ export const OverlayInner = styled.div`
   flex-direction: column;
   gap: 10px;
 `;
+
+export const PhaserDiv = styled.div.attrs(() => ({ id: 'phaser' }))`
+  background-color: #111;
+  canvas {
+    image-rendering: pixelated;
+  }
+`;

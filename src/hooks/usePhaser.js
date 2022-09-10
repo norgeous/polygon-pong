@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Phaser from 'phaser';
-import * as gameScene from '../phaser/gameScene';
+import gameScene from '../phaser/scenes/gameScene';
 
 const config = {
   type: Phaser.AUTO,
@@ -28,7 +28,6 @@ const config = {
 const usePhaser = (additionalFunctions) => {
   const [score, setScore] = useState(0);
   const [game, setGame] = useState();
-
   
   useEffect(() => {
     const newGame = new Phaser.Game({
