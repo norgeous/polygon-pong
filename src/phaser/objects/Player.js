@@ -3,8 +3,9 @@ import createOscillator from '../../sound/createOscillator';
 class Player {
   constructor(scene) {
     this.oscillator = createOscillator();
-
+    
     const { width, height } = scene.sys.game.canvas;
+    this.pointer = {x:width/2,y:0};
 
     const text = scene.add.text(width/2, height-50, 'Player 1', { font: '20px Arial', fill: '#00ff00' });
     this.player = scene.matter.add.gameObject(
@@ -30,7 +31,21 @@ class Player {
     });
 	}
 
-	update() {
+	update(scene) {
+    // console.log({scene});
+
+    // player follow cursor or touch gesture
+    scene.input.on('pointermove', (pointer) => {
+      this.pointer = pointer;
+      // if (pointer.isDown) {
+        // this.add.image(pointer.x, pointer.y, 'balls', Phaser.Math.Between(0, 5));
+      // }
+    }, scene);
+
+    if (this.player.x !== this.pointer.x) {
+      // this.player.x = pointer.x;
+      this.player.setVelocity((this.pointer.x - this.player.x)/10, 0);
+    }
 	}
 }
 

@@ -21,8 +21,8 @@ function create () {
 }
 
 function update () {
-  this.ball.update();
-  this.player1.update();
+  this.ball.update(this);
+  this.player1.update(this);
   this.additionalFunctions.update(this);
 }
 
