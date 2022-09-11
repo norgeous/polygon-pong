@@ -27,7 +27,8 @@ class Ball {
     );
     this.ball
       .setFrictionAir(0.0001)
-      .setBounce(.5);
+      .setBounce(.5)
+      .setMass(50);
 
     // sound on collision
     this.ball.setOnCollide(data => this.oscillator({
