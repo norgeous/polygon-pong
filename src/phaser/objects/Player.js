@@ -13,7 +13,7 @@ class Player {
       {
         shape: { type: 'rectangle', width: 200, height: 30 },
         isStatic: false,
-        chamfer: { radius: 15},
+        chamfer: { radius: 15 },
       },
     )
       .setFrictionAir(0.001)
@@ -32,20 +32,14 @@ class Player {
 	}
 
 	update(scene) {
-    // console.log({scene});
+    const { width, height } = scene.sys.game.canvas;
 
     // player follow cursor or touch gesture
-    scene.input.on('pointermove', (pointer) => {
-      this.pointer = pointer;
-      // if (pointer.isDown) {
-        // this.add.image(pointer.x, pointer.y, 'balls', Phaser.Math.Between(0, 5));
-      // }
-    }, scene);
-
+    scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     if (this.player.x !== this.pointer.x) {
-      // this.player.x = pointer.x;
       this.player.setVelocity((this.pointer.x - this.player.x)/10, 0);
     }
+    this.player.y = height-50;
 	}
 }
 
