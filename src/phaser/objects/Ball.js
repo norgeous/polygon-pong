@@ -26,8 +26,9 @@ class Ball {
       { shape: { type: 'circle', radius: 26 }},
     );
     this.ball
-      .setFrictionAir(0.0001)
-      .setBounce(.5)
+      .setVelocity(0, -4)
+      .setFrictionAir(0.001)
+      .setBounce(0.5)
       .setMass(10);
 
     // sound on collision
@@ -42,14 +43,19 @@ class Ball {
 
 	update() {
     // ball min speed
-    const { x, y } = this.ball.body.velocity;
-    if(x>=0 && x<=2) this.ball.setVelocityX(2);
-    if(x<=0 && x>=-2) this.ball.setVelocityX(-2);
-    if(y>=0 && y<=2) this.ball.setVelocityY(2);
-    if(y<=0 && y>=-2) this.ball.setVelocityY(-2);
+    const minVelocity = 5;
+    const { x: vx, y: vy } = this.ball.body.velocity;
+    const speed = Math.hypot(vx, vy);
+    if (speed < minVelocity-0.01) {
+      const angle = Math.atan2(vy, vx);
+      const newVx = Math.cos(angle) * minVelocity;
+      const newVy = Math.sin(angle) * minVelocity;
+      this.ball.setVelocity(newVx,newVy);
+    }
+
 
     // if velocity is fast, emit particle effect
-    this.emitter.on = (x>6 || x<-6 || y>6 || y<-6);
+    this.emitter.on = (vx>6 || vx<-6 || vy>6 || vy<-6);
 	}
 }
 
