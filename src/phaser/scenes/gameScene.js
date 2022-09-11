@@ -10,11 +10,12 @@ function create () {
   const { width, height } = this.sys.game.canvas;
 
   this.matter.world.disableGravity();
-  this.matter.world.setBounds(0, 0, width, height, 15);
+  this.matter.world.setBounds(0, 0, width, height, 150);
 
+  // camera
   this.cameras.main.setBounds(0, 0, width, height);
-  // this.cameras.main.setZoom(1.1);
-  this.cameras.main.centerOn(width/2, height);
+  // this.cameras.main.setZoom(0.5);
+  // this.cameras.main.centerOn(width/2, height/2);
 
   this.ball = new Ball(this);
   this.player1 = new Player(this);

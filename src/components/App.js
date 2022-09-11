@@ -76,10 +76,10 @@ const App = () => {
         <pre>{JSON.stringify(hostFitness,null,2)}</pre>
       </BottomRight>
       <Bottom>
-        <button onClick={() => {
+        {/* <button onClick={() => {
           const player = game.scene.scenes[0].children.list.find(({name}) => name === 'player');
           player.setVelocity(0,-10);
-        }}>fire</button>
+        }}>fire</button> */}
       </Bottom>
       <BottomLeft>{clock}</BottomLeft> 
       <PhaserDiv />
