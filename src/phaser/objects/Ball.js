@@ -1,6 +1,6 @@
 import createOscillator from '../../sound/createOscillator';
 
-export default class Ball {
+class Ball {
   constructor(scene) {
     this.oscillator = createOscillator();
 
@@ -27,8 +27,7 @@ export default class Ball {
     );
     this.ball
       .setFrictionAir(0.0001)
-      .setBounce(.5)
-      .setVelocity(20);
+      .setBounce(.5);
 
     // sound on collision
     this.ball.setOnCollide(() => this.oscillator({
@@ -38,25 +37,19 @@ export default class Ball {
 
     // emitter follow ball
     this.emitter.startFollow(ball);
-  
-		// world.scene.add.existing(this);
 	}
 
 	update() {
-		// const speed = 10
-		// if (cursors.left?.isDown)
-		// {
-		// 	this.x -= speed
-			
-		// }
-		// else if (cursors.right?.isDown)
-		// {
-		// 	this.x += speed
-		// }
+    // ball min speed
+    const { x, y } = this.ball.body.velocity;
+    if(x>=0 && x<=2) this.ball.setVelocityX(2);
+    if(x<=0 && x>=-2) this.ball.setVelocityX(-2);
+    if(y>=0 && y<=2) this.ball.setVelocityY(2);
+    if(y<=0 && y>=-2) this.ball.setVelocityY(-2);
 
-		// if (this.ball)
-		// [
-		// 	this.ball.x = this.x
-		// ]
+    // if velocity is fast, emit particle effect
+    this.emitter.on = (x>6 || x<-6 || y>6 || y<-6);
 	}
 }
+
+export default Ball;
