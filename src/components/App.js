@@ -72,8 +72,7 @@ const App = () => {
       </TopRight>
       <BottomRight>
         🪙x22
-        <br/>
-        <pre>{JSON.stringify(hostFitness,null,2)}</pre>
+        {/* <pre>{JSON.stringify(hostFitness,null,2)}</pre> */}
       </BottomRight>
       <Bottom>
         {/* <button onClick={() => {
