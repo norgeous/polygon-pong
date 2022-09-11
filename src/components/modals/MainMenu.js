@@ -3,7 +3,7 @@ import Modal from '../Modal';
 import { FlexR, Heading, A } from '../styled/common';
 import { Button } from '../styled/menu';
 
-const MainMenu = ({ open, onClose }) => {
+const MainMenu = ({ open, onClose, setRoute }) => {
   return (
     <>
       {open && (
@@ -18,6 +18,7 @@ const MainMenu = ({ open, onClose }) => {
             </div>
           </FlexR>
           <Button onClick={onClose}><span>👬</span><span>Join Multiplayer (WIP)</span></Button>
+          <Button onClick={() => setRoute('SETTINGS')}><span>⚙️</span><span>Settings</span></Button>
         </Modal>
       )}
     </>

@@ -36,6 +36,7 @@ const Settings = ({ open, onClose, setRoute }) => {
             {' '}
             Prevent sleep (wakelock)
           </Button>
+          <Button onClick={() => setRoute('PROFILE')}><span>🧰</span><span>Hardware Profile</span></Button>
         </Modal>
       )}
     </>

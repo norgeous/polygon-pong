@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import usePeer from '../hooks/usePeer';
 import usePhaser from '../hooks/usePhaser';
 import useBattery from '../hooks/useBattery';
 import useClock from '../hooks/useClock';
-import useSystemInfo from '../hooks/useSystemInfo';
 
 import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
 import Network from './modals/Network';
+import Profile from './modals/Profile';
 import {
   TopLeft,
   TopRight,
@@ -22,7 +22,6 @@ import { Button } from './styled/common';
 const App = () => {
   const batteryPercent = useBattery();
   const clock = useClock();
-  const hostFitness = useSystemInfo();
 
   const [route, setRoute] = useState('MAINMENU');
   // const [position, setPosition] = useState(0);
@@ -44,6 +43,7 @@ const App = () => {
       <MainMenu
         open={route === 'MAINMENU'}
         onClose={() => setRoute()}
+        setRoute={setRoute}
       />
       <Settings
         open={route === 'SETTINGS'}
@@ -59,11 +59,15 @@ const App = () => {
         broadcast={broadcast}
         peerData={peerData}
       />
+      <Profile
+        open={route === 'PROFILE'}
+        onClose={() => setRoute()}
+        setRoute={setRoute}
+        fps={fps}
+        targetFps={game?.loop?.targetFps}
+      />
       <TopLeft>
         ❤️❤️🖤 {1000000 + score}
-        <br/>
-        <br/>
-        {fps}/{game?.loop?.targetFps}fps
       </TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
@@ -72,13 +76,8 @@ const App = () => {
       </TopRight>
       <BottomRight>
         🪙x22
-        {/* <pre>{JSON.stringify(hostFitness,null,2)}</pre> */}
       </BottomRight>
       <Bottom>
-        {/* <button onClick={() => {
-          const player = game.scene.scenes[0].children.list.find(({name}) => name === 'player');
-          player.setVelocity(0,-10);
-        }}>fire</button> */}
       </Bottom>
       <BottomLeft>{clock}</BottomLeft> 
       <PhaserDiv />
