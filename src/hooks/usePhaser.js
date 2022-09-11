@@ -22,6 +22,10 @@ const config = {
       // gravity: { y: 200 }
     }
   },
+  fps: {
+    target: 90,
+    forceSetTimeOut: true
+  },
   // scene: [Game],
 };
 
