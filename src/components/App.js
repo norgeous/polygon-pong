@@ -25,7 +25,7 @@ const App = () => {
   const hostFitness = useSystemInfo();
 
   const [route, setRoute] = useState('MAINMENU');
-  const [position, setPosition] = useState(0);
+  // const [position, setPosition] = useState(0);
   const [fps, setFps] = useState(0);
 
   const update = (scene) => {
@@ -35,13 +35,7 @@ const App = () => {
   const { score, game } = usePhaser({ update });
   const { hardCodedPeerIds, peerId, connections2, broadcast, peerData } = usePeer();
 
-  useEffect(() => broadcast({ position }), [position]);
-
-  const setPlayerPosition = p => {
-    setPosition(p);
-    const player = game.scene.scenes[0].children.list.find(({name}) => name === 'player');
-    player.setVelocity(p,0);
-  };
+  // useEffect(() => broadcast({ position }), [position]);
 
   // console.log(game);
 
@@ -81,18 +75,7 @@ const App = () => {
         <br/>
         <pre>{JSON.stringify(hostFitness,null,2)}</pre>
       </BottomRight>
-      <Bottom>
-        <input
-          type="range"
-          min={-7}
-          max={7}
-          step={0.1}
-          value={position}
-          onChange={e => setPlayerPosition(e.target.value)}
-          onTouchEnd={() => setPlayerPosition(0)}
-          onMouseUp={() => setPlayerPosition(0)}
-        />
-      </Bottom>
+      <Bottom></Bottom>
       <BottomLeft>{clock}</BottomLeft> 
       <PhaserDiv />
     </>
