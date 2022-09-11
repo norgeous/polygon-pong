@@ -1,4 +1,9 @@
+import Ball from '../objects/Ball';
 import createOscillator from '../../sound/createOscillator';
+
+import Phaser from 'phaser';
+
+console.log({Phaser});
 
 const oscillator = createOscillator();
 
@@ -13,37 +18,11 @@ function create () {
   this.matter.world.disableGravity();
   this.matter.world.setBounds(0, 0, width, height, 15);
   this.cameras.main.setBounds(0, 0, width, height);
-
-
   // this.cameras.main.setZoom(1.1);
   this.cameras.main.centerOn(width/2, height);
 
-  const particles = this.add.particles('red');
-  this.emitter = particles.createEmitter({
-    speed: 100,
-    scale: { start: 0.25, end: 0 },
-    blendMode: 'ADD'
-  });
-
-
-
-
-
-
-
-  const ball = this.add.text(width/2, height/4, Math.random()>.5?'🥴':'🤕', { font: '50px Arial', align: 'center' }).setOrigin(0.5);
-  this.emitter.startFollow(ball);
-
-  this.ball = this.matter.add.gameObject(ball, { shape: { type: 'circle', radius: 26 }});
-  this.ball
-    .setFrictionAir(0.0001)
-    .setBounce(.5)
-    .setVelocity(20);
-  this.ball.setOnCollide(() => oscillator({
-    volume: 0.5,
-    frequency: 440,
-  }));
-
+  this.ball = new Ball(this);
+  // console.log(this.ball);
 
   const text = this.add.text(width/2, height-50, 'Player 1', { font: '20px Arial', fill: '#00ff00' });
   const player1 = this.matter.add.gameObject(
@@ -66,16 +45,15 @@ function create () {
 }
 
 function update () {
+  console.log('UPDATE',this.ball);
   // ball min speed
-  const { x, y } = this.ball.body.velocity;
-  if(x>0 && x<2) this.ball.setVelocityX(2);
-  if(x<0 && x>-2) this.ball.setVelocityX(-2);
-  if(y>0 && y<2) this.ball.setVelocityY(2);
-  if(y<0 && y>-2) this.ball.setVelocityY(-2);
+  const { x, y } = this.ball.ball.body.velocity;
+  if(x>0 && x<2) this.ball.ball.setVelocityX(2);
+  if(x<0 && x>-2) this.ball.ball.setVelocityX(-2);
+  if(y>0 && y<2) this.ball.ball.setVelocityY(2);
+  if(y<0 && y>-2) this.ball.ball.setVelocityY(-2);
 
-  if (x>6 || x<-6 || y>6 || y<-6) this.emitter.on = true;
-  else this.emitter.on = false;
-
+  this.ball.emitter.on = (x>6 || x<-6 || y>6 || y<-6);
 
   this.additionalFunctions.update(this);
 }
