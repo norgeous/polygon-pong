@@ -30,8 +30,8 @@ class Ball {
       .setBounce(.5);
 
     // sound on collision
-    this.ball.setOnCollide(() => this.oscillator({
-      volume: 0.5,
+    this.ball.setOnCollide(data => this.oscillator({
+      volume: data.collision.depth,
       frequency: 440,
     }));
 

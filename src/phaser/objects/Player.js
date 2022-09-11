@@ -21,10 +21,13 @@ class Player {
     
     this.player.name = 'player';
 
-    this.player.setOnCollide(() => this.oscillator({
-      volume: 0.5,
-      frequency: 300,
-    }));
+    // sound on collision
+    this.player.setOnCollide(data => {
+      this.oscillator({
+        volume: data.collision.depth,
+        frequency: 261.6,
+      });
+    });
 	}
 
 	update() {
