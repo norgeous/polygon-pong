@@ -28,6 +28,8 @@ const App = () => {
 
   // useEffect(() => broadcast({ position }), [position]);
 
+  // http://ip-api.com/json/[ip.here]?fields=countryCode,zip
+
   return (
     <>
       {route === 'MAINMENU' && <MainMenu />}
