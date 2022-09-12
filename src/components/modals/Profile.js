@@ -27,6 +27,8 @@ const Profile = () => {
       </div>
       <div>
         hostFitness: {hostFitness}
+        <br/>
+        ((cores + ram)*10) - timeTaken
       </div>
     </Modal>
   );
