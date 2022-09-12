@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { useAppContext } from '../contexts/AppContext';
+
 import usePeer from '../hooks/usePeer';
 import usePhaser from '../hooks/usePhaser';
 import useBattery from '../hooks/useBattery';
@@ -20,10 +22,10 @@ import {
 import { Button } from './styled/common';
 
 const App = () => {
+  const { route, setRoute } = useAppContext();
   const batteryPercent = useBattery();
   const clock = useClock();
 
-  const [route, setRoute] = useState('MAINMENU');
   // const [position, setPosition] = useState(0);
   const [fps, setFps] = useState(0);
 
