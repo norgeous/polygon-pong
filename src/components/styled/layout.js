@@ -62,6 +62,9 @@ export const OverlayInner = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  max-height: 80%;
+  overflow: auto;
 `;
 
 export const PhaserDiv = styled.div.attrs(() => ({ id: 'phaser' }))`

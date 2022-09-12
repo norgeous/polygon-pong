@@ -7,6 +7,9 @@ const hardCodedPeerIds = [
   'polygon-pong-multiplayer-id-02',
   'polygon-pong-multiplayer-id-03',
   'polygon-pong-multiplayer-id-04',
+  'polygon-pong-multiplayer-id-05',
+  'polygon-pong-multiplayer-id-06',
+  'polygon-pong-multiplayer-id-07',
 ];
 
 const usePeer = () => {

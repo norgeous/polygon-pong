@@ -13,13 +13,21 @@ const Profile = () => {
   return (
     <Modal onClose={() => setRoute('SETTINGS')}>
       <Heading>Hardware Profile</Heading>
-      <pre>{JSON.stringify({
-        fps: `${fps} / ${targetFps} fps`,
-        cores,
-        ram,
-        timeTaken,
-        hostFitness,
-      },null,2)}</pre>
+      <div>
+        fps: {fps} / {targetFps} fps
+      </div>
+      <div>
+        cores: {cores}
+      </div>
+      <div>
+        ram: {ram}
+      </div>
+      <div>
+        timeTaken: {timeTaken}
+      </div>
+      <div>
+        hostFitness: {hostFitness}
+      </div>
     </Modal>
   );
 };
