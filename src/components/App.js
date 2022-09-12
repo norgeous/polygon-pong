@@ -1,11 +1,7 @@
 import React from 'react';
-
 import { useAppContext } from '../contexts/AppContext';
-
-import usePeer from '../hooks/usePeer';
 import useBattery from '../hooks/useBattery';
 import useClock from '../hooks/useClock';
-
 import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
 import Network from './modals/Network';
@@ -21,12 +17,10 @@ import {
 import { Button } from './styled/common';
 
 const App = () => {
-  const { route, setRoute } = useAppContext();
+  const { route, setRoute, connections2 } = useAppContext();
   const batteryPercent = useBattery();
   const clock = useClock();
-  const { hardCodedPeerIds, peerId, connections2, broadcast, peerData } = usePeer();
 
-  // useEffect(() => broadcast({ position }), [position]);
 
   // http://ip-api.com/json/[ip.here]?fields=countryCode,zip
 
@@ -34,7 +28,8 @@ const App = () => {
     <>
       {route === 'MAINMENU' && <MainMenu />}
       {route === 'SETTINGS' && <Settings />}
-      <Network
+      {route === 'NETWORK' && <Network />}
+      {/* <Network
         open={route === 'NETWORK'}
         onClose={() => setRoute()}
         hardCodedPeerIds={hardCodedPeerIds}
@@ -42,7 +37,7 @@ const App = () => {
         connections2={connections2}
         broadcast={broadcast}
         peerData={peerData}
-      />
+      /> */}
       {route === 'PROFILE' && <Profile/>}
       <TopLeft>
         ❤️❤️🖤 1,000,001
