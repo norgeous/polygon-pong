@@ -42,11 +42,7 @@ const App = () => {
 
   return (
     <>
-      <MainMenu
-        open={route === 'MAINMENU'}
-        onClose={() => setRoute()}
-        setRoute={setRoute}
-      />
+      {route === 'MAINMENU' && <MainMenu />}
       <Settings
         open={route === 'SETTINGS'}
         onClose={() => setRoute()}
