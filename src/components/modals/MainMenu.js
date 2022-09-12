@@ -6,6 +6,7 @@ import { Button } from '../styled/menu';
 
 const MainMenu = () => {
   const { setRoute } = useAppContext();
+
   return (
     <Modal onClose={() => setRoute()}>
       <FlexR>

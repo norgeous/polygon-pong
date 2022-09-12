@@ -1,22 +1,18 @@
 import React from 'react';
+import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Heading } from '../styled/common';
-import useSystemInfo from '../../hooks/useSystemInfo';
 
-const Profile = ({ open, onClose, fps, targetFps }) => {
-  const hostFitness = useSystemInfo();
+const Profile = () => {
+  const { setRoute, fps, targetFps, hostFitness } = useAppContext();
 
   return (
-    <>
-      {open && (
-        <Modal onClose={onClose}>
-          <Heading>Hardware Profile</Heading>
-          {fps} / {targetFps} fps
-          <br/>
-          <pre>{JSON.stringify(hostFitness,null,2)}</pre>
-        </Modal>
-      )}
-    </>
+    <Modal onClose={() => setRoute('SETTINGS')}>
+      <Heading>Hardware Profile</Heading>
+      {fps} / {targetFps} fps
+      <br/>
+      <pre>{JSON.stringify(hostFitness,null,2)}</pre>
+    </Modal>
   );
 };
 

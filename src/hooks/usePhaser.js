@@ -24,14 +24,18 @@ const config = {
   },
   fps: {
     target: 90,
-    forceSetTimeOut: true
+    forceSetTimeOut: true,
   },
   // scene: [Game],
 };
 
 const usePhaser = (additionalFunctions) => {
-  const [score, setScore] = useState(0);
+  const [fps, setFps] = useState(0);
   const [game, setGame] = useState();
+
+  const updateFps = (scene) => {
+    setFps(Math.round(scene?.game.loop.actualFps || 0));
+  };
   
   useEffect(() => {
     const newGame = new Phaser.Game({
@@ -40,7 +44,13 @@ const usePhaser = (additionalFunctions) => {
         {
           ...gameScene,
           extend: {
-            additionalFunctions,
+            additionalFunctions: {
+              ...additionalFunctions,
+              update: scene => {
+                updateFps(scene);
+                additionalFunctions.update?.(scene);
+              },
+            },
           },
         },
       ],
@@ -48,7 +58,7 @@ const usePhaser = (additionalFunctions) => {
     setGame(newGame);
   }, []);
 
-  return { score, game };
+  return { game, fps, targetFps: game?.loop.targetFps || 0 };
 };
 
 export default usePhaser;

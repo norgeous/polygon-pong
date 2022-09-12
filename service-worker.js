@@ -78,7 +78,7 @@ self.addEventListener('activate', event => event.waitUntil(clients.claim()));
 self.addEventListener('activate', event => event.waitUntil(setupCache()));
 self.addEventListener('fetch', event => event.respondWith(handleRequest(event.request)));
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'MESSAGE_IDENTIFIER') {
+  if (event.data && event.data.type === 'CLEAR_CACHES') {
     console.log('delete all cache')
     caches.keys().then(function(names) {
       for (let name of names)
