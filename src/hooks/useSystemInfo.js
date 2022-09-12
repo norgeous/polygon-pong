@@ -11,7 +11,7 @@ const useSystemInfo = () => {
     data.find(x => x == 1000000);
     const end = new Date().getTime();;
     const duration = end - start;
-    console.log({start,end});
+    // console.log({start,end});
     setTimeTaken(duration);
   }, []);
 
