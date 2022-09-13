@@ -3,24 +3,25 @@ import { useState, useEffect } from 'react';
 const useSystemInfo = () => {
   const cores = navigator.hardwareConcurrency;
   const ram = navigator.deviceMemory;
-  const [timeTaken, setTimeTaken] = useState(1000);
+  const [benchmark, setBenchmark] = useState();
+  const [hostFitness, setHostFitness] = useState();
 
   useEffect(() => {
-    const start = new Date().getTime();;
+    const start = window.performance.now();
     const data = [...Array(1000000).keys()];
     data.find(x => x == 1000000);
-    const end = new Date().getTime();;
+    const end = window.performance.now();
     const duration = end - start;
-    // console.log({start,end});
-    setTimeTaken(duration);
+    setBenchmark(duration);
+    const fitness = ((cores + ram) * 10) - duration;
+    console.log({duration, fitness});
+    setHostFitness(fitness);
   }, []);
-
-  const hostFitness = ((cores + ram)*10) - timeTaken;
 
   return {
     cores,
     ram,
-    timeTaken,
+    benchmark,
     hostFitness,
   };
 };

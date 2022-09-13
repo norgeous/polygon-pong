@@ -14,4 +14,5 @@ export const Button = styled.button`
   gap: 10px;
   /* justify-content: space-between; */
   box-sizing: border-box;
+  text-align: left;
 `;

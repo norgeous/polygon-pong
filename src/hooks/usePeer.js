@@ -12,7 +12,7 @@ const hardCodedPeerIds = [
   'polygon-pong-multiplayer-id-07',
 ];
 
-const usePeer = () => {
+const usePeer = ({ countryCode, hostFitness }) => {
   const [i, setI] = useState(0);
   const [peerId, setPeerId] = useState();
   const [connections, setConnections] = useState({});
@@ -26,7 +26,32 @@ const usePeer = () => {
     return oldPeerData;
   }, []);
 
+  const onConnectionOpen = (newPeer, conn) => {
+    console.log(`connected to ${conn.peer}`);
+    conn.send({
+      message: `hello from ${newPeer.id}!`,
+      countryCode,
+      hostFitness,
+    });
+    setConnections(newPeer.connections);
+  };
+  const onConnectionClose = (newPeer, conn) => {
+    console.log(`close from ${conn.peer}`);
+    setConnections(newPeer.connections);
+  };
+  const onConnectionDisconnected = (newPeer, conn) => {
+    console.log(`disconnected from ${conn.peer}`);
+    setConnections(newPeer.connections);
+  };
+  const onConnectionData = (newPeer, conn, data) => {
+    console.log(`data from ${conn.peer}`, conn.peer, data);
+    setPeerDataById(conn.peer, data);
+    setConnections(newPeer.connections);
+  };
+
   useEffect(() => {
+    if (!countryCode || !hostFitness) return;
+
     const newPeer = new Peer(hardCodedPeerIds[i]);
 
     // if id is already taken, the peer will close immediately, try the next id in the list
@@ -40,33 +65,22 @@ const usePeer = () => {
       // because close / disconnected events dont seem to always fire
       window.onbeforeunload = () => {
         Object.values(newPeer.connections).forEach(([conn]) => {
-          conn.send({message: `goodbye from ${newPeer.id}!`});
+          conn.send({
+            message: `goodbye from ${newPeer.id}!`,
+            action: 'CLOSE',
+          });
         });
       };
 
       setPeerId(newPeer.id);
 
-      // outgoing connections to all predefined peer ids
+      // try to establish outgoing connections to all predefined peer ids
       const newConnections = hardCodedPeerIds.map(id => {
-        const conn = newPeer.connect(id, {label: 'data'});
-        conn.on('open', () => {
-          console.log(`connected to ${id}`);
-          conn.send({message:`hello from ${newPeer.id}!`});
-          setConnections(newPeer.connections);
-        });
-        conn.on('close', () => {
-          console.log(`close ${id}`);
-          setConnections(newPeer.connections);
-        });
-        conn.on('disconnected', () => {
-          console.log(`disconnected from ${id}`);
-          setConnections(newPeer.connections);
-        });
-        conn.on('data', (data) => {
-          console.log('data', data);
-          setPeerDataById(id, data);
-          setConnections(newPeer.connections);
-        });
+        const conn = newPeer.connect(id, { label: 'data' });
+        conn.on('open', () => onConnectionOpen(newPeer, conn));
+        conn.on('close', () => onConnectionClose(newPeer, conn));
+        conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
+        conn.on('data', data => onConnectionData(newPeer, conn, data));
         return conn;
       });
 
@@ -74,30 +88,16 @@ const usePeer = () => {
 
     // incoming connections from other peers
     newPeer.on('connection', conn => {
-      conn.on('open', () => {
-        console.log('incoming connection opened', conn);
-        conn.send({message: `hello from ${newPeer.id}!`});
-        setConnections(newPeer.connections);
-      });
-      conn.on('close', () => {
-        console.log('incoming connection close');
-        setConnections(newPeer.connections);
-      });
-      conn.on('disconnected', () => {
-        console.log(`incomming connection disconnected`);
-        setConnections(newPeer.connections);
-      });
-      conn.on('data', data => {
-        console.log('incoming connection data', conn, data);
-        setPeerDataById(conn.peer, data);
-        setConnections(newPeer.connections);
-      });
+      conn.on('open', () => onConnectionOpen(newPeer, conn));
+      conn.on('close', () => onConnectionClose(newPeer, conn));
+      conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
+      conn.on('data', data => onConnectionData(newPeer, conn, data));
     });
-  }, [i]);
+  }, [countryCode, hostFitness, i]);
+
 
   // reduce to active only connections
   const connections2 = Object.values(connections).reduce((acc, conns) => {
-    // console.log(conns);
     const openConn = conns.reduce((acc, connection) => connection.open ? connection : acc, false);
     if (!openConn) return acc;
     return [...acc, openConn];

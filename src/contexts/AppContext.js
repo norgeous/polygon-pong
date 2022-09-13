@@ -10,16 +10,20 @@ import useSystemInfo from '../hooks/useSystemInfo';
 const AppContext = createContext({});
 
 export const AppProvider = ({ children }) => {
-  const [route, setRoute] = useState('MAINMENU');
+  // const [route, setRoute] = useState('MAINMENU');
+  const [route, setRoute] = useState('NETWORK');
   const clock = useClock();
   const batteryPercent = useBattery();
-  const { countryCode, flag } = useLocation();
+  const countryCode = useLocation();
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
   const { cores, ram, timeTaken, hostFitness } = useSystemInfo();
 
   const { game, fps, targetFps } = usePhaser({});
 
-  const { hardCodedPeerIds, peerId, connections2, broadcast, peerData } = usePeer();
+  const { hardCodedPeerIds, peerId, connections2, broadcast, peerData } = usePeer({
+    countryCode,
+    hostFitness,
+  });
 
   // console.log(game);
 
@@ -29,7 +33,7 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         route, setRoute,
-        countryCode, flag,
+        countryCode,
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,
         clock,

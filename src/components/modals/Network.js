@@ -1,14 +1,14 @@
 import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
+import FlagEmoji from '../FlagEmoji';
 import Modal from '../Modal';
 import { Heading } from '../styled/common';
 import { Button } from '../styled/menu';
 
-const Network = ({
-}) => {
+const Network = () => {
   const {
     setRoute,
-    countryCode, flag,
+    countryCode,
     hardCodedPeerIds, peerId, connections2, broadcast, peerData,
   } = useAppContext();
 
@@ -18,19 +18,27 @@ const Network = ({
       {hardCodedPeerIds.map(id => {
         if(id === peerId) return (
           <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
-            🫵 {id.replace('my-pwa-multiplayer-id-','')} {countryCode} {flag}
+            🫵 {id.replace('polygon-pong-multiplayer-id-','')} {countryCode} <FlagEmoji countryCode={countryCode} />
           </Button>
         );
           
         const conn = connections2.find(conn => conn.peer === id);
 
-        return (    
-          <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
-            {conn ? '✅' : '❌'} {id.replace('my-pwa-multiplayer-id-','')}
-          </Button>
-        );
+        if (conn) {
+          const pd = peerData[conn.peer] || {};
+          const { countryCode } = pd;
+          return (
+            <>
+              <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
+                ✅ {id.replace('polygon-pong-multiplayer-id-','')} {countryCode} <FlagEmoji countryCode={countryCode} />
+              </Button>
+              <pre>{JSON.stringify(pd, null, 2)}</pre>
+            </>
+          );
+        }
+
+        return <Button>❌ {id}</Button>;
       })}
-      <pre>{JSON.stringify(peerData, null, 2)}</pre>
     </Modal>
   );
 };
