@@ -13,7 +13,7 @@ const useSystemInfo = () => {
     const end = window.performance.now();
     const duration = end - start;
     setBenchmark(duration);
-    const fitness = ((cores + ram) * 10) - duration;
+    const fitness = Math.round(((cores + ram) * 10) - duration);
     setHostFitness(fitness);
   }, []);
 

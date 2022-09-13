@@ -18,6 +18,17 @@ const usePeer = ({ countryCode, hostFitness }) => {
   const [connections, setConnections] = useState({});
   const [peerData, setPeerData] = useState({});
 
+  // reduce to active only connections
+  const connections2 = Object.values(connections).reduce((acc, conns) => {
+    const openConn = conns.reduce((acc, connection) => connection.open ? connection : acc, false);
+    if (!openConn) return acc;
+    return [...acc, openConn];
+  }, []);
+
+  const broadcast = (data) => {
+    connections2.forEach(connection => connection.send(data));
+  };
+
   const setPeerDataById = (id, data) => setPeerData(oldPeerData => {
     oldPeerData[id] = {
       ...oldPeerData[id],
@@ -52,7 +63,7 @@ const usePeer = ({ countryCode, hostFitness }) => {
     // console.log(`data from ${conn.peer}`, conn.peer, data);
 
     setPeerDataById(conn.peer, data);
-    
+
     switch(data.action) {
       case 'CLOSE':
         conn.close();
@@ -77,11 +88,8 @@ const usePeer = ({ countryCode, hostFitness }) => {
       // helps to always fire a message on refresh / close window
       // because close / disconnected events dont seem to always fire
       window.onbeforeunload = () => {
-        Object.values(newPeer.connections).forEach(([conn]) => {
-          conn.send({
-            message: 'goodbye',
-            action: 'CLOSE',
-          });
+        broadcast({
+          action: 'CLOSE',
         });
       };
 
@@ -107,18 +115,6 @@ const usePeer = ({ countryCode, hostFitness }) => {
       conn.on('data', data => onConnectionData(newPeer, conn, data));
     });
   }, [countryCode, hostFitness, i]);
-
-
-  // reduce to active only connections
-  const connections2 = Object.values(connections).reduce((acc, conns) => {
-    const openConn = conns.reduce((acc, connection) => connection.open ? connection : acc, false);
-    if (!openConn) return acc;
-    return [...acc, openConn];
-  }, []);
-
-  const broadcast = (data) => {
-    connections2.forEach(connection => connection.send(data));
-  };
 
   return { hardCodedPeerIds, peerId, connections2, broadcast, peerData };
 };
