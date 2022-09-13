@@ -28,7 +28,7 @@ const useConnections = (defaultConns) => {
   return [connections2, setConnections, broadcast]
 };
 
-const usePeer = ({ location, hostFitness }) => {
+const usePeer = ({ location, hostFitness, visibilityState }) => {
   const [i, setI] = useState(0);
   const [peerId, setPeerId] = useState();
   const [connections, setConnections, broadcast] = useConnections({});
@@ -55,6 +55,7 @@ const usePeer = ({ location, hostFitness }) => {
       message: 'hello',
       location,
       hostFitness,
+      visibilityState,
     });
     setConnections(newPeer.connections);
   };
