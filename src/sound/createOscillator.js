@@ -29,7 +29,7 @@ const createOscillator = () => {
     const { audioCtx, oscillator, gainNode } = context;
 
     oscillator.type = type;
-    gainNode.gain.value = volume;
+    gainNode.gain.value = (Math.pow(10, volume) - 1) / (10-1); // probs not quite the right place to do this
     oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime + delay); // mute after duration
     oscillator.frequency.setValueAtTime(0, audioCtx.currentTime + delay + duration); // mute after duration
   };
