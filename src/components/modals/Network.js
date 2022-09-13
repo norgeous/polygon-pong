@@ -17,7 +17,7 @@ const Network = ({
       <Heading>Connections</Heading>
       {hardCodedPeerIds.map(id => {
         if(id === peerId) return (
-          <Button onClick={()=>broadcast(`click from ${peerId}`)}>
+          <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
             🫵 {id.replace('my-pwa-multiplayer-id-','')} {countryCode} {flag}
           </Button>
         );
@@ -25,7 +25,7 @@ const Network = ({
         const conn = connections2.find(conn => conn.peer === id);
 
         return (    
-          <Button onClick={()=>broadcast(`click from ${peerId}`)}>
+          <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
             {conn ? '✅' : '❌'} {id.replace('my-pwa-multiplayer-id-','')}
           </Button>
         );
