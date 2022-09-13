@@ -32,7 +32,7 @@ export const AppProvider = ({ children }) => {
   // console.log(game);
 
   // broadcast visibilitychange events
-  useEffect(() => broadcast({ visibilityState }), [visibilityState, broadcast]);
+  useEffect(() => broadcast({ visibilityState }), [visibilityState]);
   useEffect(() => {if (game) game.maxVolume = volume}, [game, volume]);
 
   return (
