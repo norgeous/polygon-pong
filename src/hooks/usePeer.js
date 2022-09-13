@@ -6,10 +6,10 @@ const hardCodedPeerIds = [
   'polygon-pong-multiplayer-id-01',
   'polygon-pong-multiplayer-id-02',
   'polygon-pong-multiplayer-id-03',
-  'polygon-pong-multiplayer-id-04',
-  'polygon-pong-multiplayer-id-05',
-  'polygon-pong-multiplayer-id-06',
-  'polygon-pong-multiplayer-id-07',
+  // 'polygon-pong-multiplayer-id-04',
+  // 'polygon-pong-multiplayer-id-05',
+  // 'polygon-pong-multiplayer-id-06',
+  // 'polygon-pong-multiplayer-id-07',
 ];
 
 const usePeer = ({ countryCode, hostFitness }) => {
@@ -24,12 +24,17 @@ const usePeer = ({ countryCode, hostFitness }) => {
       ...data,
     };
     return oldPeerData;
-  }, []);
+  });
+
+  const resetPeerDataById = (id) => setPeerData(oldPeerData => {
+    delete oldPeerData[id];
+    return oldPeerData;
+  });
 
   const onConnectionOpen = (newPeer, conn) => {
-    console.log(`connected to ${conn.peer}`);
+    // console.log(`connected to ${conn.peer}`);
     conn.send({
-      message: `hello from ${newPeer.id}!`,
+      message: 'hello',
       countryCode,
       hostFitness,
     });
@@ -44,8 +49,16 @@ const usePeer = ({ countryCode, hostFitness }) => {
     setConnections(newPeer.connections);
   };
   const onConnectionData = (newPeer, conn, data) => {
-    console.log(`data from ${conn.peer}`, conn.peer, data);
+    // console.log(`data from ${conn.peer}`, conn.peer, data);
+
     setPeerDataById(conn.peer, data);
+    
+    switch(data.action) {
+      case 'CLOSE':
+        conn.close();
+        resetPeerDataById(conn.peer);
+        break;
+    }
     setConnections(newPeer.connections);
   };
 
@@ -66,7 +79,7 @@ const usePeer = ({ countryCode, hostFitness }) => {
       window.onbeforeunload = () => {
         Object.values(newPeer.connections).forEach(([conn]) => {
           conn.send({
-            message: `goodbye from ${newPeer.id}!`,
+            message: 'goodbye',
             action: 'CLOSE',
           });
         });

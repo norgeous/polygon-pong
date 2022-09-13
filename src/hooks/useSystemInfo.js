@@ -14,7 +14,6 @@ const useSystemInfo = () => {
     const duration = end - start;
     setBenchmark(duration);
     const fitness = ((cores + ram) * 10) - duration;
-    console.log({duration, fitness});
     setHostFitness(fitness);
   }, []);
 
