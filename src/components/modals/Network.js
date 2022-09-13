@@ -21,9 +21,13 @@ const Network = () => {
         if(id === peerId) return (
           <>
             <Button onClick={() => broadcast({ message: 'click' })}>
-              🫵 {id.replace('polygon-pong-multiplayer-id-','')} <FlagEmoji countryCode={location.country_code} /> ({location.country_code}) {location.city} {hostFitness}
+              {id.replace('polygon-pong-multiplayer-id-','')}
+              {' '}
+              🫵
               {' '}
               {visibilityState === 'visible' ? '😐' : '🫥'}
+              {' '}
+              <FlagEmoji countryCode={location.country_code} /> ({location.country_code}) {location.city} {hostFitness}
             </Button>
             {/* <pre>{JSON.stringify({ location, hostFitness, visibilityState }, null, 2)}</pre> */}
           </>
@@ -36,16 +40,20 @@ const Network = () => {
           return (
             <>
               <Button onClick={() => broadcast({ message: 'click' })}>
-                ✅ {id.replace('polygon-pong-multiplayer-id-','')} <FlagEmoji countryCode={pd?.location?.country_code} /> ({pd?.location?.country_code}) {pd?.location?.city} {pd?.hostFitness}
+                {id.replace('polygon-pong-multiplayer-id-','')}
+                {' '}
+                ✅
                 {' '}
                 {pd?.visibilityState === 'visible' ? '😐' : '🫥'}
+                {' '}
+                <FlagEmoji countryCode={pd?.location?.country_code} /> ({pd?.location?.country_code}) {pd?.location?.city} {pd?.hostFitness}
               </Button>
               {/* <pre>{JSON.stringify(pd, null, 2)}</pre> */}
             </>
           );
         }
 
-        return <Button>❌ {id.replace('polygon-pong-multiplayer-id-','')}</Button>;
+        return <Button>{id.replace('polygon-pong-multiplayer-id-','')} ❌</Button>;
       })}
     </Modal>
   );
