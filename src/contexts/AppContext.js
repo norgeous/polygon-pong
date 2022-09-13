@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import useClock from '../hooks/useClock';
 import useDocumentVisibility from '../hooks/useDocumentVisibility';
 import useLocation from '../hooks/useLocation';
+import useLocalStorage from '../hooks/useLocalStorage';
 import usePeer from '../hooks/usePeer';
 import useWakeLock from '../hooks/useWakeLock';
 import useBattery from '../hooks/useBattery';
@@ -16,6 +17,7 @@ export const AppProvider = ({ children }) => {
   const clock = useClock();
   const visibilityState = useDocumentVisibility();
   const batteryPercent = useBattery();
+  const [volume, setVolume] = useLocalStorage(0.5);
   const location = useLocation();
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
   const { cores, ram, timeTaken, hostFitness } = useSystemInfo();
@@ -31,12 +33,14 @@ export const AppProvider = ({ children }) => {
 
   // broadcast visibilitychange events
   useEffect(() => broadcast({ visibilityState }), [visibilityState, broadcast]);
+  useEffect(() => {if (game) game.maxVolume = volume}, [game, volume]);
 
   return (
     <AppContext.Provider
       value={{
         route, setRoute,
         location,
+        volume, setVolume,
         visibilityState,
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,

@@ -26,7 +26,6 @@ const config = {
     target: 90,
     forceSetTimeOut: true,
   },
-  // scene: [Game],
 };
 
 const usePhaser = (additionalFunctions) => {

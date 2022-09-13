@@ -25,7 +25,7 @@ class Player {
     // sound on collision
     this.player.setOnCollide(data => {
       this.oscillator({
-        volume: data.collision.depth,
+        volume: data.collision.depth * scene.game.maxVolume,
         frequency: 261.6,
       });
     });

@@ -7,6 +7,7 @@ import { Button } from '../styled/menu';
 const Settings = () => {
   const {
     setRoute,
+    volume, setVolume,
     wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
   } = useAppContext();
 
@@ -34,6 +35,18 @@ const Settings = () => {
         />
         {' '}
         Prevent sleep (wakelock)
+      </Button>
+      <Button as="label">
+        🔊
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          value={volume}
+          onChange={event => setVolume(event.target.value)}
+          style={{ width: '100%' }}
+        />
       </Button>
       <Button onClick={() => setRoute('PROFILE')}><span>🧰</span><span>Hardware Profile</span></Button>
     </Modal>

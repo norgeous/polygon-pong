@@ -33,7 +33,7 @@ class Ball {
 
     // sound on collision
     this.ball.setOnCollide(data => this.oscillator({
-      volume: data.collision.depth,
+      volume: data.collision.depth * scene.game.maxVolume,
       frequency: 440,
     }));
 
