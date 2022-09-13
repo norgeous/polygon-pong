@@ -6,7 +6,7 @@ export const TopLeft = styled.div`
   right: auto;
   bottom: auto;
   left: 0;
-  padding: 20px;
+  padding: 10px;
 `;
 
 export const TopRight = styled.div`
@@ -15,7 +15,7 @@ export const TopRight = styled.div`
   right: 0;
   bottom: auto;
   left: auto;
-  padding: 20px;
+  padding: 10px;
 `;
 
 export const BottomRight = styled.div`
@@ -24,7 +24,7 @@ export const BottomRight = styled.div`
   right: 0;
   bottom: 0;
   left: auto;
-  padding: 20px;
+  padding: 10px;
 `;
 
 export const Bottom = styled.div`
@@ -33,7 +33,7 @@ export const Bottom = styled.div`
   right: auto;
   bottom: 0;
   left: auto;
-  padding: 20px;
+  padding: 10px;
 `;
 
 export const BottomLeft = styled.div`
@@ -42,7 +42,7 @@ export const BottomLeft = styled.div`
   right: auto;
   bottom: 0;
   left: 0;
-  padding: 20px;
+  padding: 10px;
 `;
 
 export const Overlay = styled.div`

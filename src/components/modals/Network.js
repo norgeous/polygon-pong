@@ -22,8 +22,10 @@ const Network = () => {
           <>
             <Button onClick={() => broadcast({ message: 'click' })}>
               🫵 {id.replace('polygon-pong-multiplayer-id-','')} <FlagEmoji countryCode={location.country_code} /> ({location.country_code}) {location.city} {hostFitness}
+              {' '}
+              {visibilityState === 'visible' ? '😐' : '🫥'}
             </Button>
-            <pre>{JSON.stringify({ location, hostFitness, visibilityState }, null, 2)}</pre>
+            {/* <pre>{JSON.stringify({ location, hostFitness, visibilityState }, null, 2)}</pre> */}
           </>
         );
           
@@ -35,8 +37,10 @@ const Network = () => {
             <>
               <Button onClick={() => broadcast({ message: 'click' })}>
                 ✅ {id.replace('polygon-pong-multiplayer-id-','')} <FlagEmoji countryCode={pd?.location?.country_code} /> ({pd?.location?.country_code}) {pd?.location?.city} {pd?.hostFitness}
+                {' '}
+                {pd?.visibilityState === 'visible' ? '😐' : '🫥'}
               </Button>
-              <pre>{JSON.stringify(pd, null, 2)}</pre>
+              {/* <pre>{JSON.stringify(pd, null, 2)}</pre> */}
             </>
           );
         }
