@@ -14,14 +14,14 @@ export const AppProvider = ({ children }) => {
   const [route, setRoute] = useState('NETWORK');
   const clock = useClock();
   const batteryPercent = useBattery();
-  const countryCode = useLocation();
+  const location = useLocation();
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
   const { cores, ram, timeTaken, hostFitness } = useSystemInfo();
 
   const { game, fps, targetFps } = usePhaser({});
 
   const { hardCodedPeerIds, peerId, connections2, broadcast, peerData } = usePeer({
-    countryCode,
+    location,
     hostFitness,
   });
 
@@ -33,7 +33,7 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         route, setRoute,
-        countryCode,
+        location,
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,
         clock,

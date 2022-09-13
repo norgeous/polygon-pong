@@ -12,7 +12,7 @@ const hardCodedPeerIds = [
   // 'polygon-pong-multiplayer-id-07',
 ];
 
-const usePeer = ({ countryCode, hostFitness }) => {
+const usePeer = ({ location, hostFitness }) => {
   const [i, setI] = useState(0);
   const [peerId, setPeerId] = useState();
   const [connections, setConnections] = useState({});
@@ -46,7 +46,7 @@ const usePeer = ({ countryCode, hostFitness }) => {
     // console.log(`connected to ${conn.peer}`);
     conn.send({
       message: 'hello',
-      countryCode,
+      location,
       hostFitness,
     });
     setConnections(newPeer.connections);
@@ -74,7 +74,7 @@ const usePeer = ({ countryCode, hostFitness }) => {
   };
 
   useEffect(() => {
-    if (!countryCode || !hostFitness) return;
+    if (!location || !hostFitness) return;
 
     const newPeer = new Peer(hardCodedPeerIds[i]);
 
@@ -114,7 +114,7 @@ const usePeer = ({ countryCode, hostFitness }) => {
       conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
       conn.on('data', data => onConnectionData(newPeer, conn, data));
     });
-  }, [countryCode, hostFitness, i]);
+  }, [location, hostFitness, i]);
 
   return { hardCodedPeerIds, peerId, connections2, broadcast, peerData };
 };

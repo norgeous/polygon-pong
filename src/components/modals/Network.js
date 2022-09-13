@@ -8,7 +8,7 @@ import { Button } from '../styled/menu';
 const Network = () => {
   const {
     setRoute,
-    countryCode,
+    location,
     hostFitness,
     hardCodedPeerIds, peerId, connections2, broadcast, peerData,
   } = useAppContext();
@@ -20,21 +20,20 @@ const Network = () => {
         if(id === peerId) return (
           <>
             <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
-              🫵 {id.replace('polygon-pong-multiplayer-id-','')} {countryCode} <FlagEmoji countryCode={countryCode} />
+              🫵 {id.replace('polygon-pong-multiplayer-id-','')} {location.country_code} <FlagEmoji countryCode={location.country_code} />
             </Button>
-            <pre>{JSON.stringify({ countryCode, hostFitness }, null, 2)}</pre>
+            <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre>
           </>
         );
           
         const conn = connections2.find(conn => conn.peer === id);
 
         if (conn) {
-          const pd = peerData[conn.peer] || {};
-          const { countryCode } = pd;
+          const pd = peerData[conn.peer];
           return (
             <>
               <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
-                ✅ {id.replace('polygon-pong-multiplayer-id-','')} {countryCode} <FlagEmoji countryCode={countryCode} />
+                ✅ {id.replace('polygon-pong-multiplayer-id-','')} {pd?.location?.country_code} <FlagEmoji countryCode={pd?.location?.country_code} />
               </Button>
               <pre>{JSON.stringify(pd, null, 2)}</pre>
             </>

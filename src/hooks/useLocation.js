@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 
 const useLocation = () => {
-  const [countryCode, setCountryCode] = useState();
+  const [location, setLocation] = useState();
 
   useEffect(async () => {
-    fetch('https://ipwho.is/?fields=country_code')
+    fetch('https://ipwho.is/?fields=country_code,city,postal')
       .then(res => res.json())
       .then(res => {
-        setCountryCode(res.country_code);
+        setLocation(res);
       });
   }, []);
 
-  return countryCode;
+  return location;
 };
 
 export default useLocation;
