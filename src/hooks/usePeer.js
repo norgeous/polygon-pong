@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import Peer from 'peerjs';
 
 const hardCodedPeerIds = [
-  'polygon-pong-multiplayer-id-00',
   'polygon-pong-multiplayer-id-01',
   'polygon-pong-multiplayer-id-02',
   'polygon-pong-multiplayer-id-03',
-  // 'polygon-pong-multiplayer-id-04',
-  // 'polygon-pong-multiplayer-id-05',
-  // 'polygon-pong-multiplayer-id-06',
-  // 'polygon-pong-multiplayer-id-07',
+  'polygon-pong-multiplayer-id-04',
+  'polygon-pong-multiplayer-id-05',
+  'polygon-pong-multiplayer-id-06',
 ];
 
 const usePeer = ({ location, hostFitness }) => {
