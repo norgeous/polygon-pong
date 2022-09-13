@@ -40,8 +40,8 @@ const Network = () => {
           );
         }
 
-        return null;
-        // return <Button>❌ {id.replace('polygon-pong-multiplayer-id-','')}</Button>;
+        // return null;
+        return <Button>❌ {id.replace('polygon-pong-multiplayer-id-','')}</Button>;
       })}
     </Modal>
   );
