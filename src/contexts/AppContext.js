@@ -27,6 +27,7 @@ export const AppProvider = ({ children }) => {
   const { hardCodedPeerIds, peerId, connections, broadcast, peerData } = usePeer({
     location,
     hostFitness,
+    visibilityState,
   });
 
   // console.log(game);
