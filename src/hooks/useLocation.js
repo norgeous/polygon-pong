@@ -4,10 +4,10 @@ const useLocation = () => {
   const [countryCode, setCountryCode] = useState();
 
   useEffect(async () => {
-    fetch('http://ip-api.com/json/?fields=countryCode')
+    fetch('https://ipwho.is/?fields=country_code')
       .then(res => res.json())
       .then(res => {
-        setCountryCode(res.countryCode);
+        setCountryCode(res.country_code);
       });
   }, []);
 
