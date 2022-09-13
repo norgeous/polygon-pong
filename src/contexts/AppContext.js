@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import useClock from '../hooks/useClock';
+import useDocumentVisibility from '../hooks/useDocumentVisibility';
 import useLocation from '../hooks/useLocation';
 import usePeer from '../hooks/usePeer';
 import useWakeLock from '../hooks/useWakeLock';
@@ -13,6 +14,7 @@ export const AppProvider = ({ children }) => {
   // const [route, setRoute] = useState('MAINMENU');
   const [route, setRoute] = useState('NETWORK');
   const clock = useClock();
+  const visibilityState = useDocumentVisibility();
   const batteryPercent = useBattery();
   const location = useLocation();
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
@@ -27,13 +29,15 @@ export const AppProvider = ({ children }) => {
 
   // console.log(game);
 
-  // useEffect(() => broadcast({ position }), [position]);
+  // broadcast visibilitychange events
+  useEffect(() => broadcast({ visibilityState }), [visibilityState, broadcast]);
 
   return (
     <AppContext.Provider
       value={{
         route, setRoute,
         location,
+        visibilityState,
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,
         clock,

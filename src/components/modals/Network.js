@@ -8,6 +8,7 @@ import { Button } from '../styled/menu';
 const Network = () => {
   const {
     setRoute,
+    visibilityState,
     location,
     hostFitness,
     hardCodedPeerIds, peerId, connections, broadcast, peerData,
@@ -19,10 +20,10 @@ const Network = () => {
       {hardCodedPeerIds.map(id => {
         if(id === peerId) return (
           <>
-            <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
+            <Button onClick={() => broadcast({ message: 'click' })}>
               🫵 {id.replace('polygon-pong-multiplayer-id-','')} <FlagEmoji countryCode={location.country_code} /> ({location.country_code}) {location.city} {hostFitness}
             </Button>
-            <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre>
+            <pre>{JSON.stringify({ location, hostFitness, visibilityState }, null, 2)}</pre>
           </>
         );
           
@@ -32,7 +33,7 @@ const Network = () => {
           const pd = peerData[conn.peer];
           return (
             <>
-              <Button onClick={()=>broadcast({ message: `click from ${peerId}` })}>
+              <Button onClick={() => broadcast({ message: 'click' })}>
                 ✅ {id.replace('polygon-pong-multiplayer-id-','')} <FlagEmoji countryCode={pd?.location?.country_code} /> ({pd?.location?.country_code}) {pd?.location?.city} {pd?.hostFitness}
               </Button>
               <pre>{JSON.stringify(pd, null, 2)}</pre>

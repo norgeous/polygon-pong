@@ -115,19 +115,6 @@ const usePeer = ({ location, hostFitness }) => {
     });
   }, [location, hostFitness, i]);
 
-  // broadcast visibilitychange events
-  useEffect(() => {
-    const broadcastVisibility = () => {
-      console.log({ visibilityState: document.visibilityState, broadcast });
-      broadcast({ visibilityState: document.visibilityState });
-      // if (document.visibilityState === 'hidden') {
-        // navigator.sendBeacon('/log', analyticsData);
-      // }
-    };
-    document.addEventListener('visibilitychange', broadcastVisibility);
-    return () => document.removeEventListener('visibilitychange', broadcastVisibility);
-}, [broadcast]);
-
   return { hardCodedPeerIds, peerId, connections, broadcast, peerData };
 };
 
