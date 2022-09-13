@@ -10,11 +10,8 @@ const hardCodedPeerIds = [
   'polygon-pong-multiplayer-id-06',
 ];
 
-const usePeer = ({ location, hostFitness }) => {
-  const [i, setI] = useState(0);
-  const [peerId, setPeerId] = useState();
-  const [connections, setConnections] = useState({});
-  const [peerData, setPeerData] = useState({});
+const useConnections = (defaultConns) => {
+  const [connections, setConnections] = useState(defaultConns);
 
   // reduce to active only connections
   const connections2 = Object.values(connections).reduce((acc, conns) => {
@@ -24,8 +21,20 @@ const usePeer = ({ location, hostFitness }) => {
   }, []);
 
   const broadcast = (data) => {
+    console.log('broadcasting to', connections);
     connections2.forEach(connection => connection.send(data));
   };
+
+  return [connections2, setConnections, broadcast]
+};
+
+const usePeer = ({ location, hostFitness }) => {
+  const [i, setI] = useState(0);
+  const [peerId, setPeerId] = useState();
+  const [connections, setConnections, broadcast] = useConnections({});
+  const [peerData, setPeerData] = useState({});
+
+  // console.log(connections);
 
   const setPeerDataById = (id, data) => setPeerData(oldPeerData => {
     oldPeerData[id] = {
@@ -41,7 +50,7 @@ const usePeer = ({ location, hostFitness }) => {
   });
 
   const onConnectionOpen = (newPeer, conn) => {
-    // console.log(`connected to ${conn.peer}`);
+    console.log(`connected to ${conn.peer}`);
     conn.send({
       message: 'hello',
       location,
@@ -58,7 +67,7 @@ const usePeer = ({ location, hostFitness }) => {
     setConnections(newPeer.connections);
   };
   const onConnectionData = (newPeer, conn, data) => {
-    // console.log(`data from ${conn.peer}`, conn.peer, data);
+    console.log(`data from ${conn.peer}`, data);
 
     setPeerDataById(conn.peer, data);
 
@@ -68,6 +77,7 @@ const usePeer = ({ location, hostFitness }) => {
         resetPeerDataById(conn.peer);
         break;
     }
+
     setConnections(newPeer.connections);
   };
 
@@ -82,15 +92,6 @@ const usePeer = ({ location, hostFitness }) => {
 
     // if id is free, the peer will open
     newPeer.on('open', () => {
-
-      // helps to always fire a message on refresh / close window
-      // because close / disconnected events dont seem to always fire
-      window.onbeforeunload = () => {
-        broadcast({
-          action: 'CLOSE',
-        });
-      };
-
       setPeerId(newPeer.id);
 
       // try to establish outgoing connections to all predefined peer ids
@@ -114,7 +115,20 @@ const usePeer = ({ location, hostFitness }) => {
     });
   }, [location, hostFitness, i]);
 
-  return { hardCodedPeerIds, peerId, connections2, broadcast, peerData };
+  // broadcast visibilitychange events
+  useEffect(() => {
+    const broadcastVisibility = () => {
+      console.log({ visibilityState: document.visibilityState, broadcast });
+      broadcast({ visibilityState: document.visibilityState });
+      // if (document.visibilityState === 'hidden') {
+        // navigator.sendBeacon('/log', analyticsData);
+      // }
+    };
+    document.addEventListener('visibilitychange', broadcastVisibility);
+    return () => document.removeEventListener('visibilitychange', broadcastVisibility);
+}, [broadcast]);
+
+  return { hardCodedPeerIds, peerId, connections, broadcast, peerData };
 };
 
 export default usePeer;

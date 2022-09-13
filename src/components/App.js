@@ -17,7 +17,7 @@ import { Button } from './styled/common';
 const App = () => {
   const {
     route, setRoute,
-    connections2,
+    connections,
     clock,
     batteryPercent,
   } = useAppContext();
@@ -33,7 +33,7 @@ const App = () => {
         ❤️❤️🖤 1,000,001
       </TopLeft>
       <TopRight>
-        <Button onClick={() => setRoute('NETWORK')}>🙎x{connections2.length + 1}</Button>
+        <Button onClick={() => setRoute('NETWORK')}>🙎x{connections.length + 1}</Button>
         {batteryPercent > 50 ? '🔋' : '🪫'}{batteryPercent}%
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
       </TopRight>
