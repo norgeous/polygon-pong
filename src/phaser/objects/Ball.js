@@ -1,4 +1,4 @@
-import createOscillator from '../../sound/createOscillator';
+import createOscillator from '../../utils/createOscillator';
 
 class Ball {
   constructor(scene) {
