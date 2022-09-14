@@ -21,8 +21,8 @@ const useConnections = (defaultConns) => {
 
 const usePeer = ({ location, hostFitness, visibilityState }) => {
   const [connections, setConnections, broadcast] = useConnections({});
-  const [peerId, setPeerId] = useState();
   const [peerIds, setPeerIds] = useState([]);
+  const [peerId, setPeerId] = useState();
   const [peerData, setPeerData] = useState({});
 
   const setPeerDataById = (id, data) => setPeerData(oldPeerData => {
@@ -48,33 +48,36 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
     });
     setConnections(newPeer.connections);
   };
+
   const onConnectionClose = (newPeer, conn) => {
     console.log(`close from ${conn.peer}`);
     setConnections(newPeer.connections);
   };
+
   const onConnectionDisconnected = (newPeer, conn) => {
     console.log(`disconnected from ${conn.peer}`);
     setConnections(newPeer.connections);
   };
+
   const onConnectionData = (newPeer, conn, data) => {
     console.log(`data from ${conn.peer}`, data);
-
     setPeerDataById(conn.peer, data);
-
     switch(data.action) {
       case 'CLOSE':
         conn.close();
         resetPeerDataById(conn.peer);
         break;
     }
-
     setConnections(newPeer.connections);
   };
 
   useEffect(async () => {
     if (!location || !hostFitness) return;
 
-    const { peerIds: newPeerIds, peer } = await joinPeerMesh({
+    const {
+      peerIds: newPeerIds,
+      peer,
+    } = await joinPeerMesh({
       networkName: 'polygon-pong-multiplayer',
       maxPeers: 6,
       onConnectionOpen,
@@ -85,8 +88,6 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
 
     setPeerIds(newPeerIds);
     setPeerId(peer.id);
-
-    console.log(peer);
   }, [location, hostFitness]); // visibilityState
 
   return { peerIds, peerId, connections, broadcast, peerData };
