@@ -5,11 +5,16 @@ const useLocation = () => {
   const [location, setLocation] = useLocalStorage('location');
 
   useEffect(async () => {
-    if (!location) {
+    const now = new Date().getTime();
+    const expiryPeriod = 1000 * 60 * 60 * 24 * 1; // rate limit 1 per day
+    if (!location || location.timestamp + expiryPeriod < now) {
       fetch('https://ipwho.is/?fields=country_code,city,postal')
         .then(res => res.json())
         .then(res => {
-          setLocation(res);
+          setLocation({
+            timestamp: now,
+            ...res,
+          });
         });
     }
   }, []);
