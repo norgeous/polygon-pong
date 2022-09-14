@@ -31,14 +31,16 @@ const joinPeerMesh = async ({
   }, false);
 
   if (peer) {
-    // try to establish outgoing connections to all predefined peer ids
-    peerIds.forEach(id => {
-      const conn = peer.connect(id, { label: 'data' });
-      conn.on('open', () => onConnectionOpen(peer, conn));
-      conn.on('close', () => onConnectionClose(peer, conn));
-      conn.on('disconnected', () => onConnectionDisconnected(peer, conn));
-      conn.on('data', data => onConnectionData(peer, conn, data));
-    });
+    // try to establish outgoing connections to all predefined peer ids (except ours)
+    peerIds
+      .filter(id => id !== peer.id)
+      .forEach(id => {
+        const conn = peer.connect(id, { label: 'data' });
+        conn.on('open', () => onConnectionOpen(peer, conn));
+        conn.on('close', () => onConnectionClose(peer, conn));
+        conn.on('disconnected', () => onConnectionDisconnected(peer, conn));
+        conn.on('data', data => onConnectionData(peer, conn, data));
+      });
 
     // incoming connections from other peers
     peer.on('connection', conn => {
