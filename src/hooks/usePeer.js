@@ -72,6 +72,8 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
   };
 
   useEffect(async () => {
+    if (!location || !hostFitness) return;
+
     const { peerIds: newPeerIds, peer } = await joinPeerMesh({
       networkName: 'polygon-pong-multiplayer',
       maxPeers: 6,
@@ -85,11 +87,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
     setPeerId(peer.id);
 
     console.log(peer);
-  }, []); // visibilityState
-
-  // useEffect(() => {
-  //   if (!location || !hostFitness) return;
-  // }, [location, hostFitness, i]);
+  }, [location, hostFitness]); // visibilityState
 
   return { peerIds, peerId, connections, broadcast, peerData };
 };
