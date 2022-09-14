@@ -21,6 +21,7 @@ const createOscillator = () => {
     frequency = 261.626, // C4
     type = 'triangle', // or 'sine' or 'square'
     volume = 1,
+    maxVolume = 1,
     delay = 0,
     duration,
   } = {}) => {
@@ -28,10 +29,13 @@ const createOscillator = () => {
   
     const { audioCtx, oscillator, gainNode } = context;
 
-    const v = volume > 1 ? 1 : volume;
+    const absoluteMax = 0.1;
+    const normalMax = volume > absoluteMax ? absoluteMax : volume;
+    const normalised = normalMax * maxVolume;
+    const logVolume = (Math.pow(10, normalised) - 1) / (10-1); // logarithmic volume
 
     oscillator.type = type;
-    gainNode.gain.value = (Math.pow(10, v) - 1) / (10-1); // logarithmic volume
+    gainNode.gain.value = logVolume;
     oscillator.frequency.cancelScheduledValues(audioCtx.currentTime + delay); // cancel overlapping
     oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime + delay); // mute after duration
     if (duration) {

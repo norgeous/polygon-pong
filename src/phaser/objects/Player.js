@@ -26,7 +26,8 @@ class Player {
     // sound on collision
     this.player.setOnCollide(data => {
       this.oscillatorImpact({
-        volume: (data.collision.depth / 10) * scene.game.maxVolume,
+        volume: data.collision.depth / 10,
+        maxVolume: scene.game.maxVolume,
         frequency: 261.63, // C4
         duration: 0.05,
       });
@@ -52,9 +53,9 @@ class Player {
     const fv = (Math.abs((velocity.x * 100) + (angularVelocity * 500)) / 10);
     this.oscillator({
       type: 'sine',
-      volume: (fv/500) * scene.game.maxVolume,
-      frequency: 264.81 + fv, // not E3
-      duration: 0.05,
+      volume: fv / 500,
+      maxVolume: scene.game.maxVolume,
+      frequency: 100 + fv,
     });
 	}
 }
