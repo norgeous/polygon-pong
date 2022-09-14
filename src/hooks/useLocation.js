@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import useLocalStorage from './useLocalStorage';
 
 const useLocation = () => {
-  const [location, setLocation] = useState();
+  const [location, setLocation] = useLocalStorage('location');
 
   useEffect(async () => {
-    fetch('https://ipwho.is/?fields=country_code,city,postal')
-      .then(res => res.json())
-      .then(res => {
-        setLocation(res);
-      });
+    if (!location) {
+      fetch('https://ipwho.is/?fields=country_code,city,postal')
+        .then(res => res.json())
+        .then(res => {
+          setLocation(res);
+        });
+    }
   }, []);
 
   return location;

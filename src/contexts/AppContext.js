@@ -17,7 +17,7 @@ export const AppProvider = ({ children }) => {
   const clock = useClock();
   const visibilityState = useDocumentVisibility();
   const batteryPercent = useBattery();
-  const [volume, setVolume] = useLocalStorage(0.5);
+  const [volume, setVolume] = useLocalStorage('volume', 0.5);
   const location = useLocation();
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
   const { cores, ram, timeTaken, hostFitness } = useSystemInfo();
