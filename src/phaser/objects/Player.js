@@ -3,6 +3,7 @@ import createOscillator from '../../sound/createOscillator';
 class Player {
   constructor(scene) {
     this.oscillator = createOscillator();
+    this.oscillatorImpact = createOscillator();
     
     const { width, height } = scene.sys.game.canvas;
     this.pointer = { x:width/2, y:0 };
@@ -24,9 +25,10 @@ class Player {
 
     // sound on collision
     this.player.setOnCollide(data => {
-      this.oscillator({
+      this.oscillatorImpact({
         volume: data.collision.depth * scene.game.maxVolume,
-        frequency: 261.6,
+        frequency: 261.63, // C4
+        duration: 0.05,
       });
     });
 	}
@@ -43,9 +45,16 @@ class Player {
       );
     }
 
-    const { angle, angularVelocity } = this.player.body;
+    const { angle, velocity, angularVelocity } = this.player.body;
     this.player.setAngularVelocity((angularVelocity-(angle/100))*.99);
     // console.log({angle,angularVelocity});
+
+    this.oscillator({
+      type: 'sine',
+      volume: (Math.abs(velocity.x + (angularVelocity * 200)) / 5) * scene.game.maxVolume,
+      frequency: 164.81 + (angularVelocity * 100), // E3
+      duration: 0.05,
+    });
 	}
 }
 

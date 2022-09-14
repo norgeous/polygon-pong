@@ -22,16 +22,21 @@ const createOscillator = () => {
     type = 'triangle', // or 'sine' or 'square'
     volume = 1,
     delay = 0,
-    duration = 0.05,
+    duration,
   } = {}) => {
     if (!context || context.audioCtx.state === 'suspended') context = createAudioContext();
   
     const { audioCtx, oscillator, gainNode } = context;
 
+    const v = volume > 1 ? 1 : volume;
+
     oscillator.type = type;
-    gainNode.gain.value = (Math.pow(10, volume) - 1) / (10-1); // probs not quite the right place to do this
+    gainNode.gain.value = (Math.pow(10, v) - 1) / (10-1); // logarithmic volume
+    oscillator.frequency.cancelScheduledValues(audioCtx.currentTime + delay); // cancel overlapping
     oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime + delay); // mute after duration
-    oscillator.frequency.setValueAtTime(0, audioCtx.currentTime + delay + duration); // mute after duration
+    if (duration) {
+      oscillator.frequency.setValueAtTime(0, audioCtx.currentTime + delay + duration); // mute after duration
+    }
   };
 };
 
