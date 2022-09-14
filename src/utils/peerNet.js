@@ -1,28 +1,55 @@
 import Peer from 'peerjs';
 
 const becomePeerId = (id) => new Promise(resolve => {
-  const newPeer = new Peer(id);
+  const peer = new Peer(id);
 
   // if id is already taken, the peer will close immediately
-  newPeer.on('close', () => resolve(false));
+  peer.on('close', () => resolve(false));
 
   // if id is free, the peer will open
-  newPeer.on('open', () => resolve(newPeer));
+  peer.on('open', () => resolve(peer));
 });
 
-// joinPeerMesh({ networkName:'polygon-pong-multiplayer', maxPeers:6 });
-const joinPeerMesh = ({ networkName, maxPeers }) => {
-  const peerIds = Array.from({ length: maxPeers }, (_, id) => `${networkName}-${id}`);
+const joinPeerMesh = async ({
+  networkName,
+  maxPeers,
+  onConnectionOpen,
+  onConnectionClose,
+  onConnectionDisconnected,
+  onConnectionData,
+}) => {
+  const peerIds = Array.from(
+    { length: maxPeers },
+    (_, id) => `${networkName}-${id + 1}`,
+  );
 
   // try to become each id until vacant seat found
-  const peer = peerIds.reduce(async (acc, id) => {
-    if (acc) return acc; // if already connected skip id
+  const peer = await peerIds.reduce(async (memo, id) => {
+    const acc = await memo;
+    if (acc) return acc; // if already connected skip
     return await becomePeerId(id);
   }, false);
 
-  console.log(peer);
+  if (peer) {
+    // try to establish outgoing connections to all predefined peer ids
+    peerIds.forEach(id => {
+      const conn = peer.connect(id, { label: 'data' });
+      conn.on('open', () => onConnectionOpen(peer, conn));
+      conn.on('close', () => onConnectionClose(peer, conn));
+      conn.on('disconnected', () => onConnectionDisconnected(peer, conn));
+      conn.on('data', data => onConnectionData(peer, conn, data));
+    });
 
-  return peer;
+    // incoming connections from other peers
+    peer.on('connection', conn => {
+      conn.on('open', () => onConnectionOpen(peer, conn));
+      conn.on('close', () => onConnectionClose(peer, conn));
+      conn.on('disconnected', () => onConnectionDisconnected(peer, conn));
+      conn.on('data', data => onConnectionData(peer, conn, data));
+    });
+  }
+
+  return { peerIds, peer };
 };
 
 export default joinPeerMesh;

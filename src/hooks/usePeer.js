@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import Peer from 'peerjs';
+// import Peer from 'peerjs';
+import joinPeerMesh from '../utils/peerNet';
 
 const hardCodedPeerIds = [
   'polygon-pong-multiplayer-id-01',
@@ -29,12 +30,10 @@ const useConnections = (defaultConns) => {
 };
 
 const usePeer = ({ location, hostFitness, visibilityState }) => {
-  const [i, setI] = useState(0);
-  const [peerId, setPeerId] = useState();
   const [connections, setConnections, broadcast] = useConnections({});
+  const [peerId, setPeerId] = useState();
+  const [peerIds, setPeerIds] = useState([]);
   const [peerData, setPeerData] = useState({});
-
-  // console.log(connections);
 
   const setPeerDataById = (id, data) => setPeerData(oldPeerData => {
     oldPeerData[id] = {
@@ -82,41 +81,57 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
     setConnections(newPeer.connections);
   };
 
-  useEffect(() => {
-    if (!location || !hostFitness) return;
-
-    const newPeer = new Peer(hardCodedPeerIds[i]);
-
-    // if id is already taken, the peer will close immediately, try the next id in the list
-    newPeer.on('error', () => setConnections(newPeer.connections));
-    newPeer.on('close', () => setI(i + 1));
-
-    // if id is free, the peer will open
-    newPeer.on('open', () => {
-      setPeerId(newPeer.id);
-
-      // try to establish outgoing connections to all predefined peer ids
-      const newConnections = hardCodedPeerIds.map(id => {
-        const conn = newPeer.connect(id, { label: 'data' });
-        conn.on('open', () => onConnectionOpen(newPeer, conn));
-        conn.on('close', () => onConnectionClose(newPeer, conn));
-        conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
-        conn.on('data', data => onConnectionData(newPeer, conn, data));
-        return conn;
-      });
-
+  useEffect(async () => {
+    const { peerIds: newPeerIds, peer } = await joinPeerMesh({
+      networkName: 'polygon-pong-multiplayer',
+      maxPeers: 6,
+      onConnectionOpen,
+      onConnectionClose,
+      onConnectionDisconnected,
+      onConnectionData,
     });
 
-    // incoming connections from other peers
-    newPeer.on('connection', conn => {
-      conn.on('open', () => onConnectionOpen(newPeer, conn));
-      conn.on('close', () => onConnectionClose(newPeer, conn));
-      conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
-      conn.on('data', data => onConnectionData(newPeer, conn, data));
-    });
-  }, [location, hostFitness, i]);
+    setPeerIds(newPeerIds);
+    setPeerId(peer.id);
 
-  return { hardCodedPeerIds, peerId, connections, broadcast, peerData };
+    console.log(peer);
+  }, []); // visibilityState
+
+  // useEffect(() => {
+  //   if (!location || !hostFitness) return;
+
+  //   const newPeer = new Peer(hardCodedPeerIds[i]);
+
+  //   // if id is already taken, the peer will close immediately, try the next id in the list
+  //   newPeer.on('error', () => setConnections(newPeer.connections));
+  //   newPeer.on('close', () => setI(i + 1));
+
+  //   // if id is free, the peer will open
+  //   newPeer.on('open', () => {
+  //     setPeerId(newPeer.id);
+
+  //     // try to establish outgoing connections to all predefined peer ids
+  //     const newConnections = hardCodedPeerIds.map(id => {
+  //       const conn = newPeer.connect(id, { label: 'data' });
+  //       conn.on('open', () => onConnectionOpen(newPeer, conn));
+  //       conn.on('close', () => onConnectionClose(newPeer, conn));
+  //       conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
+  //       conn.on('data', data => onConnectionData(newPeer, conn, data));
+  //       return conn;
+  //     });
+
+  //   });
+
+  //   // incoming connections from other peers
+  //   newPeer.on('connection', conn => {
+  //     conn.on('open', () => onConnectionOpen(newPeer, conn));
+  //     conn.on('close', () => onConnectionClose(newPeer, conn));
+  //     conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
+  //     conn.on('data', data => onConnectionData(newPeer, conn, data));
+  //   });
+  // }, [location, hostFitness, i]);
+
+  return { peerIds, peerId, connections, broadcast, peerData };
 };
 
 export default usePeer;

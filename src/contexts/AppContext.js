@@ -24,7 +24,7 @@ export const AppProvider = ({ children }) => {
 
   const { game, fps, targetFps } = usePhaser({});
 
-  const { hardCodedPeerIds, peerId, connections, broadcast, peerData } = usePeer({
+  const { peerIds, peerId, connections, broadcast, peerData } = usePeer({
     location,
     hostFitness,
     visibilityState,
@@ -50,7 +50,7 @@ export const AppProvider = ({ children }) => {
         clock,
         batteryPercent,
         cores, ram, timeTaken, hostFitness,
-        hardCodedPeerIds, peerId, connections, broadcast, peerData,
+        peerIds, peerId, connections, broadcast, peerData,
       }}
     >
       {children}

@@ -11,17 +11,17 @@ const Network = () => {
     visibilityState,
     location,
     hostFitness,
-    hardCodedPeerIds, peerId, connections, broadcast, peerData,
+    peerIds, peerId, connections, broadcast, peerData,
   } = useAppContext();
 
   return (
     <Modal onClose={() => setRoute()}>
       <Heading>Connections</Heading>
-      {hardCodedPeerIds.map(id => {
+      {peerIds.map(id => {
         if(id === peerId) return (
           <>
             <Button onClick={() => broadcast({ message: 'click' })}>
-              {id.replace('polygon-pong-multiplayer-id-','')}
+              {id.replace('polygon-pong-multiplayer-','')}
               {' '}
               🫵
               {' '}
@@ -40,7 +40,7 @@ const Network = () => {
           return (
             <>
               <Button onClick={() => broadcast({ message: 'click' })}>
-                {id.replace('polygon-pong-multiplayer-id-','')}
+                {id.replace('polygon-pong-multiplayer-','')}
                 {' '}
                 ✅
                 {' '}
@@ -53,7 +53,7 @@ const Network = () => {
           );
         }
 
-        return <Button>{id.replace('polygon-pong-multiplayer-id-','')} ❌</Button>;
+        return <Button>{id.replace('polygon-pong-multiplayer-','')} ❌</Button>;
       })}
     </Modal>
   );
