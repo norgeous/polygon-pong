@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react';
-// import Peer from 'peerjs';
 import joinPeerMesh from '../utils/peerNet';
-
-const hardCodedPeerIds = [
-  'polygon-pong-multiplayer-id-01',
-  'polygon-pong-multiplayer-id-02',
-  'polygon-pong-multiplayer-id-03',
-  'polygon-pong-multiplayer-id-04',
-  'polygon-pong-multiplayer-id-05',
-  'polygon-pong-multiplayer-id-06',
-];
 
 const useConnections = (defaultConns) => {
   const [connections, setConnections] = useState(defaultConns);
@@ -99,36 +89,6 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
 
   // useEffect(() => {
   //   if (!location || !hostFitness) return;
-
-  //   const newPeer = new Peer(hardCodedPeerIds[i]);
-
-  //   // if id is already taken, the peer will close immediately, try the next id in the list
-  //   newPeer.on('error', () => setConnections(newPeer.connections));
-  //   newPeer.on('close', () => setI(i + 1));
-
-  //   // if id is free, the peer will open
-  //   newPeer.on('open', () => {
-  //     setPeerId(newPeer.id);
-
-  //     // try to establish outgoing connections to all predefined peer ids
-  //     const newConnections = hardCodedPeerIds.map(id => {
-  //       const conn = newPeer.connect(id, { label: 'data' });
-  //       conn.on('open', () => onConnectionOpen(newPeer, conn));
-  //       conn.on('close', () => onConnectionClose(newPeer, conn));
-  //       conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
-  //       conn.on('data', data => onConnectionData(newPeer, conn, data));
-  //       return conn;
-  //     });
-
-  //   });
-
-  //   // incoming connections from other peers
-  //   newPeer.on('connection', conn => {
-  //     conn.on('open', () => onConnectionOpen(newPeer, conn));
-  //     conn.on('close', () => onConnectionClose(newPeer, conn));
-  //     conn.on('disconnected', () => onConnectionDisconnected(newPeer, conn));
-  //     conn.on('data', data => onConnectionData(newPeer, conn, data));
-  //   });
   // }, [location, hostFitness, i]);
 
   return { peerIds, peerId, connections, broadcast, peerData };
