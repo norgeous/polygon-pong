@@ -49,10 +49,11 @@ class Player {
     this.player.setAngularVelocity((angularVelocity-(angle/100))*.99);
     // console.log({angle,angularVelocity});
 
+    const fv = (Math.abs((velocity.x * 100) + (angularVelocity * 500)) / 10);
     this.oscillator({
       type: 'sine',
-      volume: (Math.abs(velocity.x + (angularVelocity * 200)) / 5) * scene.game.maxVolume,
-      frequency: 164.81 + (angularVelocity * 100), // E3
+      volume: fv * scene.game.maxVolume,
+      frequency: 164.81 + fv, // E3
       duration: 0.05,
     });
 	}
