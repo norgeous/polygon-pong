@@ -25,9 +25,17 @@ const Network = () => {
               {' '}
               🫵
               {' '}
-              {visibilityState === 'visible' ? '😐' : '🫥'}
+              {location.city}
               {' '}
-              <FlagEmoji countryCode={location.country_code} /> ({location.country_code}) {location.city} {hostFitness}
+              {location.postal}
+              {' '}
+              ({location.country_code})
+              {' '}
+              <FlagEmoji countryCode={location.country_code} />
+              {' '}
+              {hostFitness}
+              {' '}
+              {visibilityState === 'visible' ? '😐' : '🫥'}
             </Button>
             {/* <pre>{JSON.stringify({ location, hostFitness, visibilityState }, null, 2)}</pre> */}
           </>
@@ -44,9 +52,17 @@ const Network = () => {
                 {' '}
                 ✅
                 {' '}
-                {pd?.visibilityState === 'visible' ? '😐' : '🫥'}
+                {pd?.location?.city}
                 {' '}
-                <FlagEmoji countryCode={pd?.location?.country_code} /> ({pd?.location?.country_code}) {pd?.location?.city} {pd?.hostFitness}
+                {pd?.location?.postal}
+                {' '}
+                ({pd?.location?.country_code})
+                {' '}
+                <FlagEmoji countryCode={pd?.location?.country_code} />
+                {' '}
+                {pd?.hostFitness}
+                {' '}
+                {pd?.visibilityState === 'visible' ? '😐' : '🫥'}
               </Button>
               {/* <pre>{JSON.stringify(pd, null, 2)}</pre> */}
             </>
