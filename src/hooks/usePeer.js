@@ -12,7 +12,7 @@ const useConnections = (defaultConns) => {
   }, []);
 
   const broadcast = (data) => {
-    console.log('broadcasting to', connections);
+    // console.log('broadcasting to', connections);
     connections2.forEach(connection => connection.send(data));
   };
 
@@ -22,7 +22,7 @@ const useConnections = (defaultConns) => {
 const usePeer = ({ location, hostFitness, visibilityState }) => {
   const [connections, setConnections, broadcast] = useConnections({});
   const [peerIds, setPeerIds] = useState([]);
-  const [peerId, setPeerId] = useState();
+  const [peer, setPeer] = useState();
   const [peerData, setPeerData] = useState({});
 
   const setPeerDataById = (id, data) => setPeerData(oldPeerData => {
@@ -72,25 +72,33 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
   };
 
   useEffect(async () => {
-    if (!location || !hostFitness) return;
+    if (!location || !hostFitness || !visibilityState) return;
 
-    const {
-      peerIds: newPeerIds,
-      peer,
-    } = await joinPeerMesh({
-      networkName: 'polygon-pong-multiplayer',
-      maxPeers: 6,
-      onConnectionOpen,
-      onConnectionClose,
-      onConnectionDisconnected,
-      onConnectionData,
-    });
+    if (visibilityState === 'visible') {
+      console.log('LOGIN');
+      const {
+        peerIds: newPeerIds,
+        peer: newPeer,
+      } = await joinPeerMesh({
+        networkName: 'polygon-pong-multiplayer',
+        maxPeers: 6,
+        onConnectionOpen,
+        onConnectionClose,
+        onConnectionDisconnected,
+        onConnectionData,
+      });
 
-    setPeerIds(newPeerIds);
-    setPeerId(peer.id);
-  }, [location, hostFitness]); // visibilityState
+      setPeerIds(newPeerIds);
+      setPeer(newPeer); 
+    }
 
-  return { peerIds, peerId, connections, broadcast, peerData };
+    if (visibilityState === 'hidden') {
+      console.log('LOGOUT');
+      peer.disconnect();
+    }
+  }, [location, hostFitness, visibilityState]);
+
+  return { peerIds, peerId: peer?.id, connections, broadcast, peerData };
 };
 
 export default usePeer;
