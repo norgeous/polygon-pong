@@ -75,7 +75,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
   useEffect(async () => {
     if (!location || !hostFitness || !visibilityState) return;
 
-    if (visibilityState === 'visible') {
+    if (visibilityState === 'visible' && !peer) {
       console.log('LOGIN');
       const {
         peerIds: newPeerIds,
@@ -95,7 +95,9 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
 
     if (visibilityState === 'hidden') {
       console.log('LOGOUT');
+      peer.disconnect();
       peer.destroy();
+      setPeer();
     }
   }, [location, hostFitness, visibilityState]);
 
