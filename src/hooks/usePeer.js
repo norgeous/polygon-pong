@@ -98,6 +98,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
 
     if (visibilityState === 'hidden') {
       console.log('LOGOUT');
+      broadcast({ action: 'CLOSE' });
       peer.disconnect();
       peer.destroy();
       setPeer();
