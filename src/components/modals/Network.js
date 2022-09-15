@@ -60,6 +60,8 @@ const Network = () => {
                 {' '}
                 <FlagEmoji countryCode={pd?.location?.country_code} />
                 {' '}
+                {pd?.platform}
+                {' '}
                 {pd?.hostFitness}
                 {' '}
                 {pd?.visibilityState === 'visible' ? '😐' : '🫥'}

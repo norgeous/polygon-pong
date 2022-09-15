@@ -45,6 +45,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
       location,
       hostFitness,
       visibilityState,
+      platform: navigator.userAgentData.platform,
     });
     setConnections(newPeer.connections);
   };
