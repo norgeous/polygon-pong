@@ -77,7 +77,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
     if (!location || !hostFitness || !visibilityState) return;
 
     if (visibilityState === 'visible' && !peer && !loading) {
-      console.log('LOGIN', visibilityState, peer, loading);
+      // console.log('LOGIN', visibilityState, peer, loading);
       setLoading(true);
       const {
         peerIds: newPeerIds,
@@ -97,7 +97,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
     }
 
     if (visibilityState === 'hidden') {
-      console.log('LOGOUT');
+      // console.log('LOGOUT');
       broadcast({ action: 'CLOSE' });
       peer.disconnect();
       peer.destroy();
