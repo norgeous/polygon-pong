@@ -34,9 +34,16 @@ export const AppProvider = ({ children }) => {
 
   // broadcast visibilitychange events
   useEffect(() => broadcast({ visibilityState }), [visibilityState]);
-
+  
   // set volume into game
   useEffect(() => {if (game) game.maxVolume = volume}, [game, volume]);
+  
+  useEffect(() => {
+    console.log(game);
+    if (!game) return;
+    if (visibilityState === 'hidden') game.scene.scenes[0].matter.pause()
+    if (visibilityState === 'visible') game.scene.scenes[0].matter.resume()
+  }, [visibilityState]);
 
   return (
     <AppContext.Provider
