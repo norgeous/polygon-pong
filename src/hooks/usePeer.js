@@ -20,9 +20,10 @@ const useConnections = (defaultConns) => {
 };
 
 const usePeer = ({ location, hostFitness, visibilityState }) => {
+  const [peer, setPeer] = useState();
+  const [loading, setLoading] = useState(false);
   const [connections, setConnections, broadcast] = useConnections({});
   const [peerIds, setPeerIds] = useState([]);
-  const [peer, setPeer] = useState();
   const [peerData, setPeerData] = useState({});
 
   const setPeerDataById = (id, data) => setPeerData(oldPeerData => {
@@ -75,8 +76,9 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
   useEffect(async () => {
     if (!location || !hostFitness || !visibilityState) return;
 
-    if (visibilityState === 'visible' && !peer) {
-      console.log('LOGIN');
+    if (visibilityState === 'visible' && !peer && !loading) {
+      console.log('LOGIN', visibilityState, peer, loading);
+      setLoading(true);
       const {
         peerIds: newPeerIds,
         peer: newPeer,
@@ -91,6 +93,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
 
       setPeerIds(newPeerIds);
       setPeer(newPeer); 
+      setLoading(false);
     }
 
     if (visibilityState === 'hidden') {
