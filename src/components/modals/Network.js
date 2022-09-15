@@ -33,6 +33,8 @@ const Network = () => {
               {' '}
               <FlagEmoji countryCode={location.country_code} />
               {' '}
+              {navigator.userAgentData.platform}
+              {' '}
               {hostFitness}
               {' '}
               {visibilityState === 'visible' ? '😐' : '🫥'}
