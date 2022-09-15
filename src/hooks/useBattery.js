@@ -5,7 +5,7 @@ const useBattery = () => {
 
   useEffect(() => {
     const getBattery = async () => {
-      const newBattery = await navigator.getBattery();
+      const newBattery = await navigator.getBattery?.();
       setBattery(newBattery);
     };
     getBattery();
