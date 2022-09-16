@@ -19,7 +19,7 @@ const useConnections = (defaultConns) => {
   return [connections2, setConnections, broadcast]
 };
 
-const usePeer = ({ location, hostFitness, visibilityState }) => {
+const usePeer = (game, { location, hostFitness, visibilityState }) => {
   const [peer, setPeer] = useState();
   const [loading, setLoading] = useState(false);
   const [connections, setConnections, broadcast] = useConnections({});
@@ -63,18 +63,32 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
 
   const onConnectionData = (newPeer, conn, data) => {
     console.log(`data from ${conn.peer}`, data);
-    setPeerDataById(conn.peer, data);
     switch(data.action) {
       case 'CLOSE':
         conn.close();
         resetPeerDataById(conn.peer);
+        break;
+      case 'SETBALL':
+        // console.log(game.scene.scenes[0].ball.ball);
+        game.scene.scenes[0].ball.ball.x = data.ball.x;
+        game.scene.scenes[0].ball.ball.y = data.ball.y;
+        game.scene.scenes[0].ball.ball.setVelocity(
+          data.ball.vx,
+          data.ball.vy,
+        );
+        // console.log(data.ball.angle);
+        game.scene.scenes[0].ball.ball.setRotation(data.ball.angle);
+        game.scene.scenes[0].ball.ball.setAngularVelocity(data.ball.angularVelocity);
+        break;
+      default:
+        setPeerDataById(conn.peer, data);
         break;
     }
     setConnections(newPeer.connections);
   };
 
   useEffect(async () => {
-    if (!location || !hostFitness || !visibilityState) return;
+    if (!game || !location || !hostFitness || !visibilityState) return;
 
     if (visibilityState === 'visible' && !peer && !loading) {
       // console.log('LOGIN', visibilityState, peer, loading);
@@ -103,7 +117,7 @@ const usePeer = ({ location, hostFitness, visibilityState }) => {
       peer.destroy();
       setPeer();
     }
-  }, [location, hostFitness, visibilityState]);
+  }, [game, location, hostFitness, visibilityState]);
 
   return { peerIds, peerId: peer?.id, connections, broadcast, peerData };
 };

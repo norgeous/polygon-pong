@@ -68,7 +68,7 @@ const Network = () => {
                 {' '}
                 {pd?.visibilityState === 'visible' ? '😐' : '🫥'}
               </Button>
-              {/* <pre>{JSON.stringify(pd, null, 2)}</pre> */}
+              <pre>{JSON.stringify(pd, null, 2)}</pre>
             </>
           );
         }

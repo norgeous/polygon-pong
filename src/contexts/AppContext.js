@@ -21,36 +21,43 @@ export const AppProvider = ({ children }) => {
   const location = useLocation();
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
   const { cores, ram, timeTaken, hostFitness } = useSystemInfo();
-
-  const { game, fps, targetFps } = usePhaser({
-    update: scene => {
-
-      // broadcast ball physics
-      const { x, y } = scene.ball.ball;
-      const { x: vx, y: vy } = scene.ball.ball.body.velocity;
-      const { angle, angularVelocity } = scene.ball.ball.body;
-      // console.log(scene.ball.ball.body);
-      // console.log({ x, y, vx, vy, angle, angularVelocity });
-      // broadcast();
-    },
-  });
-
-  const { peerIds, peerId, connections, broadcast, peerData } = usePeer({
+  const { game, fps, targetFps } = usePhaser({});
+  const { peerIds, peerId, connections, broadcast, peerData } = usePeer(game, {
     location,
     hostFitness,
     visibilityState,
   });
 
-  // console.log(game);
+  useEffect(() => {
+    if (game && peerId && peerId === peerIds[0] && broadcast) {
+      const send = () => {
+        // broadcast ball physics
+        const scene = game.scene.scenes[0];
+        const { x, y } = scene.ball.ball;
+        const { x: vx, y: vy } = scene.ball.ball.body.velocity;
+        const { angle, angularVelocity } = scene.ball.ball.body;
+        // console.log(rotation);
+        // console.log(scene.ball.ball.body);
+        // console.log({ x, y, vx, vy, angle, angularVelocity, broadcast });
+        broadcast({
+          action: 'SETBALL',
+          ball: { x, y, vx, vy, angle, angularVelocity },
+        });
+      };
+      const t = setInterval(send, 10);
+      return () => clearInterval(t);
+    };
+  }, [game, peerId, peerIds, broadcast]);
 
   // broadcast visibilitychange events
-  useEffect(() => broadcast({ visibilityState }), [visibilityState]);
+  // useEffect(() => broadcast({ visibilityState }), [visibilityState]);
   
   // set volume into game
   useEffect(() => {if (game) game.maxVolume = volume}, [game, volume]);
   
+  // pause / resume game when switching tabs or apps
   useEffect(() => {
-    console.log(game);
+    // console.log(game);
     if (!game) return;
     if (visibilityState === 'hidden') game.scene.scenes[0].matter.pause()
     if (visibilityState === 'visible') game.scene.scenes[0].matter.resume()
