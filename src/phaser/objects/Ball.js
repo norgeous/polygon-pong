@@ -1,5 +1,8 @@
 import createOscillator from '../../utils/createOscillator';
 
+const emojis = '💣,🥴,😈,🤕,🎱,🏐,⚽,🍔,☣️,🐵,🤪,🥸'.split(',');
+const randmoji = emojis[Math.floor(Math.random()*emojis.length)];
+
 class Ball {
   constructor(scene) {
     this.oscillator = createOscillator();
@@ -18,7 +21,7 @@ class Ball {
     const ball = scene.add.text(
       width/2,
       height/4,
-      Math.random()>.5?'🥴':'🤕',
+      randmoji,
       { font: '50px Arial', align: 'center' },
     ).setOrigin(0.5);
     this.ball = scene.matter.add.gameObject(
