@@ -22,7 +22,18 @@ export const AppProvider = ({ children }) => {
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
   const { cores, ram, timeTaken, hostFitness } = useSystemInfo();
 
-  const { game, fps, targetFps } = usePhaser({});
+  const { game, fps, targetFps } = usePhaser({
+    update: scene => {
+
+      // broadcast ball physics
+      const { x, y } = scene.ball.ball;
+      const { x: vx, y: vy } = scene.ball.ball.body.velocity;
+      const { angle, angularVelocity } = scene.ball.ball.body;
+      // console.log(scene.ball.ball.body);
+      // console.log({ x, y, vx, vy, angle, angularVelocity });
+      // broadcast();
+    },
+  });
 
   const { peerIds, peerId, connections, broadcast, peerData } = usePeer({
     location,
