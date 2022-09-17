@@ -52,11 +52,8 @@ export const AppProvider = ({ children }) => {
     if (game) {
       const scene = game.scene.scenes[0];
       if (scene) {
-        // if (connections.length) {
-          console.log(scene.otherPlayers);
-          scene.otherPlayers.forEach(p => p.destroy());
-          scene.otherPlayers = connections.map(c => new Player(scene, 'Other Player'));
-        // }
+        scene.otherPlayers.forEach(p => p.destroy());
+        scene.otherPlayers = connections.map(c => new Player(scene, 'Other Player'));
       }
     }
   }, [game, connections]);
@@ -75,7 +72,7 @@ export const AppProvider = ({ children }) => {
           ball: { x, y, vx, vy, angle, angularVelocity },
         });
       };
-      const t = setInterval(send, 100);
+      const t = setInterval(send, 50);
       return () => clearInterval(t);
     };
   }, [game, peerId, peerIds, broadcast]);

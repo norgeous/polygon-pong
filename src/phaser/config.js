@@ -18,10 +18,10 @@ const config = {
       // gravity: { y: 200 }
     }
   },
-  // fps: {
-  //   target: 90,
-  //   forceSetTimeOut: true,
-  // },
+  fps: {
+    target: 60,
+    forceSetTimeOut: true,
+  },
 };
 
 export default config;
