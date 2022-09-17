@@ -45,7 +45,6 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
       message: 'hello',
       location,
       hostFitness,
-      visibilityState,
       platform: navigator.userAgentData.platform,
     });
     setConnections(newPeer.connections);
