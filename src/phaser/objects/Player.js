@@ -1,22 +1,26 @@
 import createOscillator from '../../utils/createOscillator';
 
 class Player {
-  constructor(scene, label = 'Player') {
+  constructor(scene) {
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
     
     const { width, height } = scene.sys.game.canvas;
     this.pointer = { x:width/2, y:0 };
+    
+    const graphics = scene.add.graphics();
+    graphics.fillStyle(0x007777, 1);
+    graphics.fillRoundedRect(-100, -15, 200, 30, 15);
 
-    const text = scene.add.text(width/2, height-100, label, { font: '20px Arial', fill: '#00ff00' });
     this.player = scene.matter.add.gameObject(
-      text,
+      graphics,
       {
         shape: { type: 'rectangle', width: 200, height: 30 },
         isStatic: false,
         chamfer: { radius: 15 },
       },
     )
+      .setPosition(width/2, height-100)
       .setFrictionAir(0.001)
       .setBounce(0.9)
       .setMass(100);
@@ -36,6 +40,7 @@ class Player {
 
 	update(scene) {
     if (!this.player) return;
+
     const { height } = scene.sys.game.canvas;
 
     // player follow cursor or touch gesture
@@ -61,7 +66,7 @@ class Player {
 	}
 
   destroy() {
-    console.log('class destroy', this.player);
+    // console.log('class destroy', this.player);
     this.player.destroy();
     delete this.player;
   }
