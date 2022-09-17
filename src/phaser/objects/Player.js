@@ -35,6 +35,7 @@ class Player {
 	}
 
 	update(scene) {
+    if (!this.player) return;
     const { height } = scene.sys.game.canvas;
 
     // player follow cursor or touch gesture
@@ -58,6 +59,12 @@ class Player {
       frequency: 100 + fv,
     });
 	}
+
+  destroy() {
+    console.log('class destroy', this.player);
+    this.player.destroy();
+    delete this.player;
+  }
 }
 
 export default Player;

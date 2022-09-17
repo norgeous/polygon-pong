@@ -9,6 +9,8 @@ import useBattery from '../hooks/useBattery';
 import usePhaser from '../hooks/usePhaser';
 import useSystemInfo from '../hooks/useSystemInfo';
 
+import Player from '../phaser/objects/Player';
+
 const AppContext = createContext({});
 
 export const AppProvider = ({ children }) => {
@@ -28,6 +30,25 @@ export const AppProvider = ({ children }) => {
     visibilityState,
   });
 
+  // on join / leave peerNet, add / remove the player
+  useEffect(() => {
+    if (game) {
+      const scene = game.scene.scenes[0];
+      if (scene) {
+
+        if (peerId) {
+          scene.player1 = new Player(scene);
+        } else {
+          console.log(scene.player1);
+          scene.player1.destroy();
+        }
+      }
+    }
+  }, [game, peerId]);
+
+  // when connections change, add / remove other players
+
+  // broadcast ball physics state
   useEffect(() => {
     if (game && peerId && peerId === peerIds[0] && broadcast) {
       const send = () => {
@@ -36,21 +57,15 @@ export const AppProvider = ({ children }) => {
         const { x, y } = scene.ball.ball;
         const { x: vx, y: vy } = scene.ball.ball.body.velocity;
         const { angle, angularVelocity } = scene.ball.ball.body;
-        // console.log(rotation);
-        // console.log(scene.ball.ball.body);
-        // console.log({ x, y, vx, vy, angle, angularVelocity, broadcast });
         broadcast({
           action: 'SETBALL',
           ball: { x, y, vx, vy, angle, angularVelocity },
         });
       };
-      const t = setInterval(send, 10);
+      const t = setInterval(send, 100);
       return () => clearInterval(t);
     };
   }, [game, peerId, peerIds, broadcast]);
-
-  // broadcast visibilitychange events
-  // useEffect(() => broadcast({ visibilityState }), [visibilityState]);
   
   // set volume into game
   useEffect(() => {if (game) game.maxVolume = volume}, [game, volume]);

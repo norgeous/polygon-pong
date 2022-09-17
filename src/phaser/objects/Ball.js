@@ -26,7 +26,11 @@ class Ball {
     ).setOrigin(0.5);
     this.ball = scene.matter.add.gameObject(
       ball,
-      { shape: { type: 'circle', radius: 26 }},
+      // { shape: { type: 'circle', radius: 26 }},
+      {
+        shape: { type: 'rectangle', width: 52, height: 52 }, 
+        chamfer: { radius: 15 },
+      },
     );
     this.ball
       .setVelocity(0, -4)

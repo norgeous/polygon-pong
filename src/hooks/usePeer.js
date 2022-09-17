@@ -87,6 +87,7 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
     setConnections(newPeer.connections);
   };
 
+  // join / leave the peerNet when visibilityState changes
   useEffect(async () => {
     if (!game || !location || !hostFitness || !visibilityState) return;
 
