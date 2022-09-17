@@ -36,8 +36,6 @@ const Network = () => {
               {navigator.userAgentData?.platform}
               {' '}
               {hostFitness}
-              {' '}
-              {visibilityState === 'visible' ? '😐' : '🫥'}
             </Button>
             {/* <pre>{JSON.stringify({ location, hostFitness, visibilityState }, null, 2)}</pre> */}
           </>
@@ -65,8 +63,6 @@ const Network = () => {
                 {pd?.platform}
                 {' '}
                 {pd?.hostFitness}
-                {' '}
-                {pd?.visibilityState === 'visible' ? '😐' : '🫥'}
               </Button>
               <pre>{JSON.stringify(pd, null, 2)}</pre>
             </>
