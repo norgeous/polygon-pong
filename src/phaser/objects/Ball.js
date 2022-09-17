@@ -1,6 +1,6 @@
 import createOscillator from '../../utils/createOscillator';
 
-const emojis = '💣,🥴,😈,🤕,🎱,🏐,⚽,🍔,☣️,🐵,🤪,🥸'.split(',');
+const emojis = '💣,🥴,😈,🤕,🎱,🏐,⚽,🍔,☣️,🐵,🤪,🥸,🥹,😂'.split(',');
 const randmoji = emojis[Math.floor(Math.random()*emojis.length)];
 
 class Ball {
@@ -26,11 +26,11 @@ class Ball {
     ).setOrigin(0.5);
     this.ball = scene.matter.add.gameObject(
       ball,
-      // { shape: { type: 'circle', radius: 26 }},
-      {
-        shape: { type: 'rectangle', width: 52, height: 52 }, 
-        chamfer: { radius: 15 },
-      },
+      { shape: { type: 'circle', radius: 26 }},
+      // {
+      //   shape: { type: 'rectangle', width: 52, height: 52 }, 
+      //   chamfer: { radius: 15 },
+      // },
     );
     this.ball
       .setVelocity(0, -4)
