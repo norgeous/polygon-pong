@@ -52,13 +52,14 @@ export const AppProvider = ({ children }) => {
     if (game) {
       const scene = game.scene.scenes[0];
       if (scene) {
-        if (connections.length) {
-
-          scene.otherPlayers = [new Player(scene, 'Other Player')];
-        }
+        // if (connections.length) {
+          console.log(scene.otherPlayers);
+          scene.otherPlayers.forEach(p => p.destroy());
+          scene.otherPlayers = connections.map(c => new Player(scene, 'Other Player'));
+        // }
       }
     }
-  }, [connections]);
+  }, [game, connections]);
 
   // broadcast ball physics state
   useEffect(() => {
