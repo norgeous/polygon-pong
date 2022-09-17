@@ -30,14 +30,14 @@ export const AppProvider = ({ children }) => {
     visibilityState,
   });
 
-  // on join / leave peerNet, add / remove the player
+  // on join / leave peerNet, add / remove the player to scene
   useEffect(() => {
     if (game) {
       const scene = game.scene.scenes[0];
       if (scene) {
 
         if (peerId) {
-          scene.player1 = new Player(scene);
+          scene.player1 = new Player(scene, 'Player 1');
         } else {
           console.log(scene.player1);
           scene.player1.destroy();
@@ -46,7 +46,19 @@ export const AppProvider = ({ children }) => {
     }
   }, [game, peerId]);
 
-  // when connections change, add / remove other players
+  // when connections change, add / remove other players to scene
+  useEffect(() => {
+    console.log('connections changed', connections);
+    if (game) {
+      const scene = game.scene.scenes[0];
+      if (scene) {
+        if (connections.length) {
+
+          scene.otherPlayers = [new Player(scene, 'Other Player')];
+        }
+      }
+    }
+  }, [connections]);
 
   // broadcast ball physics state
   useEffect(() => {

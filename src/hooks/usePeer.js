@@ -1,28 +1,36 @@
 import { useState, useEffect } from 'react';
 import joinPeerMesh from '../utils/peerNet';
 
-const useConnections = (defaultConns) => {
-  const [connections, setConnections] = useState(defaultConns);
+const useConnections = () => {
+  const [connections, _setConnections] = useState([]);
 
-  // reduce to active only connections
-  const connections2 = Object.values(connections).reduce((acc, conns) => {
-    const openConn = conns.reduce((acc, connection) => connection.open ? connection : acc, false);
-    if (!openConn) return acc;
-    return [...acc, openConn];
-  }, []);
+  const setConnections = (newConnections) => {
+    // reduce to active only connections
+    const connections2 = Object.values(newConnections).reduce((acc, conns) => {
+      const openConn = conns.reduce((acc, connection) => connection.open ? connection : acc, false);
+      if (!openConn) return acc;
+      return [...acc, openConn];
+    }, []);
+    _setConnections(connections2);
+  };
 
   const broadcast = (data) => {
     // console.log('broadcasting to', connections);
-    connections2.forEach(connection => connection.send(data));
+    connections.forEach(connection => connection.send(data));
   };
 
-  return [connections2, setConnections, broadcast]
+  return [connections, setConnections, broadcast]
 };
+
+
+
+
+
 
 const usePeer = (game, { location, hostFitness, visibilityState }) => {
   const [peer, setPeer] = useState();
   const [loading, setLoading] = useState(false);
-  const [connections, setConnections, broadcast] = useConnections({});
+  const [connections, setConnections, broadcast] = useConnections();
   const [peerIds, setPeerIds] = useState([]);
   const [peerData, setPeerData] = useState({});
 
@@ -66,6 +74,7 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
       case 'CLOSE':
         conn.close();
         resetPeerDataById(conn.peer);
+        setConnections(newPeer.connections);
         break;
       case 'SETBALL':
         // console.log(game.scene.scenes[0].ball.ball);
@@ -83,7 +92,6 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
         setPeerDataById(conn.peer, data);
         break;
     }
-    setConnections(newPeer.connections);
   };
 
   // join / leave the peerNet when visibilityState changes

@@ -1,14 +1,14 @@
 import createOscillator from '../../utils/createOscillator';
 
 class Player {
-  constructor(scene) {
+  constructor(scene, label = 'Player') {
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
     
     const { width, height } = scene.sys.game.canvas;
     this.pointer = { x:width/2, y:0 };
 
-    const text = scene.add.text(width/2, height-100, 'Player 1', { font: '20px Arial', fill: '#00ff00' });
+    const text = scene.add.text(width/2, height-100, label, { font: '20px Arial', fill: '#00ff00' });
     this.player = scene.matter.add.gameObject(
       text,
       {

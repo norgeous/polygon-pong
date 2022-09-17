@@ -19,6 +19,7 @@ function create () {
 
   this.ball = new Ball(this);
   // this.player1 = new Player(this);
+  this.otherPlayers = [];
 }
 
 function update () {
