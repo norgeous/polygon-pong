@@ -18,13 +18,13 @@ function create () {
   // this.cameras.main.centerOn(width/2, height/2);
 
   this.ball = new Ball(this);
-  // this.player1 = new Player(this);
   this.otherPlayers = [];
 }
 
 function update () {
-  this.ball?.update(this);
+  this.ball.update(this);
   this.player1?.update(this);
+  this.otherPlayers.forEach(otherPlayer => otherPlayer.update(this));
   this.additionalFunctions.update(this);
 }
 

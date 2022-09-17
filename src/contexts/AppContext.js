@@ -37,7 +37,7 @@ export const AppProvider = ({ children }) => {
       if (scene) {
 
         if (peerId) {
-          scene.player1 = new Player(scene, 'Player 1');
+          scene.player1 = new Player(scene, 'Player 1', 'local');
         } else {
           console.log(scene.player1);
           scene.player1.destroy();
@@ -53,7 +53,7 @@ export const AppProvider = ({ children }) => {
       const scene = game.scene.scenes[0];
       if (scene) {
         scene.otherPlayers.forEach(p => p.destroy());
-        scene.otherPlayers = connections.map(c => new Player(scene, 'Other Player'));
+        scene.otherPlayers = connections.map(c => new Player(scene, 'Other Player', 'remote'));
       }
     }
   }, [game, connections]);

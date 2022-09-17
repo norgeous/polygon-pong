@@ -1,7 +1,9 @@
 import createOscillator from '../../utils/createOscillator';
 
 class Player {
-  constructor(scene) {
+  constructor(scene, name, controlType) {
+    this.name = name;
+    this.controlType = controlType;
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
     
@@ -44,17 +46,26 @@ class Player {
     const { height } = scene.sys.game.canvas;
 
     // player follow cursor or touch gesture
-    scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
-    if (this.player.x !== this.pointer.x || this.player.y !== height-40) {
-      this.player.setVelocity(
-        (this.pointer.x - this.player.x)/10,
-        (height-100 - this.player.y)/100
-      );
+    if (this.controlType === 'local') {
+      scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
+      if (this.player.x !== this.pointer.x || this.player.y !== height-40) {
+        this.player.setVelocity(
+          (this.pointer.x - this.player.x)/10,
+          (height-100 - this.player.y)/100
+        );
+      }
+    }
+
+    if (this.controlType === 'remote') {
+      if (this.player.y !== height-40) {
+        this.player.setVelocityY(
+          (height-100 - this.player.y)/100
+        );
+      }
     }
 
     const { angle, velocity, angularVelocity } = this.player.body;
     this.player.setAngularVelocity((angularVelocity-(angle/100))*.99);
-    // console.log({angle,angularVelocity});
 
     const fv = (Math.abs((velocity.x * 100) + (angularVelocity * 500)) / 10);
     this.oscillator({
