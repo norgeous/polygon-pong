@@ -8,7 +8,6 @@ import { Button } from '../styled/menu';
 const Network = () => {
   const {
     setRoute,
-    visibilityState,
     location,
     hostFitness,
     peerIds, peerId, connections, broadcast, peerData,
@@ -37,7 +36,7 @@ const Network = () => {
               {' '}
               {hostFitness}
             </Button>
-            {/* <pre>{JSON.stringify({ location, hostFitness, visibilityState }, null, 2)}</pre> */}
+            {/* <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre> */}
           </>
         );
           
@@ -64,7 +63,7 @@ const Network = () => {
                 {' '}
                 {pd?.hostFitness}
               </Button>
-              <pre>{JSON.stringify(pd, null, 2)}</pre>
+              {/* <pre>{JSON.stringify(pd, null, 2)}</pre> */}
             </>
           );
         }
