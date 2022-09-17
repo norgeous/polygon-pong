@@ -10,8 +10,9 @@ class Player {
     const { width, height } = scene.sys.game.canvas;
     this.pointer = { x:width/2, y:0 };
     
+    const color = this.controlType === 'local' ? 0x007777 : 0x770077;
     const graphics = scene.add.graphics();
-    graphics.fillStyle(0x007777, 1);
+    graphics.fillStyle(color, 1);
     graphics.fillRoundedRect(-100, -15, 200, 30, 15);
 
     this.player = scene.matter.add.gameObject(
