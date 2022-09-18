@@ -1,4 +1,5 @@
 import React from 'react';
+import { getUiIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
@@ -7,11 +8,7 @@ import { Table, Tr, Td } from '../styled/table';
 const Profile = () => {
   const {
     setRoute,
-    // packageConfig,
     fps, targetFps,
-    // hostFitness,
-    // batteryPercent,
-    // clock,
     sysInfo,
   } = useAppContext();
 
@@ -24,9 +21,18 @@ const Profile = () => {
   };
 
   return (
-    <Modal title="🧰 More" onClose={() => setRoute()}>
-      <Button onClick={reload}><span>♻️</span><span>Reload</span></Button>
-      <Button onClick={updatePwa}><span>🌀</span><span>Clear cache and reload</span></Button>
+    <Modal
+      title={`${getUiIcon('toolbox')} More`}
+      onClose={() => setRoute()}
+    >
+      <Button onClick={reload}>
+        <span>{getUiIcon('reload')}</span>
+        <span>Reload</span>
+      </Button>
+      <Button onClick={updatePwa}>
+        <span>{getUiIcon('reset')}</span>
+        <span>Clear cache and reload</span>
+      </Button>
       <Table>
         <Tr>
           <Td>Package Name</Td>

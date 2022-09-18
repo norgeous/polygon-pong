@@ -1,4 +1,5 @@
 import React from 'react';
+import { getUiIcon, getVolumeIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
@@ -10,20 +11,21 @@ const Settings = () => {
     wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
   } = useAppContext();
 
-
   return (
-    <Modal title="⚙️ Settings" onClose={() => setRoute()}>
-      {/* <Button onClick={() => setRoute('MAINMENU')}><span>🕹️</span><span>Main Menu</span></Button> */}
+    <Modal
+      title={`${getUiIcon('settings')} Settings`}
+      onClose={() => setRoute()}
+    >
 
       <Button as="label">
-        🔊
+        {getVolumeIcon(volume)}
         <input
           type="range"
           min={0}
           max={1}
           step={0.01}
           value={volume}
-          onChange={event => setVolume(event.target.value)}
+          onChange={event => setVolume(Number(event.target.value))}
           style={{ width: '100%' }}
         />
       </Button>
@@ -38,7 +40,10 @@ const Settings = () => {
         {' '}
         Prevent sleep (wakelock)
       </Button>
-      <Button onClick={() => setRoute('PROFILE')}><span>🧰</span><span>More...</span></Button>
+      <Button onClick={() => setRoute('PROFILE')}>
+        <span>{getUiIcon('toolbox')}</span>
+        <span>More...</span>
+      </Button>
     </Modal>
   );
 };

@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
+import { getUiIcon, getFlagIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
-import FlagEmoji from '../FlagEmoji';
 import Modal from '../Modal';
 import { Table, Tr, Td } from '../styled/table';
-
-const getIcon = status => ({
-  SELF: '🫵',
-  CONNECTED: '✅',
-  DISCONNECTED: '❌', 
-})[status];
 
 const PeerItem = props => {
   const { id, status, location, platform, hostFitness, isHost } = props;
@@ -18,11 +12,11 @@ const PeerItem = props => {
     <>
       <Tr onClick={() => setOpen(!open)}>
         <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
-        <Td>{getIcon(status)}</Td>
+        <Td>{getUiIcon(status)}</Td>
         <Td>{platform}{location && `, ${location.city}, ${location.postal}`}</Td>
-        <Td>{location && (<>[{location.country_code} <FlagEmoji countryCode={location.country_code} />]</>)}</Td>
+        <Td>{location && (<>[{location.country_code} {getFlagIcon(location.country_code)}]</>)}</Td>
         <Td right>{hostFitness}</Td>
-        <Td>{isHost && '👑'}</Td>
+        <Td>{isHost && getUiIcon('host')}</Td>
       </Tr>
       {open && (
         <Tr>
@@ -76,8 +70,11 @@ const Network = () => {
   }, {});
 
   return (
-    <Modal title="🙎 Network" onClose={() => setRoute()}>
-      {!peerList.length && '🚷 No Connections'}
+    <Modal
+      title={`${getUiIcon('network')} Network`}
+      onClose={() => setRoute()}
+    >
+      {!peerList.length && `${getUiIcon('disconnected')} No Connections`}
       {!!peerList.length && (
         <Table>
           {peerList.map(p => <PeerItem isHost={whoIsHost.id === p.id} {...p} />)}

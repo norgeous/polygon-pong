@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppContext } from '../../contexts/AppContext';
 import { getUiIcon } from '../../utils/emoji';
+import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
 
