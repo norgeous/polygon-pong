@@ -18,9 +18,13 @@ const App = () => {
   const {
     route, setRoute,
     connections,
-    clock,
-    batteryPercent,
+    sysInfo,
   } = useAppContext();
+  
+  const {
+    batteryPercent,
+    clock,
+  } = sysInfo;
 
   return (
     <>
@@ -38,7 +42,7 @@ const App = () => {
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections.length + 1}</Button>
         <Button onClick={() => setRoute('PROFILE')}>
-          {!!batteryPercent ? `${batteryPercent > 50 ? '🔋' : '🪫'}${batteryPercent}%` : '🧰'}
+          {!!batteryPercent ? `${batteryPercent > 50 ? '🔋' : '🪫'}${batteryPercent}` : '🧰'}
         </Button>
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
       </TopRight>
