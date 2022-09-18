@@ -13,7 +13,7 @@ export const AppProvider = ({ children }) => {
   const sysInfo = useSystemInfo();
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
-  const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
+  const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { game, fps, targetFps } = usePhaser({});
   const { peerIds, peerId, connections, broadcast, peerData } = usePeer(game);
 

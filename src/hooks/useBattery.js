@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const available = 'getBattery' in navigator;
 
 const useBattery = () => {
-  const [batteryPercent, setBatteryPercent] = useState(100);
+  const [batteryPercent, setBatteryPercent] = useState(available ? 100 : undefined);
 
   useEffect(() => {
     if (available) {

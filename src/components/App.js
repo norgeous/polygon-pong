@@ -22,7 +22,7 @@ const App = () => {
     sysInfo,
   } = useAppContext();
   
-  const { batteryPercent, clock } = sysInfo;
+  const { batteryAvailable, batteryPercent, clock } = sysInfo;
 
   return (
     <>
@@ -42,8 +42,8 @@ const App = () => {
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>{getUiIcon('network')}x{connections.length}</Button>
         <Button onClick={() => setRoute('PROFILE')}>
-          {!!batteryPercent ?
-            `${batteryPercent > 50 ? getUiIcon('battery_full') : getUiIcon('battery_half')}${batteryPercent}` :
+          {batteryAvailable ?
+            `${batteryPercent > 50 ? getUiIcon('battery_full') : getUiIcon('battery_half')}${batteryPercent}%` :
             getUiIcon('toolbox')
           }
         </Button>

@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import useLocalStorage from './useLocalStorage';
 
 const available = 'wakeLock' in navigator;
 let wakeLock;
 
-const useWakeLock = (defaultEnabled) => {
-  const [enabled, setEnabled] = useState(defaultEnabled);
+const useWakeLock = () => {
+  const [enabled, setEnabled] = useLocalStorage('wakelock', available);
   
   useEffect(async () => {
     if (available) {
