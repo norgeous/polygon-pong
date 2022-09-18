@@ -106,7 +106,7 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
         peer: newPeer,
       } = await joinPeerMesh({
         networkName: 'polygon-pong-multiplayer',
-        maxPeers: 6,
+        maxPeers: 10,
         onConnectionOpen,
         onConnectionClose,
         onConnectionDisconnected,
