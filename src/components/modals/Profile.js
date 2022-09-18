@@ -7,11 +7,11 @@ import { Table, Tr, Td } from '../styled/table';
 const Profile = () => {
   const {
     setRoute,
-    packageConfig,
+    // packageConfig,
     fps, targetFps,
-    hostFitness,
-    batteryPercent,
-    clock,
+    // hostFitness,
+    // batteryPercent,
+    // clock,
     sysInfo,
   } = useAppContext();
 
@@ -30,11 +30,11 @@ const Profile = () => {
       <Table>
         <Tr>
           <Td>Package Name</Td>
-          <Td><a href={packageConfig.repository} target="_blank">{packageConfig.name}</a></Td>
+          <Td><a href={sysInfo.packageConfig.repository} target="_blank">{sysInfo.packageConfig.name}</a></Td>
         </Tr>
         <Tr>
           <Td>Version</Td>
-          <Td>{packageConfig.version}</Td>
+          <Td>{sysInfo.packageConfig.version}</Td>
         </Tr>
         <Tr>
           <Td>FPS</Td>
@@ -42,15 +42,15 @@ const Profile = () => {
         </Tr>
         <Tr>
           <Td>Benchmark</Td>
-          <Td>{hostFitness} ms</Td>
+          <Td>{sysInfo.hostFitness} ms</Td>
         </Tr>
         <Tr>
           <Td>Battery</Td>
-          <Td>{batteryPercent}%</Td>
+          <Td>{sysInfo.batteryPercent}</Td>
         </Tr>
         <Tr>
           <Td>Local time</Td>
-          <Td>{clock}</Td>
+          <Td>{sysInfo.clock}</Td>
         </Tr>
       </Table>
       <pre>{JSON.stringify(sysInfo, null, 2)}</pre>
