@@ -8,7 +8,7 @@ class Ball {
     const { width, height } = scene.sys.game.canvas;
 
     // speeding emitter
-    console.log(scene.particles)
+    // console.log(scene.particles)
     this.emitter = scene.particles.createEmitter({
       speed: 100,
       scale: { start: 0.25, end: 0 },

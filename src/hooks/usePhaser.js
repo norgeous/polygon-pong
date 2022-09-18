@@ -4,35 +4,25 @@ import config from '../phaser/config';
 import GameScene from '../phaser/scenes/GameScene';
 
 const usePhaser = () => {
-  const [fps, setFps] = useState(0);
   const [game, setGame] = useState();
-  const updateGame = () => setGame(oldGame => ({ ...oldGame }));
+  const [gameReady, setGameReady] = useState(false);
 
-  // const updateFps = (scene) => {
-  //   setFps(Math.round(scene?.game.loop.actualFps || 0));
-  // };
+  const [fps, setFps] = useState(0);
 
   useEffect(() => {
     const newGame = new Phaser.Game({
       ...config,
-      scene: [
-        GameScene,
-        // {
-        //   ...gameScene,
-        //   extend: {
-        //     additionalFunctions: {
-        //       update: scene => {
-        //         updateFps(scene);
-        //       },
-        //     },
-        //   },
-        // },
-      ],
+      scene: [GameScene],
     });
+    newGame.setGameReady = setGameReady;
+    newGame.setFps = setFps;
     setGame(newGame);
   }, []);
 
-  return { game, updateGame, fps, targetFps: game?.loop.targetFps || 0 };
+  return {
+    game, gameReady,
+    fps, targetFps: game?.loop.targetFps || 0,
+  };
 };
 
 export default usePhaser;

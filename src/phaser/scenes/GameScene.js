@@ -4,14 +4,11 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
 
-    this.maxVolume = 0;
-    this.visibilityState = 'visible';
-
     this.localPlayer = undefined;
     this.remotePlayers = [];
     this.balls = [];
 
-    this.reactUpdate = () => {};
+    // this.reactUpdate = () => {};
   }
 
   preload () {
@@ -31,11 +28,13 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setBounds(0, 0, width, height);
     // this.cameras.main.setZoom(0.5);
     // this.cameras.main.centerOn(width/2, height/2);
+
+    this.game.setGameReady(true); // react state update
   }
 
   update () {
-    if (this.visibilityState === 'hidden') this.matter.pause();
-    if (this.visibilityState === 'visible') this.matter.resume();
+    if (this.game.visibilityState === 'hidden') this.matter.pause();
+    if (this.game.visibilityState === 'visible') this.matter.resume();
 
     [
       this.localPlayer,
@@ -43,7 +42,8 @@ class GameScene extends Phaser.Scene {
       ...this.balls,
     ].forEach(gObj => gObj?.update(this));
 
-    this.reactUpdate(this);
+    this.game.setFps(Math.round(this.game.loop.actualFps)); // react state update
+
   }
 
   addBall () {
