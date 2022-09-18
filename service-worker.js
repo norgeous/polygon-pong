@@ -14,8 +14,8 @@ const deleteCaches = async (keep) => {
   const keyList = await caches.keys();
   console.log('found caches:', keyList);
   return Promise.all(keyList.reduce((acc, key) => {
-    console.log('found a cache:', key);
-    if (key === keep) return acc;
+    // console.log('found a cache:', key);
+    if (!isDev && key === keep) return acc;
     return [
       ...acc,
       caches.delete(key),
