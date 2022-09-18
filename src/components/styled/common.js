@@ -1,17 +1,30 @@
 import styled from 'styled-components';
 
-export const FlexR = styled.div`
+export const FlexRow = styled.div`
   display: flex;
   gap: 10px;
 `;
 
-export const Heading = styled.div`
+export const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const Heading1 = styled.h1`
   font-size: 30px;
+  margin: 0;
+`;
+
+export const Heading2 = styled.h2`
+  font-size: 20px;
+  margin: 0;
 `;
 
 export const A = styled.a`
   font-size: 20px;
   text-decoration: none;
+  color: #077;
   :visited,
   :hover {
     color: #077;

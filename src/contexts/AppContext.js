@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import '../../packageConfig';
 import useClock from '../hooks/useClock';
 import useDocumentVisibility from '../hooks/useDocumentVisibility';
 import useLocation from '../hooks/useLocation';
@@ -8,14 +9,12 @@ import useWakeLock from '../hooks/useWakeLock';
 import useBattery from '../hooks/useBattery';
 import usePhaser from '../hooks/usePhaser';
 import useSystemInfo from '../hooks/useSystemInfo';
-
 import Player from '../phaser/objects/Player';
 
 const AppContext = createContext({});
 
 export const AppProvider = ({ children }) => {
-  // const [route, setRoute] = useState('MAINMENU');
-  const [route, setRoute] = useState('NETWORK');
+  const [route, setRoute] = useState('MAINMENU');
   const clock = useClock();
   const visibilityState = useDocumentVisibility();
   const batteryPercent = useBattery();
@@ -91,6 +90,7 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        packageConfig: globalThis.packageConfig,
         route, setRoute,
         location,
         volume, setVolume,

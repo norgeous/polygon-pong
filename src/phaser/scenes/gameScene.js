@@ -1,5 +1,4 @@
 import Ball from '../objects/Ball';
-import Player from '../objects/Player';
 
 function preload () {
   this.load.setBaseURL('https://labs.phaser.io');

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
-import { Heading } from '../styled/common';
+import { Heading1 } from '../styled/common';
 
 const Profile = () => {
   const {
@@ -12,7 +12,7 @@ const Profile = () => {
 
   return (
     <Modal onClose={() => setRoute('SETTINGS')}>
-      <Heading>Hardware Profile</Heading>
+      <Heading1>Hardware Profile</Heading1>
       <div>
         fps: {fps} / {targetFps} fps
       </div>

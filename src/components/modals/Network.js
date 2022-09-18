@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import FlagEmoji from '../FlagEmoji';
 import Modal from '../Modal';
-import { Heading } from '../styled/common';
+import { Heading1 } from '../styled/common';
 import { Button } from '../styled/menu';
 
 const Network = () => {
@@ -15,7 +15,7 @@ const Network = () => {
 
   return (
     <Modal onClose={() => setRoute()}>
-      <Heading>Connections</Heading>
+      <Heading1>Connections</Heading1>
       {peerIds.map(id => {
         if(id === peerId) return (
           <>

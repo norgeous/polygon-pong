@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
-import { Heading } from '../styled/common';
+import { Heading1 } from '../styled/common';
 import { Button } from '../styled/menu';
 
 const Settings = () => {
@@ -22,7 +22,7 @@ const Settings = () => {
 
   return (
     <Modal onClose={() => setRoute()}>
-      <Heading>Settings</Heading>
+      <Heading1>Settings</Heading1>
       <Button onClick={() => setRoute('MAINMENU')}><span>🕹️</span><span>Main Menu</span></Button>
       <Button onClick={reload}><span>♻️</span><span>Reload</span></Button>
       <Button onClick={updatePwa}><span>🌀</span><span>Clear cache and reload</span></Button>

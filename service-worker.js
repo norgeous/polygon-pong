@@ -1,22 +1,26 @@
-// importScripts('https://unpkg.com/@babel/standalone@7.18.13/babel.min.js');
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.18.13/babel.min.js');
+importScripts(
+  // 'https://unpkg.com/@babel/standalone@7.19.2/babel.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js',
+  './packageConfig.js',
+);
 
-const CACHE_PREFIX = 'POLYGON-PONG';
-const CACHE_VERSION = '0.0.0'; // increase to invalidate old caches on clientside
-const CACHE_NAME = `${CACHE_PREFIX}@${CACHE_VERSION}`;
-
+const CACHE_NAME = `${globalThis.packageConfig.name}@${globalThis.packageConfig.version}`;
 const isDev = location.hostname === 'localhost';
 
 const getCache = () => caches.open(CACHE_NAME);
 
-const setupCache = async() => {
+// delete all caches (except the one to keep)
+const deleteCaches = async (keep) => {
   const keyList = await caches.keys();
-  return Promise.all(keyList.map(key => {
-    if (key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME) {
-      console.log('Deleting old cache :', key);
-      return caches.delete(key);
-    }
-  }));
+  console.log('found caches:', keyList);
+  return Promise.all(keyList.reduce((acc, key) => {
+    console.log('found a cache:', key);
+    if (key === keep) return acc;
+    return [
+      ...acc,
+      caches.delete(key),
+    ];
+  }, []));
 };
 
 const getUrl = request => {
@@ -74,15 +78,14 @@ const handleRequest = async request => {
   return response;
 };
 
+const messageHandlers = {
+  CLEAR_CACHES: () => {
+    console.log('delete all caches');
+    return deleteCaches();
+  },
+};
+
 self.addEventListener('activate', event => event.waitUntil(clients.claim()));
-self.addEventListener('activate', event => event.waitUntil(setupCache()));
+self.addEventListener('activate', event => event.waitUntil(deleteCaches(CACHE_NAME)));
 self.addEventListener('fetch', event => event.respondWith(handleRequest(event.request)));
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'CLEAR_CACHES') {
-    console.log('delete all cache')
-    caches.keys().then(function(names) {
-      for (let name of names)
-          caches.delete(name);
-    });
-  }
-});
+self.addEventListener('message', event => messageHandlers[event.data?.type]?.());
