@@ -1,13 +1,12 @@
 # Polygon Pong
 
-## demo
+## Play
 
 https://norgeous.github.io/polygon-pong
 
-## features
+## Dev Features
 
-- Zero install
-- Zero build
+- Zero install, Zero build, no NPM or Node
 - Clientside ES modules
   - via importmap and skypack cdn
   - styled-components

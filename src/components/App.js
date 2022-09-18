@@ -34,7 +34,9 @@ const App = () => {
       </TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections.length + 1}</Button>
-        {!!batteryPercent && `${batteryPercent > 50 ? '🔋' : '🪫'}${batteryPercent}%`}
+        <Button onClick={() => setRoute('PROFILE')}>
+          {!!batteryPercent ? `${batteryPercent > 50 ? '🔋' : '🪫'}${batteryPercent}%` : '🧰'}
+        </Button>
         <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
       </TopRight>
       <BottomRight>

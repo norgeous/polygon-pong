@@ -15,4 +15,7 @@ export const Button = styled.button`
   /* justify-content: space-between; */
   box-sizing: border-box;
   text-align: left;
+  :hover {
+    background: #1017;
+  }
 `;

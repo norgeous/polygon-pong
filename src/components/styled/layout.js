@@ -67,6 +67,12 @@ export const OverlayInner = styled.div`
   overflow: auto;
 `;
 
+export const Title = styled.h1`
+  font-size: 25px;
+  font-weight: normal;
+  margin: 0 0 10px;
+`;
+
 export const PhaserDiv = styled.div.attrs(() => ({ id: 'phaser' }))`
   background-color: #111;
   canvas {
