@@ -4,6 +4,7 @@ import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
 import { Table, Tr, Td } from '../styled/table';
+import SystemInfo from '../SystemInfo';
 
 const Profile = () => {
   const {
@@ -39,27 +40,13 @@ const Profile = () => {
           <Td><a href={sysInfo.packageConfig.repository} target="_blank">{sysInfo.packageConfig.name}</a></Td>
         </Tr>
         <Tr>
-          <Td>Version</Td>
-          <Td>{sysInfo.packageConfig.version}</Td>
-        </Tr>
-        <Tr>
           <Td>FPS</Td>
           <Td>{fps} / {targetFps} fps</Td>
         </Tr>
-        <Tr>
-          <Td>Benchmark</Td>
-          <Td>{sysInfo.hostFitness} ms</Td>
-        </Tr>
-        <Tr>
-          <Td>Battery</Td>
-          <Td>{sysInfo.batteryPercent}</Td>
-        </Tr>
-        <Tr>
-          <Td>Local time</Td>
-          <Td>{sysInfo.clock}</Td>
-        </Tr>
       </Table>
-      <pre>{JSON.stringify(sysInfo, null, 2)}</pre>
+      <Table>
+        <SystemInfo {...sysInfo} />
+      </Table>
     </Modal>
   );
 };

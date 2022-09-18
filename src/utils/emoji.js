@@ -22,14 +22,20 @@ const os = {
   android: '🤖',
 };
 
+const platform = {
+  default: '?',
+  mobile: '📱',
+  desktop: '🖥️',
+};
+
 const browser = {
   default: '🌐',
-  chrome: '🌎',
+  chrome: '🪞',
   firefox: '🦊',
   'android browser': '🤖',
   opera: '🅾️',
   safari: '🦓',
-  'microsoft edge': '🗺️',
+  'microsoft edge': '🌎',
   ie: '💩',
 };
 
@@ -87,6 +93,7 @@ export const getGameIcon = name => game[name.toLowerCase()] || game.default;
 export const getBallIcon = () => roundBalls[Math.floor(Math.random() * roundBalls.length)];
 export const getClockIcon = i => clock[i-1] || clock[11];
 export const getOsIcon = name => os[name.toLowerCase()] || os.default;
+export const getPlatformIcon = name => platform[name.toLowerCase()] || platform.default;
 export const getBrowserIcon = name => browser[name.toLowerCase()] || browser.default;
 export const getUiIcon = name => ui[name.toLowerCase()] || ui.default;
 export const getVolumeIcon = v => {
