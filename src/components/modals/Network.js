@@ -32,7 +32,7 @@ const Network = () => {
               {' '}
               <FlagEmoji countryCode={location.country_code} />
               {' '}
-              {navigator.userAgentData?.platform}
+              {navigator.platform}
               {' '}
               {hostFitness}
             </Button>
