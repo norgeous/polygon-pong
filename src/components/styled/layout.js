@@ -65,6 +65,7 @@ export const OverlayInner = styled.div`
 
   max-height: 80%;
   overflow: auto;
+  overflow: overlay;
 `;
 
 export const Title = styled.h1`
