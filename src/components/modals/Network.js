@@ -2,72 +2,64 @@ import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import FlagEmoji from '../FlagEmoji';
 import Modal from '../Modal';
-import { Button } from '../styled/menu';
+import { Table, Tr, Td } from '../styled/table';
+
+const PeerItem = ({ id, icon, location, platform, hostFitness }) => (
+  <>
+    <Tr>
+      <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
+      <Td>{icon}</Td>
+      <Td>{platform}</Td>
+      <Td>{location && `${location.city}, ${location.postal} ${location.country_code}`}</Td>
+      <Td>{location && <FlagEmoji countryCode={location.country_code} />}</Td>
+      <Td>{hostFitness}</Td>
+    </Tr>
+    {/* <Tr>
+      <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre>
+    </Tr> */}
+  </>
+);
 
 const Network = () => {
   const {
     setRoute,
     location,
     hostFitness,
-    peerIds, peerId, connections, broadcast, peerData,
+    peerIds, peerId, connections, peerData,
   } = useAppContext();
+
+  const peerList = peerIds.map(id => {
+    if(id === peerId) return {
+      id,
+      icon: '🫵',
+      location,
+      platform: navigator.platform,
+      hostFitness,
+    };
+          
+    const conn = connections.find(conn => conn.peer === id);
+
+    if (conn) {
+      const pd = peerData[conn.peer];
+      return {
+        id,
+        icon: '✅',
+        ...pd,
+      };
+    }
+
+    // not connected ids
+    return {
+      id,
+      icon: '❌',
+    };
+  });
 
   return (
     <Modal title="🙎 Network" onClose={() => setRoute()}>
-      {peerIds.map(id => {
-        if(id === peerId) return (
-          <>
-            <Button onClick={() => broadcast({ message: 'click' })}>
-              {id.replace('polygon-pong-multiplayer-','')}
-              {' '}
-              🫵
-              {' '}
-              {location.city}
-              {' '}
-              {location.postal}
-              {' '}
-              ({location.country_code})
-              {' '}
-              <FlagEmoji countryCode={location.country_code} />
-              {' '}
-              {navigator.platform}
-              {' '}
-              {hostFitness}
-            </Button>
-            {/* <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre> */}
-          </>
-        );
-          
-        const conn = connections.find(conn => conn.peer === id);
-
-        if (conn) {
-          const pd = peerData[conn.peer];
-          return (
-            <>
-              <Button onClick={() => broadcast({ message: 'click' })}>
-                {id.replace('polygon-pong-multiplayer-','')}
-                {' '}
-                ✅
-                {' '}
-                {pd?.location?.city}
-                {' '}
-                {pd?.location?.postal}
-                {' '}
-                ({pd?.location?.country_code})
-                {' '}
-                <FlagEmoji countryCode={pd?.location?.country_code} />
-                {' '}
-                {pd?.platform}
-                {' '}
-                {pd?.hostFitness}
-              </Button>
-              {/* <pre>{JSON.stringify(pd, null, 2)}</pre> */}
-            </>
-          );
-        }
-
-        return <Button>{id.replace('polygon-pong-multiplayer-','')} ❌</Button>;
-      })}
+      <Table>
+        {peerList.map(p => <PeerItem {...p} />)}
+      </Table>
     </Modal>
   );
 };
