@@ -30,7 +30,10 @@ const App = () => {
       {route === 'PROFILE' && <Profile/>}
 
       <TopLeft>
-        ❤️❤️🖤 1,000,001
+        ❤️❤️❤️❤️🖤
+        <br/>
+        <br/>
+        1,000,023
       </TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>🙎x{connections.length + 1}</Button>

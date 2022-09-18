@@ -4,15 +4,15 @@ import FlagEmoji from '../FlagEmoji';
 import Modal from '../Modal';
 import { Table, Tr, Td } from '../styled/table';
 
-const PeerItem = ({ id, icon, location, platform, hostFitness }) => (
+const PeerItem = ({ id, icon, location, platform, hostFitness, isHost }) => (
   <>
     <Tr>
       <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
       <Td>{icon}</Td>
-      <Td>{platform}</Td>
-      <Td>{location && `${location.city}, ${location.postal} ${location.country_code}`}</Td>
-      <Td>{location && <FlagEmoji countryCode={location.country_code} />}</Td>
-      <Td>{hostFitness}</Td>
+      <Td>{platform}{location && `, ${location.city}, ${location.postal}`}</Td>
+      <Td>{location && (<>[{location.country_code} <FlagEmoji countryCode={location.country_code} />]</>)}</Td>
+      <Td right>{hostFitness}</Td>
+      <Td>{isHost && '👑'}</Td>
     </Tr>
     {/* <Tr>
       <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre>
@@ -48,17 +48,22 @@ const Network = () => {
       };
     }
 
-    // not connected ids
     return {
       id,
       icon: '❌',
     };
   });
 
+  const whoIsHost = peerList.reduce((a, b) => {
+    if (b.hostFitness === undefined) return a;
+    if (a.hostFitness < b.hostFitness) return a;
+    else return b;
+  }, {});
+
   return (
     <Modal title="🙎 Network" onClose={() => setRoute()}>
       <Table>
-        {peerList.map(p => <PeerItem {...p} />)}
+        {peerList.map(p => <PeerItem isHost={whoIsHost.id === p.id} {...p} />)}
       </Table>
     </Modal>
   );
