@@ -19,8 +19,25 @@ const useConnections = () => {
     connections.forEach(connection => connection.send(data));
   };
 
-  return [connections, setConnections, broadcast]
+  return [connections, setConnections, broadcast];
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -32,8 +49,8 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
   const [loading, setLoading] = useState(false);
   const [connections, setConnections, broadcast] = useConnections();
   const [peerIds, setPeerIds] = useState([]);
-  const [peerData, setPeerData] = useState({});
 
+  const [peerData, setPeerData] = useState({});
   const setPeerDataById = (id, data) => setPeerData(oldPeerData => {
     oldPeerData[id] = {
       ...oldPeerData[id],
@@ -41,7 +58,6 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
     };
     return oldPeerData;
   });
-
   const resetPeerDataById = (id) => setPeerData(oldPeerData => {
     delete oldPeerData[id];
     return oldPeerData;

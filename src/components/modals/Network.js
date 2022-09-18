@@ -12,7 +12,7 @@ const PeerItem = ({ id, icon, location, platform, hostFitness, isHost }) => (
       <Td>{platform}{location && `, ${location.city}, ${location.postal}`}</Td>
       <Td>{location && (<>[{location.country_code} <FlagEmoji countryCode={location.country_code} />]</>)}</Td>
       <Td right>{hostFitness}</Td>
-      <Td>{isHost && '👑 <- HOST'}</Td>
+      <Td>{isHost && '👑'}</Td>
     </Tr>
     {/* <Tr>
       <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre>
