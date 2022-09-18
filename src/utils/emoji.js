@@ -1,3 +1,18 @@
+
+const game = {
+  default: '?',
+  heart_on: '❤️',
+  heart_off: '🖤',
+  bomb: '💣',
+  boom: '💥',
+  gem: '💎',
+  coin: '🪙',
+};
+
+const roundBalls = '💣,🥴,😈,🤕,🎱,🏐,⚽,🍔,☣️,🐵,🤪,🥸,🥹,😂'.split(',');
+
+const clock = '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛'.split('');
+
 const os = {
   default: '👨‍💻',
   linux: '🐧',
@@ -22,12 +37,12 @@ const ui = {
   default: '?',
   game: '🕹️',
   settings: '⚙️',
+  toolbox: '🧰',
   reload: '♻️',
   reset: '🌀',
   info: 'ℹ️',
   multiplayer: '👬',
   network: '🙎',
-  toolbox: '🧰',
   battery_full: '🔋',
   battery_half: '🪫',
   connected: '✅',
@@ -36,19 +51,7 @@ const ui = {
   host: '👑',
 };
 
-const game = {
-  default: '?',
-  heart_on: '❤️',
-  heart_off: '🖤',
-  bomb: '💣',
-  boom: '💥',
-  gem: '💎',
-  coin: '🪙',
-};
-
 const volume = '🔇,🔈,🔉,🔊,📣'.split(',');
-
-const clock = '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛'.split('');
 
 const intlLetters = {
   A: '🇦',
@@ -80,10 +83,12 @@ const intlLetters = {
   joiner: '\u200d',
 };
 
+export const getGameIcon = name => game[name.toLowerCase()] || game.default;
+export const getBallIcon = () => roundBalls[Math.floor(Math.random() * roundBalls.length)];
+export const getClockIcon = i => clock[i-1] || clock[11];
 export const getOsIcon = name => os[name.toLowerCase()] || os.default;
 export const getBrowserIcon = name => browser[name.toLowerCase()] || browser.default;
 export const getUiIcon = name => ui[name.toLowerCase()] || ui.default;
-export const getGameIcon = name => game[name.toLowerCase()] || game.default;
 export const getVolumeIcon = v => {
   if (v <= 0) return volume[0];
   if (v > 0.00 && v <= 0.33) return volume[1];
@@ -91,7 +96,6 @@ export const getVolumeIcon = v => {
   if (v > 0.66 && v <= 0.99) return volume[3];
   if (v >= 1) return volume[4];
 };
-export const getClockIcon = i => clock[i-1] || clock[11];
 export const getFlagIcon = countryCode => countryCode
   ?.split('')
   .map(letter => intlLetters[letter])
