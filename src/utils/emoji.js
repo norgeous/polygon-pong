@@ -25,6 +25,7 @@ const ui = {
   reload: '♻️',
   reset: '🌀',
   info: 'ℹ️',
+  multiplayer: '👬',
   network: '🙎',
   toolbox: '🧰',
   battery_full: '🔋',
