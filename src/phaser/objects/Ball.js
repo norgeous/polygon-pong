@@ -66,6 +66,14 @@ class Ball {
     // if velocity is fast, emit particle effect
     this.emitter.on = (vx>6 || vx<-6 || vy>6 || vy<-6);
 	}
+
+  setState({ x, y, a, vx, vy, va }) {
+    this.ball.x = x;
+    this.ball.y = y;
+    this.ball.setRotation(a);
+    this.ball.setVelocity(vx, vy);
+    this.ball.setAngularVelocity(va);
+  }
 }
 
 export default Ball;

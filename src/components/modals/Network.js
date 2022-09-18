@@ -1,24 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import FlagEmoji from '../FlagEmoji';
 import Modal from '../Modal';
 import { Table, Tr, Td } from '../styled/table';
 
-const PeerItem = ({ id, icon, location, platform, hostFitness, isHost }) => (
-  <>
-    <Tr>
-      <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
-      <Td>{icon}</Td>
-      <Td>{platform}{location && `, ${location.city}, ${location.postal}`}</Td>
-      <Td>{location && (<>[{location.country_code} <FlagEmoji countryCode={location.country_code} />]</>)}</Td>
-      <Td right>{hostFitness}</Td>
-      <Td>{isHost && '👑'}</Td>
-    </Tr>
-    {/* <Tr>
-      <pre>{JSON.stringify({ location, hostFitness }, null, 2)}</pre>
-    </Tr> */}
-  </>
-);
+const getIcon = status => ({
+  SELF: '🫵',
+  CONNECTED: '✅',
+  DISCONNECTED: '❌', 
+})[status];
+
+const PeerItem = props => {
+  const { id, status, location, platform, hostFitness, isHost } = props;
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Tr onClick={() => setOpen(!open)}>
+        <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
+        <Td>{getIcon(status)}</Td>
+        <Td>{platform}{location && `, ${location.city}, ${location.postal}`}</Td>
+        <Td>{location && (<>[{location.country_code} <FlagEmoji countryCode={location.country_code} />]</>)}</Td>
+        <Td right>{hostFitness}</Td>
+        <Td>{isHost && '👑'}</Td>
+      </Tr>
+      {open && (
+        <Tr>
+          <Td colSpan="100%">
+            <pre>{JSON.stringify(props, null, 2)}</pre>
+          </Td>
+        </Tr>
+      )}
+    </>
+  );
+};
 
 const Network = () => {
   const {
@@ -31,7 +46,7 @@ const Network = () => {
   const peerList = peerIds.map(id => {
     if(id === peerId) return {
       id,
-      icon: '🫵',
+      status: 'SELF',
       location,
       platform: navigator.platform,
       hostFitness,
@@ -43,14 +58,14 @@ const Network = () => {
       const pd = peerData[conn.peer];
       return {
         id,
-        icon: '✅',
+        status: 'CONNECTED',
         ...pd,
       };
     }
 
     return {
       id,
-      icon: '❌',
+      status: 'DISCONNECTED',
     };
   });
 

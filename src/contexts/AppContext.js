@@ -65,10 +65,10 @@ export const AppProvider = ({ children }) => {
         const scene = game.scene.scenes[0];
         const { x, y } = scene.ball.ball;
         const { x: vx, y: vy } = scene.ball.ball.body.velocity;
-        const { angle, angularVelocity } = scene.ball.ball.body;
+        const { angle: a, angularVelocity: va } = scene.ball.ball.body;
         broadcast({
           action: 'SETBALL',
-          ball: { x, y, vx, vy, angle, angularVelocity },
+          payload: { x, y, a, vx, vy, va },
         });
       };
       const t = setInterval(send, 50);

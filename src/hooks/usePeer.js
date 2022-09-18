@@ -37,7 +37,7 @@ const useConnections = () => {
 
 
 
-
+// const usePeerData
 
 
 
@@ -66,10 +66,12 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
   const onConnectionOpen = (newPeer, conn) => {
     console.log(`connected to ${conn.peer}`);
     conn.send({
-      message: 'hello',
-      location,
-      hostFitness,
-      platform: navigator.platform,
+      action: 'SETDATA',
+      payload: {
+        location,
+        hostFitness,
+        platform: navigator.platform,
+      },
     });
     setConnections(newPeer.connections);
   };
@@ -86,28 +88,22 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
 
   const onConnectionData = (newPeer, conn, data) => {
     console.log(`data from ${conn.peer}`, data);
-    switch(data.action) {
-      case 'CLOSE':
+    const { action, payload } = data;
+    const reducer = {
+      CLOSE: () => {
         conn.close();
         resetPeerDataById(conn.peer);
         setConnections(newPeer.connections);
-        break;
-      case 'SETBALL':
-        // console.log(game.scene.scenes[0].ball.ball);
-        game.scene.scenes[0].ball.ball.x = data.ball.x;
-        game.scene.scenes[0].ball.ball.y = data.ball.y;
-        game.scene.scenes[0].ball.ball.setVelocity(
-          data.ball.vx,
-          data.ball.vy,
-        );
-        // console.log(data.ball.angle);
-        game.scene.scenes[0].ball.ball.setRotation(data.ball.angle);
-        game.scene.scenes[0].ball.ball.setAngularVelocity(data.ball.angularVelocity);
-        break;
-      default:
+      },
+      SETBALL: () => {
+        const scene = game.scene.scenes[0];
+        scene.ball.setState(payload);
+      },
+      SETDATA: () => {
         setPeerDataById(conn.peer, data);
-        break;
-    }
+      },
+    };
+    reducer[action]?.(payload) || reducer.SETDATA(payload);
   };
 
   // join / leave the peerNet when visibilityState changes
