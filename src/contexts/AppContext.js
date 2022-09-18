@@ -21,7 +21,7 @@ export const AppProvider = ({ children }) => {
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
   const location = useLocation();
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock(true);
-  const { cores, ram, timeTaken, hostFitness } = useSystemInfo();
+  const { hostFitness } = useSystemInfo();
   const { game, fps, targetFps } = usePhaser({});
   const { peerIds, peerId, connections, broadcast, peerData } = usePeer(game, {
     location,
@@ -99,7 +99,7 @@ export const AppProvider = ({ children }) => {
         game, fps, targetFps,
         clock,
         batteryPercent,
-        cores, ram, timeTaken, hostFitness,
+        hostFitness,
         peerIds, peerId, connections, broadcast, peerData,
       }}
     >
