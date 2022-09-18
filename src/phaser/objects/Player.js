@@ -65,16 +65,18 @@ class Player {
       }
     }
 
+    // slowly correct angle to flat
     const { angle, velocity, angularVelocity } = this.player.body;
     this.player.setAngularVelocity((angularVelocity-(angle/100))*.99);
 
-    const fv = (Math.abs((velocity.x * 100) + (angularVelocity * 500)) / 10);
-    this.oscillator({
-      type: 'sine',
-      volume: fv / 500,
-      maxVolume: scene.game.maxVolume,
-      frequency: 100 + fv,
-    });
+    // player movement sound
+    // const fv = (Math.abs((velocity.x * 100) + (angularVelocity * 500)) / 10);
+    // this.oscillator({
+    //   type: 'sine',
+    //   volume: fv / 500,
+    //   maxVolume: scene.game.maxVolume,
+    //   frequency: 100 + fv,
+    // });
 	}
 
   destroy() {
