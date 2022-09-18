@@ -14,7 +14,7 @@ import Player from '../phaser/objects/Player';
 const AppContext = createContext({});
 
 export const AppProvider = ({ children }) => {
-  const [route, setRoute] = useState('MAINMENU');
+  const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const clock = useClock();
   const visibilityState = useDocumentVisibility();
   const batteryPercent = useBattery();
