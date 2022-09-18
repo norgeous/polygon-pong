@@ -3,9 +3,10 @@ import Phaser from 'phaser';
 import gameScene from '../phaser/scenes/gameScene';
 import config from '../phaser/config';
 
-const usePhaser = (additionalFunctions) => {
+const usePhaser = () => {
   const [fps, setFps] = useState(0);
   const [game, setGame] = useState();
+  const updateGame = () => setGame(oldGame => ({ ...oldGame }));
 
   const updateFps = (scene) => {
     setFps(Math.round(scene?.game.loop.actualFps || 0));
@@ -19,10 +20,8 @@ const usePhaser = (additionalFunctions) => {
           ...gameScene,
           extend: {
             additionalFunctions: {
-              ...additionalFunctions,
               update: scene => {
                 updateFps(scene);
-                additionalFunctions.update?.(scene);
               },
             },
           },
@@ -32,7 +31,7 @@ const usePhaser = (additionalFunctions) => {
     setGame(newGame);
   }, []);
 
-  return { game, fps, targetFps: game?.loop.targetFps || 0 };
+  return { game, updateGame, fps, targetFps: game?.loop.targetFps || 0 };
 };
 
 export default usePhaser;

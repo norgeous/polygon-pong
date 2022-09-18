@@ -104,10 +104,11 @@ const usePeer = (game) => {
 
   // join / leave the peerNet when visibilityState changes
   useEffect(async () => {
+    // console.log('game changed, i might join', game, game?.sysInfo?.visibilityState, peer, loading);
     if (!game) return;
 
     if (game.sysInfo?.visibilityState === 'visible' && !peer && !loading) {
-      // console.log('LOGIN', visibilityState, peer, loading);
+      console.log('LOGIN');
       setLoading(true);
       const {
         peerIds: newPeerIds,
@@ -127,7 +128,7 @@ const usePeer = (game) => {
     }
 
     if (game.sysInfo?.visibilityState === 'hidden') {
-      // console.log('LOGOUT');
+      console.log('LOGOUT');
       broadcast({ action: 'CLOSE' });
       peer.disconnect();
       peer.destroy();

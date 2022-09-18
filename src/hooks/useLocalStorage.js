@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 
-const useLocalStorage = (key, defaultValue) => {
+const getInitialState = (key, defaultValue) => {
   const item = localStorage.getItem(key);
-  const initialState = item !== undefined && JSON.parse(item) || defaultValue;
+  if (item !== undefined) return JSON.parse(item);
+  return defaultValue;
+};
+
+const useLocalStorage = (key, defaultValue) => {
+  const initialState = getInitialState(key, defaultValue);
   const [value, setValue] = useState(initialState);
 
   // update local storage when value changes

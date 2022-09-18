@@ -6,6 +6,10 @@ function preload () {
 }
 
 function create () {
+  this.sysInfo = {};
+  this.player1 = {};
+  this.otherPlayers = [];
+
   const { width, height } = this.sys.game.canvas;
 
   this.matter.world.disableGravity();

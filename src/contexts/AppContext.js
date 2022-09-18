@@ -14,7 +14,7 @@ export const AppProvider = ({ children }) => {
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
-  const { game, fps, targetFps } = usePhaser({});
+  const { game, updateGame, fps, targetFps } = usePhaser();
   const { peerIds, peerId, connections, broadcast, peerData } = usePeer(game);
 
   // on join / leave peerNet, add / remove the player to scene
@@ -27,7 +27,7 @@ export const AppProvider = ({ children }) => {
           scene.player1 = new Player(scene, 'Player 1', 'local');
         } else {
           // console.log(scene.player1);
-          scene.player1.destroy();
+          scene.player1?.destroy?.();
         }
       }
     }
@@ -65,29 +65,16 @@ export const AppProvider = ({ children }) => {
   }, [game, peerId, peerIds, broadcast]);
   
   // set react data into game
-  useEffect(() => {if (game) game.maxVolume = volume}, [game, volume]);
-  useEffect(() => {if (game) game.sysInfo = sysInfo}, [game, sysInfo]);
-  
-  // pause / resume game when switching tabs or apps
-  // useEffect(() => {
-  //   // console.log(game);
-  //   if (!game) return;
-  //   if (visibilityState === 'hidden') game.scene.scenes[0].matter.pause()
-  //   if (visibilityState === 'visible') game.scene.scenes[0].matter.resume()
-  // }, [visibilityState]);
+  // useEffect(() => {if (game) { game.maxVolume = volume; updateGame(); }}, [volume]);
+  useEffect(() => {console.log('sysinfo changed', game, sysInfo); if (game) { game.sysInfo = sysInfo; updateGame(); }}, [game, sysInfo]);
 
   return (
     <AppContext.Provider
       value={{
-        // packageConfig: globalThis.packageConfig,
         route, setRoute,
-        // location,
         volume, setVolume,
-        // visibilityState,
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,
-        // clock,
-        // batteryPercent,
         sysInfo,
         peerIds, peerId, connections, broadcast, peerData,
       }}
