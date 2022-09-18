@@ -15,7 +15,6 @@ export const TopRight = styled.div`
   right: 0;
   bottom: auto;
   left: auto;
-  /* padding: 10px; */
 `;
 
 export const BottomRight = styled.div`

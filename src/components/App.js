@@ -13,6 +13,7 @@ import {
   PhaserDiv,
 } from './styled/layout';
 import { Button } from './styled/common';
+import { getUiIcon, getGameIcon } from '../utils/emoji';
 
 const App = () => {
   const {
@@ -21,10 +22,7 @@ const App = () => {
     sysInfo,
   } = useAppContext();
   
-  const {
-    batteryPercent,
-    clock,
-  } = sysInfo;
+  const { batteryPercent, clock } = sysInfo;
 
   return (
     <>
@@ -34,20 +32,25 @@ const App = () => {
       {route === 'PROFILE' && <Profile/>}
 
       <TopLeft>
-        ❤️❤️❤️❤️🖤
+        {getGameIcon('heart_on')}
+        {getGameIcon('heart_on')}
+        {getGameIcon('heart_off')}
         <br/>
         <br/>
         1,000,023
       </TopLeft>
       <TopRight>
-        <Button onClick={() => setRoute('NETWORK')}>🙎x{connections.length + 1}</Button>
+        <Button onClick={() => setRoute('NETWORK')}>{getUiIcon('network')}x{connections.length}</Button>
         <Button onClick={() => setRoute('PROFILE')}>
-          {!!batteryPercent ? `${batteryPercent > 50 ? '🔋' : '🪫'}${batteryPercent}` : '🧰'}
+          {!!batteryPercent ?
+            `${batteryPercent > 50 ? getUiIcon('battery_full') : getUiIcon('battery_half')}${batteryPercent}` :
+            getUiIcon('toolbox')
+          }
         </Button>
-        <Button onClick={() => setRoute('SETTINGS')}>⚙️</Button>
+        <Button onClick={() => setRoute('SETTINGS')}>{getUiIcon('settings')}</Button>
       </TopRight>
       <BottomRight>
-        🪙x22
+        {getGameIcon('coin')}x22
       </BottomRight>
       <Bottom>
       </Bottom>

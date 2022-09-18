@@ -5,7 +5,9 @@ export const Table = styled.table`
   background: #3037;
   white-space: nowrap;
 `;
+
 export const Tr = styled.tr``;
+
 export const Td = styled.td`
   ${({right}) => right && css`text-align: right;`};
 `;
