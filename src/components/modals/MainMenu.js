@@ -1,15 +1,25 @@
 import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
+import { getUiIcon } from '../../utils/emoji';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
 
 const MainMenu = () => {
-  const { packageConfig, setRoute } = useAppContext();
+  const { sysInfo, setRoute } = useAppContext();
 
   return (
-    <Modal title={`🕹️ ${packageConfig.name}`} onClose={() => setRoute()}>
-      <Button onClick={() => setRoute()}><span>👬</span><span>Join Multiplayer</span></Button>
-      <Button onClick={() => setRoute('SETTINGS')}><span>⚙️</span><span>Settings...</span></Button>
+    <Modal
+      title={`${getUiIcon('game')} ${sysInfo.packageConfig.name}`}
+      onClose={() => setRoute()}
+    >
+      <Button onClick={() => setRoute()}>
+        <span>{getUiIcon('multiplayer')}</span>
+        <span>Join Multiplayer</span>
+      </Button>
+      <Button onClick={() => setRoute('SETTINGS')}>
+        <span>{getUiIcon('settings')}</span>
+        <span>Settings...</span>
+      </Button>
     </Modal>
   );
 };
