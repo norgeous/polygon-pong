@@ -25,6 +25,9 @@ function update () {
   this.player1?.update(this);
   this.otherPlayers.forEach(otherPlayer => otherPlayer.update(this));
   this.additionalFunctions.update(this);
+
+  if (this.game.sysInfo.visibilityState === 'hidden') this.matter.pause();
+  if (this.game.sysInfo.visibilityState === 'visible') this.matter.resume();
 }
 
 export default {

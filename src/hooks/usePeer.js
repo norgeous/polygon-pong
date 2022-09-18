@@ -44,7 +44,7 @@ const useConnections = () => {
 
 
 
-const usePeer = (game, { location, hostFitness, visibilityState }) => {
+const usePeer = (game) => {
   const [peer, setPeer] = useState();
   const [loading, setLoading] = useState(false);
   const [connections, setConnections, broadcast] = useConnections();
@@ -67,11 +67,7 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
     console.log(`connected to ${conn.peer}`);
     conn.send({
       action: 'SETDATA',
-      payload: {
-        location,
-        hostFitness,
-        platform: navigator.platform,
-      },
+      payload: game.sysInfo,
     });
     setConnections(newPeer.connections);
   };
@@ -108,9 +104,9 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
 
   // join / leave the peerNet when visibilityState changes
   useEffect(async () => {
-    if (!game || !location || !hostFitness || !visibilityState) return;
+    if (!game) return;
 
-    if (visibilityState === 'visible' && !peer && !loading) {
+    if (game.sysInfo?.visibilityState === 'visible' && !peer && !loading) {
       // console.log('LOGIN', visibilityState, peer, loading);
       setLoading(true);
       const {
@@ -130,14 +126,14 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
       setLoading(false);
     }
 
-    if (visibilityState === 'hidden') {
+    if (game.sysInfo?.visibilityState === 'hidden') {
       // console.log('LOGOUT');
       broadcast({ action: 'CLOSE' });
       peer.disconnect();
       peer.destroy();
       setPeer();
     }
-  }, [game, location, hostFitness, visibilityState]);
+  }, [game]);
 
   return { peerIds, peerId: peer?.id, connections, broadcast, peerData };
 };
