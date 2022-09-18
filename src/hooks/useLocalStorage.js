@@ -20,8 +20,6 @@ const useLocalStorage = (key, defaultValue) => {
     else localStorage.removeItem(key);
   }, [value]);
 
-  if (key === 'volume') console.log({key, defaultValue, value});
-
   return [value, setValue];
 };
 

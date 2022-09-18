@@ -8,8 +8,8 @@ class Ball {
     const { width, height } = scene.sys.game.canvas;
 
     // speeding emitter
-    const particles = scene.add.particles('red');
-    this.emitter = particles.createEmitter({
+    console.log(scene.particles)
+    this.emitter = scene.particles.createEmitter({
       speed: 100,
       scale: { start: 0.25, end: 0 },
       blendMode: 'ADD'
@@ -71,6 +71,11 @@ class Ball {
     this.ball.setRotation(a);
     this.ball.setVelocity(vx, vy);
     this.ball.setAngularVelocity(va);
+  }
+
+  destroy() {
+    this.ball.destroy();
+    delete this.ball;
   }
 }
 
