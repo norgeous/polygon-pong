@@ -81,7 +81,7 @@ class Player {
 
   destroy() {
     // console.log('class destroy', this.player);
-    this.player.destroy();
+    this.player?.destroy?.();
     delete this.player;
   }
 }

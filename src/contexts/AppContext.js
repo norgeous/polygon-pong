@@ -22,9 +22,8 @@ export const AppProvider = ({ children }) => {
     if (game) {
       const scene = game.scene.scenes[0];
       if (scene) {
-
         if (peerId) {
-          scene.player1 = new Player(scene, 'Player 1', 'local');
+          if (!scene.player1) scene.player1 = new Player(scene, 'Player 1', 'local');
         } else {
           // console.log(scene.player1);
           scene.player1?.destroy?.();
@@ -66,7 +65,7 @@ export const AppProvider = ({ children }) => {
   
   // set react data into game
   // useEffect(() => {if (game) { game.maxVolume = volume; updateGame(); }}, [volume]);
-  useEffect(() => {console.log('sysinfo changed', game, sysInfo); if (game) { game.sysInfo = sysInfo; updateGame(); }}, [game, sysInfo]);
+  useEffect(() => { if (game) { game.sysInfo = sysInfo; updateGame(); }}, [game, sysInfo]);
 
   return (
     <AppContext.Provider
