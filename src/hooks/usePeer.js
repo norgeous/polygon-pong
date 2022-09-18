@@ -100,7 +100,7 @@ const usePeer = (game, { location, hostFitness, visibilityState }) => {
         scene.ball.setState(payload);
       },
       SETDATA: () => {
-        setPeerDataById(conn.peer, data);
+        setPeerDataById(conn.peer, payload);
       },
     };
     reducer[action]?.(payload) || reducer.SETDATA(payload);
