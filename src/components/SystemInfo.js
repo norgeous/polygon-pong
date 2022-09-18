@@ -11,10 +11,10 @@ const SystemInfo = props => {
       <Tr onClick={() => setOpen(!open)}>
         <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
         <Td>{status && getUiIcon(status)}</Td>
-        <Td>{getBrowserIcon(browser.name)}</Td>
-        <Td>{getOsIcon(os.name)}</Td>
-        <Td>{getPlatformIcon(platform.type)}</Td>
-        <Td>{getUiIcon('game')} {packageConfig.version}</Td>
+        <Td>{browser?.name && getBrowserIcon(browser.name)}</Td>
+        <Td>{os?.name &&getOsIcon(os.name)}</Td>
+        <Td>{platform?.type && getPlatformIcon(platform.type)}</Td>
+        <Td>{getUiIcon('game')} {packageConfig?.version}</Td>
         <Td>{location && (<>{getFlagIcon(location.country_code)} {location.city} {location.country_code}</>)}</Td>
         <Td>{isHost && getUiIcon('host')}</Td>
         <Td right>{hostFitness}</Td>

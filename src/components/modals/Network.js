@@ -1,33 +1,9 @@
-import React, { useState } from 'react';
-import { getUiIcon, getFlagIcon } from '../../utils/emoji';
+import React from 'react';
+import { getUiIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
-import { Table, Tr, Td } from '../styled/table';
-
-const PeerItem = props => {
-  const { id, status, location, platform, hostFitness, isHost } = props;
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <Tr onClick={() => setOpen(!open)}>
-        <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
-        <Td>{getUiIcon(status)}</Td>
-        <Td>{platform}{location && `, ${location.city}, ${location.postal}`}</Td>
-        <Td>{location && (<>[{location.country_code} {getFlagIcon(location.country_code)}]</>)}</Td>
-        <Td right>{hostFitness}</Td>
-        <Td>{isHost && getUiIcon('host')}</Td>
-      </Tr>
-      {open && (
-        <Tr>
-          <Td colSpan="100%">
-            <pre>{JSON.stringify(props, null, 2)}</pre>
-          </Td>
-        </Tr>
-      )}
-    </>
-  );
-};
+import { Table } from '../styled/table';
+import SystemInfo from '../SystemInfo';
 
 const Network = () => {
   const {
@@ -35,6 +11,7 @@ const Network = () => {
     location,
     hostFitness,
     peerIds, peerId, connections, peerData,
+    sysInfo,
   } = useAppContext();
 
   const peerList = peerIds.map(id => {
@@ -77,7 +54,7 @@ const Network = () => {
       {!peerList.length && `${getUiIcon('disconnected')} No Connections`}
       {!!peerList.length && (
         <Table>
-          {peerList.map(p => <PeerItem isHost={whoIsHost.id === p.id} {...p} />)}
+          {peerList.map(p => p.id === peerId ?<SystemInfo {...sysInfo} />:<SystemInfo isHost={whoIsHost.id === p.id} {...p} />)}
         </Table>
       )}
     </Modal>
