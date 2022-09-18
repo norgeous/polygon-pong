@@ -12,6 +12,7 @@ const Profile = () => {
     hostFitness,
     batteryPercent,
     clock,
+    sysInfo,
   } = useAppContext();
 
   const reload = () => window.location.reload();
@@ -52,6 +53,7 @@ const Profile = () => {
           <Td>{clock}</Td>
         </Tr>
       </Table>
+      <pre>{JSON.stringify(sysInfo, null, 2)}</pre>
     </Modal>
   );
 };
