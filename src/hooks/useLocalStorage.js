@@ -7,14 +7,20 @@ const getInitialState = (key, defaultValue) => {
 };
 
 const useLocalStorage = (key, defaultValue) => {
-  const initialState = getInitialState(key, defaultValue);
-  const [value, setValue] = useState(initialState);
+  const [value, setValue] = useState(defaultValue);
+  
+  useEffect(() => {
+    const initialState = getInitialState(key, defaultValue);
+    setValue(initialState);
+  }, []);
 
   // update local storage when value changes
   useEffect(() => {
     if (value !== undefined) localStorage.setItem(key, JSON.stringify(value));
     else localStorage.removeItem(key);
   }, [value]);
+
+  if (key === 'volume') console.log({key, defaultValue, value});
 
   return [value, setValue];
 };

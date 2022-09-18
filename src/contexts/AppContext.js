@@ -64,8 +64,8 @@ export const AppProvider = ({ children }) => {
   }, [game, peerId, peerIds, broadcast]);
   
   // set react data into game
-  // useEffect(() => {if (game) { game.maxVolume = volume; updateGame(); }}, [volume]);
-  useEffect(() => { if (game) { game.sysInfo = sysInfo; updateGame(); }}, [game, sysInfo]);
+  useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; updateGame(); }}, [game, volume]);
+  // useEffect(() => { if (game && game.sysInfo !== sysInfo) { game.sysInfo = sysInfo; updateGame(); }}, [game, sysInfo]);
 
   return (
     <AppContext.Provider

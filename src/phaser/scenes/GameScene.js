@@ -34,8 +34,8 @@ class GameScene extends Phaser.Scene {
     this.otherPlayers.forEach(otherPlayer => otherPlayer.update(this));
     // this.additionalFunctions.update(this);
 
-    if (this.game.sysInfo.visibilityState === 'hidden') this.matter.pause();
-    if (this.game.sysInfo.visibilityState === 'visible') this.matter.resume();
+    if (this.sysInfo.visibilityState === 'hidden') this.matter.pause();
+    if (this.sysInfo.visibilityState === 'visible') this.matter.resume();
   }
 }
 

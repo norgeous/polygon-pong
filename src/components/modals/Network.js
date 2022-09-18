@@ -54,7 +54,7 @@ const Network = () => {
       {!peerList.length && `${getUiIcon('disconnected')} No Connections`}
       {!!peerList.length && (
         <Table>
-          {peerList.map(p => p.id === peerId ?<SystemInfo {...sysInfo} />:<SystemInfo isHost={whoIsHost.id === p.id} {...p} />)}
+          {peerList.map(p => p.id === peerId ?<SystemInfo {...sysInfo} {...p} />:<SystemInfo isHost={whoIsHost.id === p.id} {...p} />)}
         </Table>
       )}
     </Modal>
