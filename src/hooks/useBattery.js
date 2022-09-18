@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 const available = 'getBattery' in navigator;
 
 const useBattery = () => {
-  const [battery, setBattery] = useState();
+  const [batteryPercent, setBatteryPercent] = useState(100);
 
   useEffect(() => {
     if (available) {
       const getBattery = async () => {
         const newBattery = await navigator.getBattery();
-        setBattery(newBattery);
+        setBatteryPercent(Math.floor(newBattery.level * 100));
       };
 
       getBattery();
@@ -19,8 +19,6 @@ const useBattery = () => {
       return () => clearInterval(t);
     }
   }, []);
-
-  const batteryPercent = `${Math.floor((battery?.level || 0) * 100)}%`;
 
   return [available, batteryPercent];
 };
