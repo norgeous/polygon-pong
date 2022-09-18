@@ -49,6 +49,7 @@ const Settings = () => {
         />
       </Button>
       <Button onClick={() => setRoute('PROFILE')}><span>🧰</span><span>Hardware Profile</span></Button>
+      <Button onClick={() => setRoute('NETWORK')}><span>🙎</span><span>Network</span></Button>
     </Modal>
   );
 };

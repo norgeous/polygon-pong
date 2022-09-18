@@ -7,7 +7,7 @@ const Profile = () => {
   const {
     setRoute,
     fps, targetFps,
-    cores, ram, timeTaken, hostFitness,
+    hostFitness,
    } = useAppContext();
 
   return (
@@ -17,18 +17,7 @@ const Profile = () => {
         fps: {fps} / {targetFps} fps
       </div>
       <div>
-        cores: {cores}
-      </div>
-      <div>
-        ram: {ram}
-      </div>
-      <div>
-        timeTaken: {timeTaken}
-      </div>
-      <div>
         hostFitness: {hostFitness}
-        <br/>
-        ((cores + ram)*10) - timeTaken
       </div>
     </Modal>
   );

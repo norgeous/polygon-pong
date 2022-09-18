@@ -13,12 +13,15 @@ export const FlexColumn = styled.div`
 
 export const Heading1 = styled.h1`
   font-size: 30px;
+  font-weight: normal;
   margin: 0;
 `;
 
 export const Heading2 = styled.h2`
   font-size: 20px;
+  font-weight: normal;
   margin: 0;
+  text-align: center;
 `;
 
 export const A = styled.a`
