@@ -77,9 +77,12 @@ const Network = () => {
 
   return (
     <Modal title="🙎 Network" onClose={() => setRoute()}>
-      <Table>
-        {peerList.map(p => <PeerItem isHost={whoIsHost.id === p.id} {...p} />)}
-      </Table>
+      {!peerList.length && '🚷 No Connections'}
+      {!!peerList.length && (
+        <Table>
+          {peerList.map(p => <PeerItem isHost={whoIsHost.id === p.id} {...p} />)}
+        </Table>
+      )}
     </Modal>
   );
 };
