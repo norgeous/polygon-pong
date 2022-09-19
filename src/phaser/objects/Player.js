@@ -1,8 +1,7 @@
 import createOscillator from '../../utils/createOscillator';
 
 class Player {
-  constructor(scene, name, controlType) {
-    this.name = name;
+  constructor(scene, controlType) {
     this.controlType = controlType;
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();

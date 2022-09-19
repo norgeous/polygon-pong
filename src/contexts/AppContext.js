@@ -25,54 +25,43 @@ export const AppProvider = ({ children }) => {
   // on mount, add a ball
   useEffect(() => { if (gameReady) scene.addBall(); }, [gameReady]);
 
-  // on join / leave peerNet, add / remove the player to scene
+  // on local player join / leave peerNet, add / remove the player to scene
   useEffect(() => {
-    if (game) {
-      const scene = game.scene.scenes[0];
-      if (scene) {
-        // console.log(scene, peerId);
-        if (peerId) {
-          if (!scene.localPlayer) scene.localPlayer = new Player(scene, 'Player 1', 'local');
-        } else {
-          scene.player1?.destroy?.();
-        }
-      }
+    if (gameReady) {
+      if (peerId) scene.addLocalPlayer();
+      else scene.removeLocalPlayer();
     }
-  }, [game, peerId]);
+  }, [gameReady, peerId]);
 
-  // when connections change, add / remove other players to scene
+  // when connections change, adjust remote players
   useEffect(() => {
-    if (game) {
-      const scene = game.scene.scenes[0];
-      if (scene) {
-        scene.remotePlayers.forEach(p => p.destroy());
-        scene.remotePlayers = connections.map(c => new Player(scene, 'Other Player', 'remote'));
-      }
+    if (gameReady) {
+      scene.remotePlayers.forEach(p => p.destroy());
+      connections.forEach(() => scene.addRemotePlayer());
     }
-  }, [game, connections]);
+  }, [gameReady, connections]);
 
   // broadcast ball physics state
-  // useEffect(() => {
-  //   if (game && peerId && peerId === peerIds[0] && broadcast) {
-  //     const send = () => {
-  //       const ball = scene.balls[0];
-  //       const { x, y } = ball.ball;
-  //       const { x: vx, y: vy } = ball.ball.body.velocity;
-  //       const { angle: a, angularVelocity: va } = ball.ball.body;
-  //       broadcast({
-  //         action: 'SETBALL',
-  //         payload: { x, y, a, vx, vy, va },
-  //       });
-  //     };
-  //     const t = setInterval(send, 50); // broadcast poll rate
-  //     return () => clearInterval(t);
-  //   };
-  // }, [game, peerId, peerIds, broadcast]);
+  useEffect(() => {
+    if (gameReady && peerId && peerId === peerIds[0] && broadcast) {
+      const send = () => {
+        const ball = scene.balls[0];
+        const { x, y } = ball.ball;
+        const { x: vx, y: vy } = ball.ball.body.velocity;
+        const { angle: a, angularVelocity: va } = ball.ball.body;
+        broadcast({
+          action: 'SETBALL',
+          payload: { x, y, a, vx, vy, va },
+        });
+      };
+      const t = setInterval(send, 50); // broadcast poll rate
+      return () => clearInterval(t);
+    }
+  }, [gameReady, peerId, peerIds, broadcast]);
   
   // set react data into game
   useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
   useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
-  // useEffect(() => { if (game && game.sysInfo !== sysInfo) { game.sysInfo = sysInfo; updateGame(); }}, [game, sysInfo]);
 
   return (
     <AppContext.Provider

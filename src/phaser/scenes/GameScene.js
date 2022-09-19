@@ -1,4 +1,5 @@
 import Ball from '../objects/Ball';
+import Player from '../objects/Player';
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -43,20 +44,30 @@ class GameScene extends Phaser.Scene {
     ].forEach(gObj => gObj?.update(this));
 
     this.game.setFps(Math.round(this.game.loop.actualFps)); // react state update
-
   }
 
   addBall () {
     this.balls.push(new Ball(this));
   }
-
   removeBall () {
     const ball = this.balls.pop();
     ball.destroy();
   }
+  
+  addLocalPlayer () {
+    this.localPlayer = new Player(this, 'local');
+  }
+  removeLocalPlayer () {
+    if (this.localPlayer) this.localPlayer.destroy();
+  }
 
-  addPlayer () {}
-  removePlayer () {}
+  addRemotePlayer () {
+    this.remotePlayers.push(new Player(this, 'remote'));
+  }
+  removeRemotePlayer () {
+    const remotePlayer = this.remotePlayers.pop();
+    remotePlayer.destroy();
+  }
 }
 
 export default GameScene;
