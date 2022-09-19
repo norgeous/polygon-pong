@@ -17,13 +17,13 @@ export const AppProvider = ({ children }) => {
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
-  const { game, ready, fps, targetFps } = usePhaser();
+  const { game, gameReady, fps, targetFps } = usePhaser();
   const { peerIds, peerId, connections, broadcast, peerData } = usePeer(sysInfo, game, visibilityState);
 
   const scene = game?.scene?.scenes?.[0];
 
   // on mount, add a ball
-  useEffect(() => { if (ready) scene.addBall(); }, [ready]);
+  useEffect(() => { if (gameReady) scene.addBall(); }, [gameReady]);
 
   // on join / leave peerNet, add / remove the player to scene
   useEffect(() => {
