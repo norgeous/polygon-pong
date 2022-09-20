@@ -26,7 +26,7 @@ const Settings = () => {
           step={0.01}
           value={volume}
           onChange={event => {
-            console.log('wtf?',Number(event.target.value));
+            // console.log('wtf?',Number(event.target.value));
             setVolume(Number(event.target.value));
           }}
           style={{ width: '100%' }}
