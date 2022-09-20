@@ -82,7 +82,7 @@ const usePeerNet = ({
 
       const newPeerNet = createPeerNet({networkName, maxPeers});
       setPeerNet(newPeerNet);
-      newPeerNet.update = newestPeerNet => setPeerNet({...newestPeerNet});
+      newPeerNet.update = newestPeerNet => setPeerNet({...newestPeerNet}); // update react state after open/close/data
       newPeerNet.onOpen = () => newPeerNet.broadcast({msg: 'hello nice to meet you'});
       
       await newPeerNet.start();
