@@ -10,7 +10,11 @@ const AppContext = createContext({});
 
 export const AppProvider = ({ children }) => {
   const sysInfo = useSystemInfo();
-  const { visibilityState, hostFitness } = sysInfo;
+  const { visibilityState, hostFitness, location } = sysInfo;
+  const osName = sysInfo.os.name;
+  const platformType = sysInfo.platformType;
+  const browserName = sysInfo.browser.name;
+  const version = sysInfo.packageConfig.version;
 
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
@@ -18,8 +22,20 @@ export const AppProvider = ({ children }) => {
   const { game, gameReady, fps, targetFps } = usePhaser();
 
   const onOpen = useCallback(conn => {
-    conn.send({ action: 'SETDATA', payload: { hostFitness } });
+    conn.send({
+      action: 'SETDATA',
+      payload: {
+        osName,
+        location,
+        platformType,
+        browserName,
+        version,
+        hostFitness,
+      },
+    });
   }, [hostFitness]);
+
+  console.log(sysInfo);
 
   const { peer, connections } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
@@ -44,7 +60,7 @@ export const AppProvider = ({ children }) => {
 
   // when connections change, adjust players
   useEffect(() => {
-    // console.log('connections or game changed!', connections);
+    console.log('connections or game changed!', connections);
     if (gameReady && connections) {
       scene.localPlayer?.destroy();
       scene.remotePlayers.forEach(p => p.destroy());
@@ -85,8 +101,6 @@ export const AppProvider = ({ children }) => {
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,
         sysInfo,
-        // peerIds, peerId, connections, broadcast, peerData,
-        // peerNet, peerData, setPeerDataById, broadcast,
         peer, connections,
       }}
     >
