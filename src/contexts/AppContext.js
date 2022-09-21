@@ -10,11 +10,7 @@ const AppContext = createContext({});
 
 export const AppProvider = ({ children }) => {
   const sysInfo = useSystemInfo();
-  const { visibilityState, hostFitness, location } = sysInfo;
-  const osName = sysInfo.os.name;
-  const platformType = sysInfo.platform.type;
-  const browserName = sysInfo.browser.name;
-  const version = sysInfo.packageConfig.version;
+  const { visibilityState, idCard } = sysInfo;
 
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
@@ -22,20 +18,8 @@ export const AppProvider = ({ children }) => {
   const { game, gameReady, fps, targetFps } = usePhaser();
 
   const onOpen = useCallback(conn => {
-    conn.send({
-      action: 'SETDATA',
-      payload: {
-        osName,
-        location,
-        platformType,
-        browserName,
-        version,
-        hostFitness,
-      },
-    });
-  }, [hostFitness]);
-
-  console.log(sysInfo);
+    conn.send({ action: 'SETDATA', payload: idCard });
+  }, [idCard]);
 
   const { peer, connections } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
