@@ -20,8 +20,10 @@ const usePhaser = () => {
   }, []);
 
   return {
-    game, gameReady,
-    fps, targetFps: game?.loop.targetFps || 0,
+    gameReady,
+    game,
+    fps,
+    targetFps: game?.loop.targetFps || 0,
   };
 };
 
