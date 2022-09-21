@@ -15,26 +15,28 @@ export const AppProvider = ({ children }) => {
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
-  const { game, gameReady, fps, targetFps } = usePhaser();
+  const { gameReady, game, fps, targetFps } = usePhaser();
 
   const onOpen = useCallback(conn => {
     conn.send({ action: 'SETDATA', payload: idCard });
   }, [idCard]);
+  
+  const onData = useCallback((conn, data) => {
+    const { action, payload } = data;
+    ({
+      // receive game state
+      SETGAMESTATE: (d) => {
+        // deserialise game state and set into scene
+      },
+    })[action]?.(payload);
+  }, [game]);
 
   const { peer, connections } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
     active: visibilityState === 'visible',
     onOpen,
-    // onData: (conn, data) => {
-    //   const { action, payload } = data;
-    //   ({
-    //     // receive game state
-    //     SETGAMESTATE: (d) => {
-    //       // deserialise game state and set into scene
-    //     },
-    //   })[action]?.(payload);
-    // },
+    onData,
   });
 
   const scene = game?.scene?.scenes?.[0];
