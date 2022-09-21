@@ -36,7 +36,10 @@ const usePeerJsMesh = ({
 
   const setConnectionById = (id, data) => setConnections(oldConnections => ({
     ...oldConnections,
-    [id]: data,
+    [id]: {
+      ...oldConnections?.[id],
+      ...data,
+    },
   }));
 
   const deleteConnectionById = (id) => setConnections(oldConnections => {
@@ -98,7 +101,6 @@ const usePeerJsMesh = ({
   // for incoming connections from other peers
   useEffect(() => {
     if (peer) {
-      console.log('REG INCOMING')
       peer.on('connection', conn => { // Emitted when a new data connection is established from a remote peer.
         conn.on('open', () => onOpenWrapper(conn));
         conn.on('close', () => onCloseWrapper(conn));
@@ -106,7 +108,6 @@ const usePeerJsMesh = ({
       });
       
       return () => {
-        console.log('DEREREG INCOMING')
         peer.off('connection');
       };
     }
