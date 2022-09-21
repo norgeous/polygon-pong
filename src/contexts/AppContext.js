@@ -12,7 +12,7 @@ export const AppProvider = ({ children }) => {
   const sysInfo = useSystemInfo();
   const { visibilityState, hostFitness, location } = sysInfo;
   const osName = sysInfo.os.name;
-  const platformType = sysInfo.platformType;
+  const platformType = sysInfo.platform.type;
   const browserName = sysInfo.browser.name;
   const version = sysInfo.packageConfig.version;
 
