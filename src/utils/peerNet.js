@@ -38,22 +38,14 @@ const createPeerNet = ({
     onClose: () => {},
     onData: () => {},
     start: async function () {
-      // console.log('start');
       // try to become each id until vacant seat found
       this.peer = await peerIds.reduce(async (memo, id) => {
-        // console.log('processing', id);
         const acc = await memo;
-        // console.log('processing2', id);
         if (acc) return acc; // if already connected skip
-        // console.log('join as', id);
         return await becomePeerId(id);
       }, false);
 
-      // console.log('got peer?', this.peer);
-
       if (!this.peer) throw new Error('no seats');
-
-      // console.log('got peer');
 
       // setup this peer inside connections
       this.connections[this.peer.id].connectionType = 'local';
