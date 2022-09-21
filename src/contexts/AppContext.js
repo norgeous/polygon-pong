@@ -26,7 +26,6 @@ export const AppProvider = ({ children }) => {
     maxPeers: 9,
     active: visibilityState === 'visible',
     onOpen,
-    // onClose: () => {},
     // onData: (conn, data) => {
     //   const { action, payload } = data;
     //   ({
@@ -45,18 +44,15 @@ export const AppProvider = ({ children }) => {
 
   // when connections change, adjust players
   useEffect(() => {
-    console.log('connections or game changed!', connections);
-    // if (gameReady && peerNet) {
-    //   scene.localPlayer?.destroy();
-    //   scene.remotePlayers.forEach(p => p.destroy());
-    //   Object.entries(peerNet.connections).forEach(([id, { connectionType, connected }]) => {
-    //     console.log('might add a player',{ connectionType, connected });
-    //     if (connected) {
-    //       if (connectionType === 'local') scene.addLocalPlayer(id);
-    //       if (connectionType === 'remote') scene.addRemotePlayer(id);
-    //     }
-    //   });
-    // }
+    // console.log('connections or game changed!', connections);
+    if (gameReady && connections) {
+      scene.localPlayer?.destroy();
+      scene.remotePlayers.forEach(p => p.destroy());
+      Object.entries(connections).forEach(([id, { connectionType }]) => {
+        if (connectionType === 'local') scene.addLocalPlayer(id);
+        if (connectionType === 'remote') scene.addRemotePlayer(id);
+      });
+    }
   }, [gameReady, connections]);
 
   // broadcast ball physics state
