@@ -59,6 +59,7 @@ const Network = () => {
         </Table>
       )} */}
       <pre>{JSON.stringify(peerNet.connections,null,2)}</pre>
+      <pre>{JSON.stringify(peerData,null,2)}</pre>
     </Modal>
   );
 };

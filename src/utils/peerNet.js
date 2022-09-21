@@ -15,6 +15,7 @@ const becomePeerId = (id) => new Promise(resolve => {
 const createPeerNet = ({
   networkName,
   maxPeers,
+  callbacks,
 }) => {
   const peerIds = Array.from(
     { length: maxPeers },
@@ -63,16 +64,19 @@ const createPeerNet = ({
         this.connections[conn.peer].connectionType = 'remote';
         this.connections[conn.peer].connected = true;
         this.onOpen(conn);
+        callbacks.open(conn);
         this.update(this);
       };
       const onClose = conn => {
         this.connections[conn.peer].connectionType = 'none';
         this.connections[conn.peer].connected = false;
         this.onClose(conn);
+        callbacks.close(conn);
         this.update(this);
       };
       const onData = (conn, data) => {
         this.onData(conn, data);
+        callbacks.data(conn, data);
         this.update(this);
       };
 

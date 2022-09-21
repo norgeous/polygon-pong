@@ -29,6 +29,15 @@ export const AppProvider = ({ children }) => {
 
   // console.log(peerNet, peerData);
 
+  // once we have both peerNet and sysInfo, change peerNet's onOpen callback
+  useEffect(() => {
+    if (peerNet && sysInfo) {
+      peerNet.onOpen = conn => conn.send({
+        action: 'SETDATA',
+        payload: sysInfo,
+      });
+    }
+  }, [peerNet, sysInfo]);
 
   // on mount, add a ball
   useEffect(() => { if (gameReady) scene.addBall(); }, [gameReady]);
@@ -80,7 +89,7 @@ export const AppProvider = ({ children }) => {
         game, fps, targetFps,
         sysInfo,
         // peerIds, peerId, connections, broadcast, peerData,
-        peerNet, setPeerDataById, broadcast,
+        peerNet, peerData, setPeerDataById, broadcast,
       }}
     >
       {children}
