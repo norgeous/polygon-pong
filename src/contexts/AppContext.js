@@ -25,7 +25,7 @@ export const AppProvider = ({ children }) => {
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
     active: visibilityState === 'visible',
-    // onOpen,
+    onOpen,
     // onClose: () => {},
     // onData: (conn, data) => {
     //   const { action, payload } = data;
