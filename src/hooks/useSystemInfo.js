@@ -43,6 +43,14 @@ const useSystemInfo = () => {
     location,
     batteryAvailable, batteryPercent,
     clock,
+    idCard: {
+      location,
+      osName: browser.os.name,
+      platformType: browser.platform.type,
+      browserName: browser.browser.name,
+      version: packageConfig.version,
+      hostFitness: average,
+    }
   };
 };
 
