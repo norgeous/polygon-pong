@@ -82,8 +82,8 @@ const usePeerJsMesh = ({
   useEffect(() => {
     const cleanUp = p => {
       console.log('LOGOUT');
-      p.disconnect();
-      p.destroy();
+      p?.disconnect();
+      p?.destroy();
       setPeer();
       setConnections();
     };
