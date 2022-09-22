@@ -34,19 +34,21 @@ const usePeerJsMesh = ({
   const [peer, setPeer] = useState();
   const [connections, setConnections] = useState();
 
-  const setConnectionById = (id, data) => setConnections(oldConnections => ({
-    ...oldConnections,
-    [id]: {
-      ...oldConnections?.[id],
-      ...data,
-    },
-  }));
+  const setConnectionById = (id, data) => {console.log('setConnectionById', id, data); setConnections(oldConnections => ({
+      ...oldConnections,
+      [id]: {
+        ...oldConnections?.[id],
+        ...data,
+      },
+    }));
+  };
 
   const deleteConnectionById = (id) => setConnections(oldConnections => {
     return Object.fromEntries(Object.entries(oldConnections).filter(([cid]) => cid !== id));
   });
 
-  const onOpenWrapper = useCallback(conn => {
+  const onOpenWrapper = useCallback((conn, x) => {
+    console.log('set to remote', x, conn.peer, conn)
     setConnectionById(conn.peer, {
       connectionType: 'remote',
       connection: conn,
@@ -77,32 +79,39 @@ const usePeerJsMesh = ({
   const peerIds = useMemo(() => getIds({ networkName, seats }), [networkName, seats]);
 
   // if config changes, join and setPeer
-  useEffect(async () => {
-    if (peerIds.length && active) {
-      console.log('LOGIN')
-      const newPeer = await join(peerIds);
-      setPeer(newPeer);
-      setConnectionById(newPeer.id, {
-        connectionType: 'local',
-        connection: newPeer,
-      });
-
-      return () => {
-        console.log('LOGOUT')
-        newPeer.disconnect();
-        newPeer.destroy();
-        setPeer();
-        setConnections();
-      };
+  useEffect(() => {
+    const cleanUp = p => {
+      console.log('LOGOUT');
+      p.disconnect();
+      p.destroy();
+      setPeer();
+      setConnections();
+    };
+    let mounted = true;
+    if (active) {
+      console.log('LOGIN');
+      (async () => {
+        const newPeer = await join(peerIds);
+        if (mounted) {
+          setPeer(newPeer);
+          setConnectionById(newPeer.id, {
+            connectionType: 'local',
+            connection: newPeer,
+          });
+        } else cleanUp(newPeer);
+      })();
+    } else {
+      cleanUp(peer);
     }
+    return () => mounted = false;
   }, [peerIds, active]);
 
   // if peer changes, register event callbacks
   // for incoming connections from other peers
   useEffect(() => {
-    if (peer) {
-      peer.on('connection', conn => { // Emitted when a new data connection is established from a remote peer.
-        conn.on('open', () => onOpenWrapper(conn));
+    if (active && peer) {
+      peer.on('connection', conn => { // Emitted when a new data connection is established from a remote peer
+        conn.on('open', () => onOpenWrapper(conn,'a'));
         conn.on('close', () => onCloseWrapper(conn));
         conn.on('data', data => onDataWrapper(conn, data));
       });
@@ -111,22 +120,23 @@ const usePeerJsMesh = ({
         peer.off('connection');
       };
     }
-  }, [peer, onOpenWrapper, onCloseWrapper, onDataWrapper]);
+  }, [active, peer, onOpenWrapper, onCloseWrapper, onDataWrapper]);
 
   // if peer changes, try to establish outgoing
   // connections to all predefined peer ids (except ours)
   useEffect(() => {
-    if (peer && peerIds.length) {
+    if (active && peer && peerIds.length) {
       const everyoneExceptUs = peerIds.filter(id => id !== peer.id);
       everyoneExceptUs.forEach(id => {
         const conn = peer.connect(id, { label: 'data' });
-        conn.on('open', () => onOpenWrapper(conn));
+        // console.log({id, conn});
+        conn.on('open', () => onOpenWrapper(conn,'b'));
         conn.on('close', () => onCloseWrapper(conn));
         conn.on('data', data => onDataWrapper(conn, data));
       });
 
       return () => {
-        // deregister old handlers on open connections
+        // deregister old handlers when wrappers change
         if (connections) {
           Object.values(connections).forEach(({ connectionType, connection }) => {
             if (connectionType === 'remote') {
@@ -138,7 +148,7 @@ const usePeerJsMesh = ({
         }
       };
     }
-  }, [peer, peerIds, onOpenWrapper, onCloseWrapper, onDataWrapper]);
+  }, [active, peer, peerIds, onOpenWrapper, onCloseWrapper, onDataWrapper]);
 
   return {
     peer,
