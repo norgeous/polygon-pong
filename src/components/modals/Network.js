@@ -8,11 +8,12 @@ import SystemInfo from '../SystemInfo';
 const Network = () => {
   const {
     setRoute,
-    location,
-    hostFitness,
-    peerIds, peerId, connections, peerData,
-    sysInfo,
-    peerNet,
+    // location,
+    // hostFitness,
+    // peerIds, peerId, connections, peerData,
+    // sysInfo,
+    // peerNet,
+    connections,
   } = useAppContext();
 
   // const peerList = peerIds.map(id => {
@@ -58,8 +59,11 @@ const Network = () => {
           {peerList.map(p => p.id === peerId ?<SystemInfo {...sysInfo} {...p} />:<SystemInfo isHost={whoIsHost.id === p.id} {...p} />)}
         </Table>
       )} */}
-      <pre>{JSON.stringify(peerNet.connections,null,2)}</pre>
-      <pre>{JSON.stringify(peerData,null,2)}</pre>
+      {connections && Object.entries(connections).map(([id, {connectionType, location, platform, hostFitness}]) => (
+        <pre>{JSON.stringify({ id, connectionType, location, platform, hostFitness }, null, 2)}</pre>
+      ))}
+      
+      {/* <pre>{JSON.stringify(peerData,null,2)}</pre> */}
     </Modal>
   );
 };
