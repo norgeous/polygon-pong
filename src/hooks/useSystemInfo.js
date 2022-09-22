@@ -40,11 +40,11 @@ const useSystemInfo = () => {
     ram,
     hostFitness: average,
     ...browser,
-    location,
+    ...location,
     batteryAvailable, batteryPercent,
     clock,
     idCard: {
-      location,
+      ...location,
       osName: browser.os.name,
       platformType: browser.platform.type,
       browserName: browser.browser.name,
