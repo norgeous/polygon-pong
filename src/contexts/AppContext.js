@@ -18,25 +18,25 @@ export const AppProvider = ({ children }) => {
   const { gameReady, game, fps, targetFps } = usePhaser();
 
   const onOpen = useCallback(conn => {
-    conn.send({ action: 'SETDATA', payload: idCard });
+    conn.send({ action: 'SETDATA', payload: { idCard } });
   }, [idCard]);
   
-  const onData = useCallback((conn, data) => {
-    const { action, payload } = data;
-    ({
-      // receive game state
-      SETGAMESTATE: (d) => {
-        // deserialise game state and set into scene
-      },
-    })[action]?.(payload);
-  }, []);
+  // const onData = useCallback((conn, data) => {
+  //   const { action, payload } = data;
+  //   ({
+  //     // receive game state
+  //     SETGAMESTATE: (d) => {
+  //       // deserialise game state and set into scene
+  //     },
+  //   })[action]?.(payload);
+  // }, []);
 
   const { peer, connections } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
     active: visibilityState === 'visible',
     onOpen,
-    onData,
+    // onData,
   });
 
   const scene = game?.scene?.scenes?.[0];
