@@ -29,7 +29,7 @@ export const AppProvider = ({ children }) => {
         // deserialise game state and set into scene
       },
     })[action]?.(payload);
-  }, [game]);
+  }, []);
 
   const { peer, connections } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
