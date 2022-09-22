@@ -47,13 +47,15 @@ export const AppProvider = ({ children }) => {
   // when connections change, adjust players
   useEffect(() => {
     console.log('connections or game changed!', connections);
-    if (gameReady && connections) {
+    if (gameReady){
       scene.localPlayer?.destroy();
       scene.remotePlayers.forEach(p => p.destroy());
-      Object.entries(connections).forEach(([id, { connectionType }]) => {
-        if (connectionType === 'local') scene.addLocalPlayer(id);
-        if (connectionType === 'remote') scene.addRemotePlayer(id);
-      });
+      if (connections) {
+        Object.entries(connections).forEach(([id, { connectionType }]) => {
+          if (connectionType === 'local') scene.addLocalPlayer(id);
+          if (connectionType === 'remote') scene.addRemotePlayer(id);
+        });
+      }
     }
   }, [gameReady, connections]);
 
