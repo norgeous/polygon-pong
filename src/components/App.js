@@ -24,6 +24,8 @@ const App = () => {
   
   const { batteryAvailable, batteryPercent, clock } = sysInfo;
 
+  const connectionCount = connections ? Object.keys(connections)?.length : 0;
+
   return (
     <>
       {route === 'MAINMENU' && <MainMenu />}
@@ -40,7 +42,7 @@ const App = () => {
         1,000,023
       </TopLeft>
       <TopRight>
-        <Button onClick={() => setRoute('NETWORK')}>{getUiIcon('network')}x{connections?.length}</Button>
+        <Button onClick={() => setRoute('NETWORK')}>{getUiIcon('network')}x{connectionCount}</Button>
         <Button onClick={() => setRoute('PROFILE')}>
           {batteryAvailable ?
             `${batteryPercent > 50 ? getUiIcon('battery_full') : getUiIcon('battery_half')}${batteryPercent}%` :
