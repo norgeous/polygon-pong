@@ -7,12 +7,7 @@ const getInitialState = (key, defaultValue) => {
 };
 
 const useLocalStorage = (key, defaultValue) => {
-  const [value, setValue] = useState(defaultValue);
-  
-  useEffect(() => {
-    const initialState = getInitialState(key, defaultValue);
-    setValue(initialState);
-  }, []);
+  const [value, setValue] = useState(getInitialState(key, defaultValue));
 
   // update local storage when value changes
   useEffect(() => {
