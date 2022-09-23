@@ -12,7 +12,7 @@ const getCache = () => caches.open(CACHE_NAME);
 // delete all caches (except the one to keep)
 const deleteCaches = async (keep) => {
   const keyList = await caches.keys();
-  console.log('found caches:', keyList);
+  // console.log('found caches:', keyList);
   return Promise.all(keyList.reduce((acc, key) => {
     // console.log('found a cache:', key);
     if (!isDev && key === keep) return acc;
