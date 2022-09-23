@@ -8,7 +8,7 @@ const SystemInfo = props => {
 
   const [open, setOpen] = useState(false);
 
-  const status = connectionType === 'local' ? 'SELF' : connection.open ? 'CONNECTED' : 'DISCONNECTED';
+  const status = connectionType === 'local' ? 'SELF' : connection?.open ? 'CONNECTED' : 'DISCONNECTED';
 
   return (
     <>
@@ -18,7 +18,7 @@ const SystemInfo = props => {
         <Td>{browserName && getBrowserIcon(browserName)}</Td>
         <Td>{osName &&getOsIcon(osName)}</Td>
         <Td>{platformType && getPlatformIcon(platformType)}</Td>
-        <Td>{getUiIcon('game')} {version}</Td>
+        <Td>{version && getUiIcon('game')} {version}</Td>
         <Td>
           {countryCode && getFlagIcon(countryCode)}
           {' '}

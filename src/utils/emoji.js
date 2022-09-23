@@ -53,7 +53,7 @@ const ui = {
   battery_half: '🪫',
   connected: '✅',
   disconnected: '🚷',
-  self: '🏠', //'🫵',
+  self: '🫵',
   host: '👑',
 };
 
