@@ -30,7 +30,6 @@ const SystemInfo = props => {
           {countryCode}
         </Td>
         <Td>{isHost && getUiIcon('host')}</Td>
-        <Td right>{hostFitness}</Td>
       </Tr>
       {open && (
         <Tr>

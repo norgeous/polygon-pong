@@ -17,6 +17,7 @@ const Profile = () => {
     await navigator.serviceWorker.ready;
     // At this point, a Service Worker is controlling the current page
     navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_CACHES' });
+    localStorage.removeItem('location');
     reload();
   };
 
