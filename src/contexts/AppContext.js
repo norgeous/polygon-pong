@@ -59,8 +59,6 @@ export const AppProvider = ({ children }) => {
       .filter(({ connection }) => connection?.open)
       .sort((a, b) => a.idCard?.hostFitness - b.idCard?.hostFitness)[0]?.id;
 
-    console.log(hostId)
-
     return newIC.map(c => ({
       ...c,
       isHost: c.id === hostId,
@@ -80,22 +78,24 @@ export const AppProvider = ({ children }) => {
   }, [gameReady, connections]);
 
   // broadcast ball physics state
-  // useEffect(() => {
-  //   if (gameReady && connections.length) {
-  //     const send = () => {
-  //       const ball = scene.balls[0];
-  //       const { x, y } = ball.ball;
-  //       const { x: vx, y: vy } = ball.ball.body.velocity;
-  //       const { angle: a, angularVelocity: va } = ball.ball.body;
-  //       broadcast({
-  //         action: 'SETBALL',
-  //         payload: { x, y, a, vx, vy, va },
-  //       });
-  //     };
-  //     const t = setInterval(send, 5000); // broadcast poll rate
-  //     return () => clearInterval(t);
-  //   }
-  // }, [gameReady, broadcast]);
+  useEffect(() => {
+    if (gameReady && improvedConnections.length) {
+      if (improvedConnections.find(({ connectionType }) => connectionType === 'local').isHost) {
+        const send = () => {
+          const ball = scene.balls[0];
+          const { x, y } = ball.ball;
+          const { x: vx, y: vy } = ball.ball.body.velocity;
+          const { angle: a, angularVelocity: va } = ball.ball.body;
+          broadcast({
+            action: 'SETBALL',
+            payload: { x, y, a, vx, vy, va },
+          });
+        };
+        const t = setInterval(send, 5000); // broadcast poll rate
+        return () => clearInterval(t);
+      }
+    }
+  }, [gameReady, broadcast]);
   
   // set react data into game
   useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
