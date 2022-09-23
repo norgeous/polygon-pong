@@ -129,7 +129,6 @@ const usePeerJsMesh = ({
   // connections to all predefined peer ids (except ours)
   useEffect(() => {
     if (peer) {
-      console.log('calling all cars!');
       const everyoneExceptUs = peerIds.filter(id => id !== peer.id);
       everyoneExceptUs.forEach(id => {
         const conn = peer.connect(id, { label: 'data' });
@@ -168,7 +167,6 @@ const usePeerJsMesh = ({
     .filter(({ connectionType }) => connectionType === 'remote')
     .forEach(({ connection }) => {
       if (connection.open) {
-        console.log('sending data', {connection, data});
         connection.send(data);
       }
     }), [connectionsArray]);
