@@ -100,7 +100,7 @@ export const AppProvider = ({ children }) => {
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,
         sysInfo,
-        peer, connections: improvedConnections,
+        peer, connections: improvedConnections, broadcast,
         isHost,
       }}
     >
