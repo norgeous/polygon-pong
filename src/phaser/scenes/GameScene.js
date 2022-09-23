@@ -42,6 +42,7 @@ class GameScene extends Phaser.Scene {
       this.localPlayer,
       ...this.remotePlayers,
       ...this.balls,
+      ...Object.values(this.players),
     ].forEach(gObj => gObj?.update(this));
 
     this.game.setFps(Math.round(this.game.loop.actualFps)); // react state update
@@ -84,8 +85,7 @@ class GameScene extends Phaser.Scene {
     });
 
     // add player object for newly connected players
-    connections.forEach(({id, connectionType}) => {
-      // console.log('game got', id, connectionType);
+    connections.forEach(({ id, connectionType }) => {
       if (!this.players?.[id]) {
         this.players[id] = new Player(this, connectionType);
       }

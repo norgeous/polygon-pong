@@ -56,6 +56,7 @@ class Player {
       }
     }
 
+    // glide to position for remote players
     if (this.controlType === 'remote') {
       if (this.player.y !== height-40) {
         this.player.setVelocityY(
