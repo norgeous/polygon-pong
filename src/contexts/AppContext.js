@@ -44,20 +44,29 @@ export const AppProvider = ({ children }) => {
     onData,
   });
 
-  const improvedConnections = useMemo(() => connections.map(c => {
-    if (c.connectionType === 'local') {
-      return {
-        ...c,
-        idCard: sysInfo.idCard,
-      };
-    }
+  const improvedConnections = useMemo(() => {
+    const newIC = connections.map(c => {
+      if (c.connectionType === 'local') {
+        return {
+          ...c,
+          idCard: sysInfo.idCard,
+        };
+      }
+      return c;
+    });
 
-    return c;
-  }), [connections]);
+    const hostId = newIC
+      .filter(({ connection }) => connection?.open)
+      .sort((a, b) => a.idCard?.hostFitness - b.idCard?.hostFitness)[0]?.id;
 
-  const isHost = useMemo(() => improvedConnections
-    .filter(({ connection }) => connection?.open)
-    .sort((a, b) => a.idCard?.hostFitness - b.idCard?.hostFitness)[0], [improvedConnections]);
+    console.log(hostId)
+
+    return newIC.map(c => ({
+      ...c,
+      isHost: c.id === hostId,
+    }));
+  }, [connections, sysInfo]);
+
 
   // on mount, add a ball
   useEffect(() => { if (gameReady) scene.addBall(); }, [gameReady]);
@@ -101,7 +110,6 @@ export const AppProvider = ({ children }) => {
         game, fps, targetFps,
         sysInfo,
         peer, connections: improvedConnections, broadcast,
-        isHost,
       }}
     >
       {children}
