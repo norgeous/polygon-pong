@@ -64,7 +64,6 @@ class Ball {
 	}
 
   setState({ x, y, a, vx, vy, va }) {
-    console.log('ball recieved state')
     this.ball.x = x;
     this.ball.y = y;
     this.ball.setRotation(a);
