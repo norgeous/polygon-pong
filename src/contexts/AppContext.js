@@ -47,7 +47,10 @@ export const AppProvider = ({ children }) => {
 
   // when connections change, adjust player object count
   useEffect(() => {
-    if (gameReady && connections) scene.syncronizeConnectionsWithPlayers(connections);
+    if (gameReady && connections) {
+      const players = connections.filter(({ connection }) => connection.open);
+      scene.syncronizeConnectionsWithPlayers(players);
+    }
   }, [gameReady, connections]);
 
   // broadcast ball physics state

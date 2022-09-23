@@ -37,6 +37,17 @@ const usePeerJsMesh = ({
   const [peer, setPeer] = useState();
   const [connections, setConnections] = useState();
 
+  // convert connections object to array
+  const connectionsArray = useMemo(() => {
+    if (!connections) return [];
+
+    // sort by ids alphabetically
+    return Object
+      .entries(connections)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([id, data]) => ({ id, ...data }));
+  }, [connections]);
+
   const setConnectionById = (id, data) => setConnections(oldConnections => ({
     ...oldConnections,
     [id]: {
@@ -45,12 +56,11 @@ const usePeerJsMesh = ({
     },
   }));
 
-  const deleteConnectionById = (id) => setConnections(oldConnections => {
-    return Object.fromEntries(Object.entries(oldConnections).filter(([cid]) => cid !== id));
-  });
+  const deleteConnectionById = (id) => {
+    setConnectionById(id, { connection: false, idCard: undefined });
+  };
 
   const onOpenWrapper = useCallback(conn => {
-    console.log('onOpenWrapper', conn.peer);
     setConnectionById(conn.peer, {
       connectionType: 'remote',
       connection: conn,
@@ -71,7 +81,7 @@ const usePeerJsMesh = ({
         deleteConnectionById(conn.peer);
       },
       SETDATA: (d) => {
-        console.log('SETDATA', conn.peer, d);
+        // console.log('SETDATA', conn.peer, d);
         setConnectionById(conn.peer, d);
       },
     })[action]?.(payload);
@@ -134,9 +144,9 @@ const usePeerJsMesh = ({
   // if connections or event handlers change,
   // register handlers to remote connections
   useEffect(() => {
-    if (connections) {
-      const remoteConnections = Object.values(connections)
-        .filter(({ connectionType }) => connectionType === 'remote');
+    if (connectionsArray) {
+      const remoteConnections = connectionsArray
+        .filter(({ connectionType, connection }) => connectionType === 'remote' && connection);
 
       remoteConnections.forEach(({ connection }) => {
         connection.on('open', () => onOpenWrapper(connection));
@@ -152,18 +162,7 @@ const usePeerJsMesh = ({
         });
       };
     }
-  }, [connections, onOpenWrapper, onCloseWrapper, onDataWrapper]);
-
-  // convert connections object to array
-  const connectionsArray = useMemo(() => {
-    if (!connections) return [];
-
-    // sort by ids alphabetically
-    return Object
-      .entries(connections)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([id, data]) => ({ id, ...data }));
-  }, [connections]);
+  }, [connectionsArray, onOpenWrapper, onCloseWrapper, onDataWrapper]);
 
   return {
     peer,

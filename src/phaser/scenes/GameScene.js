@@ -8,6 +8,7 @@ class GameScene extends Phaser.Scene {
     this.localPlayer = undefined;
     this.remotePlayers = [];
     this.balls = [];
+    this.players = {};
 
     // this.reactUpdate = () => {};
   }
@@ -74,14 +75,21 @@ class GameScene extends Phaser.Scene {
 
 
   syncronizeConnectionsWithPlayers (connections) {
-      // scene.localPlayer?.destroy();
-      // scene.remotePlayers.forEach(p => p.destroy());
-      // if (connections) {
-      //   Object.entries(connections).forEach(([id, { connectionType }]) => {
-      //     if (connectionType === 'local') scene.addLocalPlayer(id);
-      //     if (connectionType === 'remote') scene.addRemotePlayer(id);
-      //   });
-      // }
+    // delete exisiting players not in new connections (they logged off)
+    const connectedIds = connections.map(({ id }) => id);
+    const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id))
+    deleteIds.forEach(id => {
+      this.players[id].destroy();
+      delete this.players[id];
+    });
+
+    // add player object for newly connected players
+    connections.forEach(({id, connectionType}) => {
+      // console.log('game got', id, connectionType);
+      if (!this.players?.[id]) {
+        this.players[id] = new Player(this, connectionType);
+      }
+    });
   }
 }
 

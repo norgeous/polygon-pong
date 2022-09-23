@@ -11,8 +11,6 @@ const Network = () => {
     connections,
   } = useAppContext();
 
-  // console.log(connections);
-
   return (
     <Modal
       title={`${getUiIcon('network')} Network`}
