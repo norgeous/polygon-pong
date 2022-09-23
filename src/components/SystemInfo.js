@@ -3,7 +3,8 @@ import { getUiIcon, getFlagIcon, getOsIcon, getPlatformIcon, getBrowserIcon } fr
 import { Tr, Td } from './styled/table';
 
 const SystemInfo = props => {
-  const { id, connectionType, connection, idCard = {} } = props;
+  const { connection, ...other } = props;
+  const { id, connectionType, isHost, idCard = {} } = other;
   const { browserName, city, countryCode, hostFitness, osName, platformType, postal, version } = idCard;
 
   const [open, setOpen] = useState(false);
@@ -28,13 +29,13 @@ const SystemInfo = props => {
           {' '}
           {countryCode}
         </Td>
-        {/* <Td>{isHost && getUiIcon('host')}</Td> */}
+        <Td>{isHost && getUiIcon('host')}</Td>
         <Td right>{hostFitness}</Td>
       </Tr>
       {open && (
         <Tr>
           <Td colSpan="100%">
-            <pre>{JSON.stringify(props, null, 2)}</pre>
+            <pre>{JSON.stringify(other, null, 2)}</pre>
           </Td>
         </Tr>
       )}
