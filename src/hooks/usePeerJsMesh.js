@@ -71,6 +71,7 @@ const usePeerJsMesh = ({
         deleteConnectionById(conn.peer);
       },
       SETDATA: (d) => {
+        console.log('SETDATA', conn.peer, d);
         setConnectionById(conn.peer, d);
       },
     })[action]?.(payload);
@@ -153,9 +154,20 @@ const usePeerJsMesh = ({
     }
   }, [connections, onOpenWrapper, onCloseWrapper, onDataWrapper]);
 
+  // convert connections object to array
+  const connectionsArray = useMemo(() => {
+    if (!connections) return [];
+
+    // sort by ids alphabetically
+    return Object
+      .entries(connections)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([id, data]) => ({ id, ...data }));
+  }, [connections]);
+
   return {
     peer,
-    connections,
+    connections: connectionsArray,
   };
 };
 

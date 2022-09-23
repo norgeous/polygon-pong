@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useCallback } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 import usePeerJsMesh from '../hooks/usePeerJsMesh';
@@ -72,6 +72,17 @@ export const AppProvider = ({ children }) => {
   useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
   useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
 
+  const improvedConnections = useMemo(() => connections.map(c => {
+    if (c.connectionType === 'local') {
+      return {
+        ...c,
+        idCard: sysInfo.idCard,
+      };
+    }
+
+    return c;
+  }), [connections]);
+
   return (
     <AppContext.Provider
       value={{
@@ -80,7 +91,7 @@ export const AppProvider = ({ children }) => {
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, fps, targetFps,
         sysInfo,
-        peer, connections,
+        peer, connections: improvedConnections,
       }}
     >
       {children}
