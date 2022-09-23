@@ -39,6 +39,10 @@ const Profile = () => {
           <Td><a href={sysInfo.packageConfig.repository} target="_blank">{sysInfo.packageConfig.name}</a></Td>
         </Tr>
         <Tr>
+          <Td>Package Version</Td>
+          <Td>{sysInfo.packageConfig.version}</Td>
+        </Tr>
+        <Tr>
           <Td>FPS</Td>
           <Td>{fps} / {targetFps} fps</Td>
         </Tr>
