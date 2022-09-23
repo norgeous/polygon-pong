@@ -5,8 +5,8 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
 
-    this.localPlayer = undefined;
-    this.remotePlayers = [];
+    // this.localPlayer = undefined;
+    // this.remotePlayers = [];
     this.balls = [];
     this.players = {};
 
@@ -39,8 +39,8 @@ class GameScene extends Phaser.Scene {
     if (this.game.visibilityState === 'visible') this.matter.resume();
 
     [
-      this.localPlayer,
-      ...this.remotePlayers,
+      // this.localPlayer,
+      // ...this.remotePlayers,
       ...this.balls,
       ...Object.values(this.players),
     ].forEach(gObj => gObj?.update(this));
@@ -59,20 +59,20 @@ class GameScene extends Phaser.Scene {
 
 
   
-  addLocalPlayer () {
-    this.localPlayer = new Player(this, 'local');
-  }
-  removeLocalPlayer () {
-    if (this.localPlayer) this.localPlayer.destroy();
-  }
+  // addLocalPlayer () {
+  //   this.localPlayer = new Player(this, 'local');
+  // }
+  // removeLocalPlayer () {
+  //   if (this.localPlayer) this.localPlayer.destroy();
+  // }
 
-  addRemotePlayer () {
-    this.remotePlayers.push(new Player(this, 'remote'));
-  }
-  removeRemotePlayer () {
-    const remotePlayer = this.remotePlayers.pop();
-    remotePlayer.destroy();
-  }
+  // addRemotePlayer () {
+  //   this.remotePlayers.push(new Player(this, 'remote'));
+  // }
+  // removeRemotePlayer () {
+  //   const remotePlayer = this.remotePlayers.pop();
+  //   remotePlayer.destroy();
+  // }
 
 
   syncronizeConnectionsWithPlayers (connections) {
