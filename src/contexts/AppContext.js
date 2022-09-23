@@ -34,7 +34,7 @@ export const AppProvider = ({ children }) => {
         scene?.balls?.[0].setState?.(d);
       },
     })[action]?.(payload);
-  }, []);
+  }, [scene]);
 
   const { peer, connections, broadcast } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
@@ -91,7 +91,7 @@ export const AppProvider = ({ children }) => {
             payload: { x, y, a, vx, vy, va },
           });
         };
-        const t = setInterval(send, 5000); // broadcast poll rate
+        const t = setInterval(send, 200); // broadcast poll rate
         return () => clearInterval(t);
       }
     }
