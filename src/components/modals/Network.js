@@ -61,8 +61,8 @@ const Network = () => {
       )} */}
       {connections && Object.entries(connections)
         .sort(([a], [b]) => a.localeCompare(b)) // sort by ids alphabetically
-        .map(([id, {connectionType, connection, location, platform, hostFitness}]) => (
-          <pre>{JSON.stringify({ id, connectionType, connection: connection.open, location, platform, hostFitness })}</pre>
+        .map(([id, {connectionType, connection, idCard}]) => (
+          <pre>{JSON.stringify({ id, connectionType, connection: connection.open, idCard })}</pre>
         ))}
       
       {/* <pre>{JSON.stringify(peerData,null,2)}</pre> */}
