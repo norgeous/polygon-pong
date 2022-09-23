@@ -167,7 +167,10 @@ const usePeerJsMesh = ({
   const broadcast = useCallback(data => connectionsArray
     .filter(({ connectionType }) => connectionType === 'remote')
     .forEach(({ connection }) => {
-      if (connection) connection.send(data);
+      if (connection.open) {
+        console.log('sending data', {connection, data});
+        connection.send(data);
+      }
     }), [connectionsArray]);
 
   return {
