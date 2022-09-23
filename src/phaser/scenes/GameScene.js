@@ -5,12 +5,8 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
 
-    // this.localPlayer = undefined;
-    // this.remotePlayers = [];
     this.balls = [];
     this.players = {};
-
-    // this.reactUpdate = () => {};
   }
 
   preload () {
@@ -39,8 +35,6 @@ class GameScene extends Phaser.Scene {
     if (this.game.visibilityState === 'visible') this.matter.resume();
 
     [
-      // this.localPlayer,
-      // ...this.remotePlayers,
       ...this.balls,
       ...Object.values(this.players),
     ].forEach(gObj => gObj?.update(this));
@@ -57,28 +51,11 @@ class GameScene extends Phaser.Scene {
   }
 
 
-
-  
-  // addLocalPlayer () {
-  //   this.localPlayer = new Player(this, 'local');
-  // }
-  // removeLocalPlayer () {
-  //   if (this.localPlayer) this.localPlayer.destroy();
-  // }
-
-  // addRemotePlayer () {
-  //   this.remotePlayers.push(new Player(this, 'remote'));
-  // }
-  // removeRemotePlayer () {
-  //   const remotePlayer = this.remotePlayers.pop();
-  //   remotePlayer.destroy();
-  // }
-
-
   syncronizeConnectionsWithPlayers (connections) {
     // delete exisiting players not in new connections (they logged off)
     const connectedIds = connections.map(({ id }) => id);
-    const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id))
+    const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id));
+
     deleteIds.forEach(id => {
       this.players[id].destroy();
       delete this.players[id];

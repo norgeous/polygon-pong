@@ -4,7 +4,6 @@ import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
 import { Table, Tr, Td } from '../styled/table';
-import SystemInfo from '../SystemInfo';
 
 const Profile = () => {
   const {
@@ -43,9 +42,6 @@ const Profile = () => {
           <Td>FPS</Td>
           <Td>{fps} / {targetFps} fps</Td>
         </Tr>
-      </Table>
-      <Table>
-        <SystemInfo {...sysInfo} />
       </Table>
     </Modal>
   );

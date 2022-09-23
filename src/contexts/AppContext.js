@@ -16,31 +16,48 @@ export const AppProvider = ({ children }) => {
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { gameReady, game, fps, targetFps } = usePhaser();
+  const scene = game?.scene?.scenes?.[0];
 
   // DI
   const onOpen = useCallback(conn => {
     conn.send({ action: 'SETDATA', payload: { idCard } });
   }, [idCard]);
   
-  // const onData = useCallback((conn, data) => {
-  //   const { action, payload } = data;
-  //   ({
-  //     // receive game state
-  //     SETGAMESTATE: (d) => {
-  //       // deserialise game state and set into scene
-  //     },
-  //   })[action]?.(payload);
-  // }, []);
+  const onData = useCallback((conn, data) => {
+    const { action, payload } = data;
+    ({
+      // receive game state
+      SETGAMESTATE: d => {
+        // deserialise game state and set into scene
+      },
+      SETBALL: d => {
+        scene?.balls?.[0].setState?.(d);
+      },
+    })[action]?.(payload);
+  }, []);
 
-  const { peer, connections } = usePeerJsMesh({
+  const { peer, connections, broadcast } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
     active: visibilityState === 'visible',
     onOpen,
-    // onData,
+    onData,
   });
 
-  const scene = game?.scene?.scenes?.[0];
+  const improvedConnections = useMemo(() => connections.map(c => {
+    if (c.connectionType === 'local') {
+      return {
+        ...c,
+        idCard: sysInfo.idCard,
+      };
+    }
+
+    return c;
+  }), [connections]);
+
+  const isHost = useMemo(() => improvedConnections
+    .filter(({ connection }) => connection?.open)
+    .sort((a, b) => a.idCard?.hostFitness - b.idCard?.hostFitness)[0], [improvedConnections]);
 
   // on mount, add a ball
   useEffect(() => { if (gameReady) scene.addBall(); }, [gameReady]);
@@ -55,7 +72,7 @@ export const AppProvider = ({ children }) => {
 
   // broadcast ball physics state
   // useEffect(() => {
-  //   if (gameReady && peerId && peerId === peerIds[0] && broadcast) {
+  //   if (gameReady && connections.length) {
   //     const send = () => {
   //       const ball = scene.balls[0];
   //       const { x, y } = ball.ball;
@@ -66,25 +83,14 @@ export const AppProvider = ({ children }) => {
   //         payload: { x, y, a, vx, vy, va },
   //       });
   //     };
-  //     const t = setInterval(send, 50); // broadcast poll rate
+  //     const t = setInterval(send, 5000); // broadcast poll rate
   //     return () => clearInterval(t);
   //   }
-  // }, [gameReady, peerId, peerIds, broadcast]);
+  // }, [gameReady, broadcast]);
   
   // set react data into game
   useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
   useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
-
-  const improvedConnections = useMemo(() => connections.map(c => {
-    if (c.connectionType === 'local') {
-      return {
-        ...c,
-        idCard: sysInfo.idCard,
-      };
-    }
-
-    return c;
-  }), [connections]);
 
   return (
     <AppContext.Provider
@@ -95,6 +101,7 @@ export const AppProvider = ({ children }) => {
         game, fps, targetFps,
         sysInfo,
         peer, connections: improvedConnections,
+        isHost,
       }}
     >
       {children}

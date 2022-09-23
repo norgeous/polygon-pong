@@ -8,7 +8,6 @@ class Ball {
     const { width, height } = scene.sys.game.canvas;
 
     // speeding emitter
-    // console.log(scene.particles)
     this.emitter = scene.particles.createEmitter({
       speed: 100,
       scale: { start: 0.25, end: 0 },
@@ -60,12 +59,12 @@ class Ball {
       this.ball.setVelocity(newVx,newVy);
     }
 
-
     // if velocity is fast, emit particle effect
     this.emitter.on = (vx>6 || vx<-6 || vy>6 || vy<-6);
 	}
 
   setState({ x, y, a, vx, vy, va }) {
+    console.log('ball recieved state')
     this.ball.x = x;
     this.ball.y = y;
     this.ball.setRotation(a);
