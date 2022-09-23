@@ -17,6 +17,7 @@ export const AppProvider = ({ children }) => {
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { gameReady, game, fps, targetFps } = usePhaser();
 
+  // DI
   const onOpen = useCallback(conn => {
     conn.send({ action: 'SETDATA', payload: { idCard } });
   }, [idCard]);
@@ -44,19 +45,9 @@ export const AppProvider = ({ children }) => {
   // on mount, add a ball
   useEffect(() => { if (gameReady) scene.addBall(); }, [gameReady]);
 
-  // when connections change, adjust players
+  // when connections change, adjust player object count
   useEffect(() => {
-    console.log('connections or game changed!', connections);
-    if (gameReady){
-      scene.localPlayer?.destroy();
-      scene.remotePlayers.forEach(p => p.destroy());
-      if (connections) {
-        Object.entries(connections).forEach(([id, { connectionType }]) => {
-          if (connectionType === 'local') scene.addLocalPlayer(id);
-          if (connectionType === 'remote') scene.addRemotePlayer(id);
-        });
-      }
-    }
+    if (gameReady && connections) scene.syncronizeConnectionsWithPlayers(connections);
   }, [gameReady, connections]);
 
   // broadcast ball physics state

@@ -31,24 +31,26 @@ const usePeerJsMesh = ({
   onClose,
   onData,
 }) => {
+  // if networkName or seats changes, generate a new list of peerIds
+  const peerIds = useMemo(() => getIds({ networkName, seats }), [networkName, seats]);
+
   const [peer, setPeer] = useState();
   const [connections, setConnections] = useState();
 
-  const setConnectionById = (id, data) => {console.log('setConnectionById', id, data); setConnections(oldConnections => ({
-      ...oldConnections,
-      [id]: {
-        ...oldConnections?.[id],
-        ...data,
-      },
-    }));
-  };
+  const setConnectionById = (id, data) => setConnections(oldConnections => ({
+    ...oldConnections,
+    [id]: {
+      ...oldConnections?.[id],
+      ...data,
+    },
+  }));
 
   const deleteConnectionById = (id) => setConnections(oldConnections => {
     return Object.fromEntries(Object.entries(oldConnections).filter(([cid]) => cid !== id));
   });
 
-  const onOpenWrapper = useCallback((conn, x) => {
-    console.log('set to remote', x, conn.peer, conn)
+  const onOpenWrapper = useCallback(conn => {
+    console.log('onOpenWrapper', conn.peer);
     setConnectionById(conn.peer, {
       connectionType: 'remote',
       connection: conn,
@@ -75,80 +77,81 @@ const usePeerJsMesh = ({
     onData?.(conn, data);
   }, [onData]);
 
-  // if networkName or seats changes, generate a new list of peerIds
-  const peerIds = useMemo(() => getIds({ networkName, seats }), [networkName, seats]);
-
   // if config changes, join and setPeer
   useEffect(() => {
     const cleanUp = p => {
       console.log('LOGOUT');
+      p.off('connection');
       p?.disconnect();
       p?.destroy();
       setPeer();
       setConnections();
     };
+
     let mounted = true;
     if (active) {
       console.log('LOGIN');
       (async () => {
-        const newPeer = await join(peerIds);
+        const newPeer = await join(peerIds); // will throw when no seats
         if (mounted) {
           setPeer(newPeer);
           setConnectionById(newPeer.id, {
             connectionType: 'local',
             connection: newPeer,
           });
+
+          // listen for incoming connections and save them into "connections"
+          newPeer.on('connection', conn => setConnectionById(conn.peer, {
+            connectionType: 'remote',
+            connection: conn,
+          }));
         } else cleanUp(newPeer);
       })();
     } else {
       cleanUp(peer);
     }
+
     return () => mounted = false;
   }, [peerIds, active]);
-
-  // if peer changes, register event callbacks
-  // for incoming connections from other peers
-  useEffect(() => {
-    if (active && peer) {
-      peer.on('connection', conn => { // Emitted when a new data connection is established from a remote peer
-        conn.on('open', () => onOpenWrapper(conn,'a'));
-        conn.on('close', () => onCloseWrapper(conn));
-        conn.on('data', data => onDataWrapper(conn, data));
-      });
-      
-      return () => {
-        peer.off('connection');
-      };
-    }
-  }, [active, peer, onOpenWrapper, onCloseWrapper, onDataWrapper]);
 
   // if peer changes, try to establish outgoing
   // connections to all predefined peer ids (except ours)
   useEffect(() => {
-    if (active && peer && peerIds.length) {
+    if (peer) {
+      console.log('calling all cars!');
       const everyoneExceptUs = peerIds.filter(id => id !== peer.id);
       everyoneExceptUs.forEach(id => {
         const conn = peer.connect(id, { label: 'data' });
-        // console.log({id, conn});
-        conn.on('open', () => onOpenWrapper(conn,'b'));
-        conn.on('close', () => onCloseWrapper(conn));
-        conn.on('data', data => onDataWrapper(conn, data));
+        setConnectionById(id, {
+          connectionType: 'remote',
+          connection: conn,
+        });
+      });
+    }
+  }, [peer]);
+
+  // if connections or event handlers change,
+  // register handlers to remote connections
+  useEffect(() => {
+    if (connections) {
+      const remoteConnections = Object.values(connections)
+        .filter(({ connectionType }) => connectionType === 'remote');
+
+      remoteConnections.forEach(({ connection }) => {
+        connection.on('open', () => onOpenWrapper(connection));
+        connection.on('close', () => onCloseWrapper(connection));
+        connection.on('data', data => onDataWrapper(connection, data));
       });
 
       return () => {
-        // deregister old handlers when wrappers change
-        if (connections) {
-          Object.values(connections).forEach(({ connectionType, connection }) => {
-            if (connectionType === 'remote') {
-              connection.off('open');
-              connection.off('close');
-              connection.off('data');
-            }
-          });
-        }
+        remoteConnections.forEach(({ connection }) => {
+          connection.off('open');
+          connection.off('close');
+          connection.off('data');
+        });
       };
     }
-  }, [active, peer, peerIds, onOpenWrapper, onCloseWrapper, onDataWrapper]);
+  }, [connections, onOpenWrapper, onCloseWrapper, onDataWrapper]);
 
   return {
     peer,

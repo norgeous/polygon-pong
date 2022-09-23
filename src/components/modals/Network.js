@@ -59,9 +59,11 @@ const Network = () => {
           {peerList.map(p => p.id === peerId ?<SystemInfo {...sysInfo} {...p} />:<SystemInfo isHost={whoIsHost.id === p.id} {...p} />)}
         </Table>
       )} */}
-      {connections && Object.entries(connections).map(([id, {connectionType, location, platform, hostFitness}]) => (
-        <pre>{JSON.stringify({ id, connectionType, location, platform, hostFitness }, null, 2)}</pre>
-      ))}
+      {connections && Object.entries(connections)
+        .sort(([a], [b]) => a.localeCompare(b)) // sort by ids alphabetically
+        .map(([id, {connectionType, connection, location, platform, hostFitness}]) => (
+          <pre>{JSON.stringify({ id, connectionType, connection: connection.open, location, platform, hostFitness })}</pre>
+        ))}
       
       {/* <pre>{JSON.stringify(peerData,null,2)}</pre> */}
     </Modal>

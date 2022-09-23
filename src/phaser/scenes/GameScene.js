@@ -43,7 +43,7 @@ class GameScene extends Phaser.Scene {
       ...this.balls,
     ].forEach(gObj => gObj?.update(this));
 
-    this.game.setFps(Math.round(this.game.loop.actualFps)); // react state update
+    // this.game.setFps(Math.round(this.game.loop.actualFps)); // react state update
   }
 
   addBall () {
@@ -53,6 +53,9 @@ class GameScene extends Phaser.Scene {
     const ball = this.balls.pop();
     ball.destroy();
   }
+
+
+
   
   addLocalPlayer () {
     this.localPlayer = new Player(this, 'local');
@@ -67,6 +70,18 @@ class GameScene extends Phaser.Scene {
   removeRemotePlayer () {
     const remotePlayer = this.remotePlayers.pop();
     remotePlayer.destroy();
+  }
+
+
+  syncronizeConnectionsWithPlayers (connections) {
+      // scene.localPlayer?.destroy();
+      // scene.remotePlayers.forEach(p => p.destroy());
+      // if (connections) {
+      //   Object.entries(connections).forEach(([id, { connectionType }]) => {
+      //     if (connectionType === 'local') scene.addLocalPlayer(id);
+      //     if (connectionType === 'remote') scene.addRemotePlayer(id);
+      //   });
+      // }
   }
 }
 
