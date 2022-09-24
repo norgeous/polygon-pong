@@ -64,7 +64,7 @@ class GameScene extends Phaser.Scene {
     // add player object for newly connected players
     connections.forEach(({ id, connectionType }) => {
       if (!this.players?.[id]) {
-        this.players[id] = new Player(this, connectionType);
+        this.players[id] = new Player(this, id, connectionType);
       }
     });
   }

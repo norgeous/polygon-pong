@@ -1,7 +1,8 @@
 import createOscillator from '../../utils/createOscillator';
 
 class Player {
-  constructor(scene, controlType) {
+  constructor(scene, id, controlType) {
+    this.id = id;
     this.controlType = controlType;
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
@@ -81,10 +82,11 @@ class Player {
 
 
   getState() {
+    const id = this.id;
     const { x, y } = this.player;
     const { x: vx, y: vy } = this.player.body.velocity;
     const { angle: a, angularVelocity: va } = this.player.body;
-    return { x, y, a, vx, vy, va };
+    return { id, x, y, a, vx, vy, va };
   }
 
   setState({ x, y, a, vx, vy, va }) {

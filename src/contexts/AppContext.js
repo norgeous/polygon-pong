@@ -34,7 +34,8 @@ export const AppProvider = ({ children }) => {
         scene?.balls?.[0].setState?.(d);
       },
       SETPLAYERPOSITION: d => {
-        console.log('got SETPLAYERPOSITION', d);
+        console.log('got SETPLAYERPOSITION', d, scene?.players?.[d.id]);
+        scene?.players?.[d.id]?.setState?.(d)
       },
     })[action]?.(payload);
   }, [scene]);
@@ -92,7 +93,7 @@ export const AppProvider = ({ children }) => {
           const payload = ball.getState();
           broadcast({ action: 'SETBALL', payload });
         };
-        const t = setInterval(send, 200); // broadcast poll rate
+        const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
       }
       if (host.connectionType === 'remote') {
@@ -103,7 +104,7 @@ export const AppProvider = ({ children }) => {
           // host.connection.send({ action: 'SETPLAYERPOSITION', payload });
           broadcast({ action: 'SETPLAYERPOSITION', payload });
         };
-        const t = setInterval(send, 200); // broadcast poll rate
+        const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
       }
     }
