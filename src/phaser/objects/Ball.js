@@ -63,6 +63,13 @@ class Ball {
     this.emitter.on = (vx>6 || vx<-6 || vy>6 || vy<-6);
 	}
 
+  getState() {
+    const { x, y } = this.ball;
+    const { x: vx, y: vy } = this.ball.body.velocity;
+    const { angle: a, angularVelocity: va } = this.ball.body;
+    return { x, y, a, vx, vy, va };
+  }
+
   setState({ x, y, a, vx, vy, va }) {
     this.ball.x = x;
     this.ball.y = y;

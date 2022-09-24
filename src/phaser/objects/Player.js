@@ -69,7 +69,7 @@ class Player {
     const { angle, velocity, angularVelocity } = this.player.body;
     this.player.setAngularVelocity((angularVelocity-(angle/100))*.99);
 
-    // player movement sound
+    // player movement sound - buggy
     // const fv = (Math.abs((velocity.x * 100) + (angularVelocity * 500)) / 10);
     // this.oscillator({
     //   type: 'sine',
@@ -79,8 +79,23 @@ class Player {
     // });
 	}
 
+
+  getState() {
+    const { x, y } = this.player;
+    const { x: vx, y: vy } = this.player.body.velocity;
+    const { angle: a, angularVelocity: va } = this.player.body;
+    return { x, y, a, vx, vy, va };
+  }
+
+  setState({ x, y, a, vx, vy, va }) {
+    this.player.x = x;
+    this.player.y = y;
+    this.player.setRotation(a);
+    this.player.setVelocity(vx, vy);
+    this.player.setAngularVelocity(va);
+  }
+
   destroy() {
-    // console.log('class destroy', this.player);
     this.player?.destroy?.();
     delete this.player;
   }
