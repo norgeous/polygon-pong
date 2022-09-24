@@ -34,7 +34,6 @@ export const AppProvider = ({ children }) => {
         scene?.balls?.[0].setState?.(d);
       },
       SETPLAYERPOSITION: d => {
-        console.log('got SETPLAYERPOSITION', d, scene?.players?.[d.id]);
         scene?.players?.[d.id]?.setState?.(d)
       },
     })[action]?.(payload);
@@ -90,8 +89,10 @@ export const AppProvider = ({ children }) => {
         // if hosting
         const send = () => {
           const ball = scene.balls[0];
-          const payload = ball.getState();
-          broadcast({ action: 'SETBALL', payload });
+          broadcast({ action: 'SETBALL', payload: ball.getState() });
+
+          const me = scene.players[peer.id];
+          broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
         };
         const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
@@ -100,9 +101,7 @@ export const AppProvider = ({ children }) => {
         // if not hosting
         const send = () => {
           const me = scene.players[peer.id];
-          const payload = me.getState();
-          // host.connection.send({ action: 'SETPLAYERPOSITION', payload });
-          broadcast({ action: 'SETPLAYERPOSITION', payload });
+          broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
         };
         const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
