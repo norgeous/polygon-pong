@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const getInitialState = (key, defaultValue) => {
   const item = localStorage.getItem(key);
-  if (item !== undefined) return JSON.parse(item);
+  if (item) return JSON.parse(item);
   return defaultValue;
 };
 
