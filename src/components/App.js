@@ -24,7 +24,7 @@ const App = () => {
   
   const { batteryAvailable, batteryPercent, clock } = sysInfo;
 
-  const connectionCount = connections ? Object.keys(connections)?.length : 0;
+  const connectionCount = connections.reduce((acc, {connection}) => connection?.open ? acc+1 : acc, 0);
 
   return (
     <>
