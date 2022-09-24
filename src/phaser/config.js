@@ -14,8 +14,8 @@ const config = {
   physics: {
     default: 'matter',
     matter: {
-      // debug: true,
-      // gravity: { y: 200 }
+      debug: true,
+      // gravity: { y: 200 },
     }
   },
   fps: {

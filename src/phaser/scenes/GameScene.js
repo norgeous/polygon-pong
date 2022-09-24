@@ -26,6 +26,7 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setBounds(0, 0, width, height);
     // this.cameras.main.setZoom(0.5);
     // this.cameras.main.centerOn(width/2, height/2);
+    // this.cameras.main.setAngle(90);
 
     this.game.setGameReady(true); // react state update
   }
@@ -49,7 +50,6 @@ class GameScene extends Phaser.Scene {
     const ball = this.balls.pop();
     ball.destroy();
   }
-
 
   syncronizeConnectionsWithPlayers (connections) {
     // delete exisiting players not in new connections (they logged off)

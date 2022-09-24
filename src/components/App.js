@@ -4,6 +4,7 @@ import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
 import Network from './modals/Network';
 import Profile from './modals/Profile';
+import HostControls from './modals/HostControls';
 import {
   TopLeft,
   TopRight,
@@ -32,7 +33,8 @@ const App = () => {
       {route === 'MAINMENU' && <MainMenu />}
       {route === 'SETTINGS' && <Settings />}
       {route === 'NETWORK' && <Network />}
-      {route === 'PROFILE' && <Profile/>}
+      {route === 'PROFILE' && <Profile />}
+      {route === 'HOSTCONTROLS' && <HostControls />}
 
       <TopLeft>
         {getGameIcon('heart_on')}
@@ -43,8 +45,12 @@ const App = () => {
         1,000,023
       </TopLeft>
       <TopRight>
+        {isHost && (
+          <Button onClick={() => setRoute('HOSTCONTROLS')}>
+            {getUiIcon('host')}
+          </Button>
+        )}
         <Button onClick={() => setRoute('NETWORK')}>
-          {isHost && getUiIcon('host')}
           {connectionCount ? `${getUiIcon('network')}x${connectionCount}` : getUiIcon('disconnected')}
         </Button>
         <Button onClick={() => setRoute('PROFILE')}>
