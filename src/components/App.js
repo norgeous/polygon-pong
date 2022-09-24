@@ -42,7 +42,9 @@ const App = () => {
         1,000,023
       </TopLeft>
       <TopRight>
-        <Button onClick={() => setRoute('NETWORK')}>{getUiIcon('network')}x{connectionCount}</Button>
+        <Button onClick={() => setRoute('NETWORK')}>
+          {connectionCount ? `${getUiIcon('network')}x${connectionCount}` : getUiIcon('disconnected')}
+        </Button>
         <Button onClick={() => setRoute('PROFILE')}>
           {batteryAvailable ?
             `${batteryPercent > 50 ? getUiIcon('battery_full') : getUiIcon('battery_half')}${batteryPercent}%` :
