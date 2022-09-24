@@ -101,7 +101,7 @@ export const AppProvider = ({ children }) => {
         // if not hosting
         const send = () => {
           const me = scene.players[peer.id];
-          broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
+          if (me) broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
         };
         const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
