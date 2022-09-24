@@ -24,6 +24,7 @@ const App = () => {
   
   const { batteryAvailable, batteryPercent, clock } = sysInfo;
 
+  const isHost = connections.find(({ connectionType }) => connectionType === 'local')?.isHost;
   const connectionCount = connections.reduce((acc, {connection}) => connection?.open ? acc+1 : acc, 0);
 
   return (
@@ -43,6 +44,7 @@ const App = () => {
       </TopLeft>
       <TopRight>
         <Button onClick={() => setRoute('NETWORK')}>
+          {isHost && getUiIcon('host')}
           {connectionCount ? `${getUiIcon('network')}x${connectionCount}` : getUiIcon('disconnected')}
         </Button>
         <Button onClick={() => setRoute('PROFILE')}>
