@@ -94,7 +94,7 @@ export const AppProvider = ({ children }) => {
           const me = scene.players[peer.id];
           broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
         };
-        const t = setInterval(send, 20); // broadcast poll rate
+        const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
       }
       if (host.connectionType === 'remote') {
@@ -103,7 +103,7 @@ export const AppProvider = ({ children }) => {
           const me = scene.players[peer.id];
           broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
         };
-        const t = setInterval(send, 20); // broadcast poll rate
+        const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
       }
     }
