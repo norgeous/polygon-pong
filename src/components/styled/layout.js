@@ -81,7 +81,7 @@ export const PhaserDiv = styled.div.attrs(() => ({ id: 'phaser' }))`
 `;
 
 export const FpsCounter = styled.span`
-  font-family: monospace;
+  font-family: sans-serif;
   font-size: 30px;
   font-weight: 700;
   color: yellow;
