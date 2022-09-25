@@ -190,7 +190,7 @@ const usePeerJsMesh = ({
           connection.send({ action: 'PING' });
         });
     };
-    const t = setInterval(pingEm, 2000);
+    const t = setInterval(pingEm, 1000);
     return () => clearInterval(t);
   }, [connectionsArray]);
 
