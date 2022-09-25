@@ -8,6 +8,7 @@ const Settings = () => {
   const {
     setRoute,
     volume, setVolume,
+    showFps, setShowFps,
     wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
   } = useAppContext();
 
@@ -43,6 +44,17 @@ const Settings = () => {
         {' '}
         Prevent sleep (wakelock)
       </Button>
+
+      <Button as="label">
+        <input
+          type="checkbox"
+          checked={showFps}
+          onChange={() => setShowFps(!showFps)}
+        />
+        {' '}
+        Show FPS
+      </Button>
+
       <Button onClick={() => setRoute('PROFILE')}>
         <span>{getUiIcon('toolbox')}</span>
         <span>More...</span>

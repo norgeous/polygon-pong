@@ -5,7 +5,7 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
 
-    this.balls = [];
+    this.balls = {};
     this.players = {};
   }
 
@@ -42,26 +42,33 @@ class GameScene extends Phaser.Scene {
     if (this.game.visibilityState === 'visible') this.matter.resume();
 
     [
-      ...this.balls,
+      ...Object.values(this.balls),
       ...Object.values(this.players),
-    ].forEach(gObj => gObj?.update(this));
+    ].forEach(item => item?.update(this));
 
     this.game.setFps(Math.round(this.game.loop.actualFps)); // react state update
   }
 
-  addBall () {
-    this.balls.push(new Ball(this));
-  }
-  removeBall () {
-    const ball = this.balls.pop();
-    ball.destroy();
+  syncronizeBalls (balls) {
+    // delete balls not in the new state
+    const deleteIds = Object.keys(this.balls).filter(id => !balls.includes(id));
+    deleteIds.forEach(id => {
+      this.balls[id].destroy();
+      delete this.balls[id];
+    });
+
+    // add ball object for newly connected players
+    balls.forEach(({ id, state }) => {
+      if (!this.balls[id]) {
+        this.balls[id] = new Ball(this, id);
+      }
+    });
   }
 
   syncronizeConnectionsWithPlayers (connections) {
     // delete exisiting players not in new connections (they logged off)
     const connectedIds = connections.map(({ id }) => id);
     const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id));
-
     deleteIds.forEach(id => {
       this.players[id].destroy();
       delete this.players[id];
@@ -69,7 +76,7 @@ class GameScene extends Phaser.Scene {
 
     // add player object for newly connected players
     connections.forEach(({ id, connectionType }) => {
-      if (!this.players?.[id]) {
+      if (!this.players[id]) {
         this.players[id] = new Player(this, id, connectionType);
       }
     });

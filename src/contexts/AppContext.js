@@ -5,18 +5,20 @@ import usePeerJsMesh from '../hooks/usePeerJsMesh';
 import useWakeLock from '../hooks/useWakeLock';
 import usePhaser from '../hooks/usePhaser';
 import useSystemInfo from '../hooks/useSystemInfo';
+import usePhaserBalls from '../hooks/usePhaserBalls';
 
 const AppContext = createContext({});
 
 export const AppProvider = ({ children }) => {
   const sysInfo = useSystemInfo();
   const { visibilityState, idCard } = sysInfo;
-
+  
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
+  const [showFps, setShowFps] = useLocalStorage('showfps', false);
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
-  const { gameReady, game, fps, targetFps } = usePhaser();
-  const scene = game?.scene?.scenes?.[0];
+  const { gameReady, game, scene, fps, targetFps } = usePhaser();
+  const { balls, setBallById, removeBallById } = usePhaserBalls({ scene });
 
   // DI
   const onOpen = useCallback(conn => {
@@ -27,14 +29,11 @@ export const AppProvider = ({ children }) => {
     const { action, payload } = data;
     ({
       // receive game state
-      SETGAMESTATE: d => {
+      SETGAMESTATE: gamePhysicsState => {
         // deserialise game state and set into scene
-      },
-      SETBALL: d => {
-        scene?.balls?.[0].setState?.(d);
-      },
-      SETPLAYERPOSITION: d => {
-        scene?.players?.[d.id]?.setState?.(d)
+        const { balls, players } = gamePhysicsState;
+        if (balls) balls.forEach(({ id, ...state }) => scene?.balls?.[id].setState?.(state));
+        if (players) players.forEach(({ id, ...state }) => scene?.players?.[id].setState?.(state));
       },
     })[action]?.(payload);
   }, [scene]);
@@ -68,10 +67,6 @@ export const AppProvider = ({ children }) => {
     }));
   }, [connections, sysInfo]);
 
-
-  // on mount, add a ball
-  useEffect(() => { if (gameReady) scene.addBall(); }, [gameReady]);
-
   // when connections change, adjust player object count
   useEffect(() => {
     if (gameReady && connections) {
@@ -80,19 +75,27 @@ export const AppProvider = ({ children }) => {
     }
   }, [gameReady, connections]);
 
-  // broadcast ball physics state
+  // set react data into game
+  useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
+  useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
+
+  // on mount, add balls
+  // useEffect(() => { if (gameReady) scene.syncronizeBalls([{id:1},{id:2}]); }, [gameReady]);
+
+  // broadcast physics state
   useEffect(() => {
     if (gameReady && improvedConnections.length) {
       const host = improvedConnections.find(({ isHost }) => isHost);
-      // if (!host.connection.open) return;
       if (host.connectionType === 'local') {
         // if hosting
         const send = () => {
-          const ball = scene.balls[0];
-          broadcast({ action: 'SETBALL', payload: ball.getState() });
-
-          const me = scene.players[peer.id];
-          broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
+          broadcast({
+            action: 'SETGAMESTATE',
+            payload: {
+              balls: Object.values(scene.balls).map(ball => ball.getState()), // all balls
+              players: [scene.players[peer.id].getState()], // host player position
+            },
+          });
         };
         const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
@@ -100,18 +103,18 @@ export const AppProvider = ({ children }) => {
       if (host.connectionType === 'remote') {
         // if not hosting
         const send = () => {
-          const me = scene.players[peer.id];
-          if (me) broadcast({ action: 'SETPLAYERPOSITION', payload: me.getState() });
+          broadcast({
+            action: 'SETGAMESTATE',
+            payload: {
+              players: [scene.players[peer.id].getState()], // player position
+            },
+          });
         };
         const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
       }
     }
   }, [gameReady, improvedConnections, broadcast]);
-  
-  // set react data into game
-  useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
-  useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
 
   return (
     <AppContext.Provider
@@ -119,7 +122,9 @@ export const AppProvider = ({ children }) => {
         route, setRoute,
         volume, setVolume,
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
-        game, fps, targetFps,
+        game, scene,
+        showFps, setShowFps, fps, targetFps,
+        balls, setBallById, removeBallById,
         sysInfo,
         peer, connections: improvedConnections, broadcast,
       }}

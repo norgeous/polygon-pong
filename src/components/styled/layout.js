@@ -79,3 +79,15 @@ export const PhaserDiv = styled.div.attrs(() => ({ id: 'phaser' }))`
     image-rendering: pixelated;
   }
 `;
+
+export const FpsCounter = styled.span`
+  font-family: monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: yellow;
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000; 
+`;

@@ -2,7 +2,8 @@ import createOscillator from '../../utils/createOscillator';
 import { getBallIcon } from '../../utils/emoji';
 
 class Ball {
-  constructor(scene) {
+  constructor(scene, id) {
+    this.id = id;
     this.oscillator = createOscillator();
 
     const { width, height } = scene.sys.game.canvas;
@@ -69,10 +70,11 @@ class Ball {
 	}
 
   getState() {
+    const id = this.id;
     const { x, y } = this.gameObject;
     const { x: vx, y: vy } = this.gameObject.body.velocity;
     const { angle: a, angularVelocity: va } = this.gameObject.body;
-    return { x, y, a, vx, vy, va };
+    return { id, x, y, a, vx, vy, va };
   }
 
   setState({ x, y, a, vx, vy, va }) {

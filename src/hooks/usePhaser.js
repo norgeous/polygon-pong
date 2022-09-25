@@ -19,9 +19,12 @@ const usePhaser = () => {
     setGame(newGame);
   }, []);
 
+  const scene = game?.scene?.scenes?.[0];
+
   return {
     gameReady,
     game,
+    scene,
     fps,
     targetFps: game?.loop.targetFps || 0,
   };

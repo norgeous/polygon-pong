@@ -12,6 +12,7 @@ import {
   Bottom,
   BottomLeft,
   PhaserDiv,
+  FpsCounter,
 } from './styled/layout';
 import { Button } from './styled/common';
 import { getUiIcon, getGameIcon } from '../utils/emoji';
@@ -19,6 +20,7 @@ import { getUiIcon, getGameIcon } from '../utils/emoji';
 const App = () => {
   const {
     route, setRoute,
+    showFps, fps,
     connections,
     sysInfo,
   } = useAppContext();
@@ -43,6 +45,9 @@ const App = () => {
         <br/>
         <br/>
         1,000,023
+        <br/>
+        <br/>
+        {showFps && <FpsCounter>{fps}</FpsCounter>}
       </TopLeft>
       <TopRight>
         {isHost && (
@@ -51,7 +56,7 @@ const App = () => {
           </Button>
         )}
         <Button onClick={() => setRoute('NETWORK')}>
-          {connectionCount ? `${getUiIcon('network')}x${connectionCount}` : getUiIcon('disconnected')}
+          {connectionCount ? `${getUiIcon('network')}×${connectionCount}` : getUiIcon('disconnected')}
         </Button>
         <Button onClick={() => setRoute('PROFILE')}>
           {batteryAvailable ?
@@ -62,7 +67,7 @@ const App = () => {
         <Button onClick={() => setRoute('SETTINGS')}>{getUiIcon('settings')}</Button>
       </TopRight>
       <BottomRight>
-        {getGameIcon('coin')}x22
+        {getGameIcon('coin')}×22
       </BottomRight>
       <Bottom>
       </Bottom>
