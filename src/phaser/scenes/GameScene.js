@@ -51,7 +51,8 @@ class GameScene extends Phaser.Scene {
 
   syncronizeBalls (balls) {
     // delete balls not in the new state
-    const deleteIds = Object.keys(this.balls).filter(id => !balls.includes(id));
+    const ballIds = balls.map(({ id }) => id);
+    const deleteIds = Object.keys(this.balls).filter(id => !ballIds.includes(id));
     deleteIds.forEach(id => {
       this.balls[id].destroy();
       delete this.balls[id];
