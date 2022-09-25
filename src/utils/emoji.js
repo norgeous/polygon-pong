@@ -8,7 +8,7 @@ const game = {
   coin: '🪙',
 };
 
-const roundBalls = '🏐,💣,🥴,😈,🤕,🎱,⚽,🍔,☣️,🐵,🤪,🥸,🥹,😂,💩'.split(',');
+export const ballEmojis = '🏐,💣,🥴,😈,🤕,🎱,⚽,🍔,☣️,🐵,🤪,🥸,🥹,😂,💩'.split(',');
 
 const clock = '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛'.split('');
 
@@ -91,7 +91,7 @@ const intlLetters = {
 };
 
 export const getGameIcon = name => game[name.toLowerCase()] || game.default;
-export const getBallIcon = () => roundBalls[Math.floor(Math.random() * roundBalls.length)];
+export const getBallIcon = () => ballEmojis[Math.floor(Math.random() * ballEmojis.length)];
 export const getClockIcon = i => clock[i-1] || clock[11];
 export const getOsIcon = name => os[name.toLowerCase()] || os.default;
 export const getPlatformIcon = name => platform[name.toLowerCase()] || platform.default;
