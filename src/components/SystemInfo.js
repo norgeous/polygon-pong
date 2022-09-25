@@ -29,7 +29,9 @@ const SystemInfo = props => {
           {' '}
           {countryCode}
         </Td>
-        <Td right>{ping && `${Math.round(ping)}ms`}</Td>
+        <Td right style={{ fontFamily: 'monospace' }}>
+          {ping && String(Math.round(ping)).padStart(3, '0')}
+        </Td>
         <Td>{isHost && getUiIcon('host')}</Td>
       </Tr>
       {open && (
