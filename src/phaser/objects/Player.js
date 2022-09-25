@@ -15,7 +15,7 @@ class Player {
     graphics.fillStyle(color, 1);
     graphics.fillRoundedRect(-100, -15, 200, 30, 15);
 
-    this.player = scene.matter.add.gameObject(
+    this.gameObject = scene.matter.add.gameObject(
       graphics,
       {
         shape: { type: 'rectangle', width: 200, height: 30 },
@@ -28,10 +28,10 @@ class Player {
       .setBounce(0.9)
       .setMass(100);
     
-    this.player.name = 'player';
+    this.gameObject.name = 'player';
 
     // sound on collision
-    this.player.setOnCollide(data => {
+    this.gameObject.setOnCollide(data => {
       this.oscillatorImpact({
         volume: data.collision.depth / 10,
         maxVolume: scene.game.maxVolume,
@@ -42,64 +42,55 @@ class Player {
 	}
 
 	update(scene) {
-    if (!this.player) return;
+    if (!this.gameObject) return;
 
     const { height } = scene.sys.game.canvas;
 
     // player follow cursor or touch gesture
     if (this.controlType === 'local') {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
-      if (this.player.x !== this.pointer.x || this.player.y !== height-40) {
-        this.player.setVelocity(
-          (this.pointer.x - this.player.x)/10,
-          (height-100 - this.player.y)/100
+      if (this.gameObject.x !== this.pointer.x || this.gameObject.y !== height-40) {
+        this.gameObject.setVelocity(
+          (this.pointer.x - this.gameObject.x)/10,
+          (height-100 - this.gameObject.y)/100
         );
       }
     }
 
     // glide to position for remote players
     if (this.controlType === 'remote') {
-      if (this.player.y !== height-40) {
-        this.player.setVelocityY(
-          (height-100 - this.player.y)/100
+      if (this.gameObject.y !== height-40) {
+        this.gameObject.setVelocityY(
+          (height-100 - this.gameObject.y)/100
         );
       }
     }
 
     // slowly correct angle to flat
-    const { angle, velocity, angularVelocity } = this.player.body;
-    this.player.setAngularVelocity((angularVelocity-(angle/100))*.99);
-
-    // player movement sound - buggy
-    // const fv = (Math.abs((velocity.x * 100) + (angularVelocity * 500)) / 10);
-    // this.oscillator({
-    //   type: 'sine',
-    //   volume: fv / 500,
-    //   maxVolume: scene.game.maxVolume,
-    //   frequency: 100 + fv,
-    // });
+    const { angle, angularVelocity } = this.gameObject.body;
+    this.gameObject.setAngularVelocity((angularVelocity-(angle/100))*.99);
 	}
 
 
   getState() {
     const id = this.id;
-    const { x, y } = this.player;
-    const { x: vx, y: vy } = this.player.body.velocity;
-    const { angle: a, angularVelocity: va } = this.player.body;
+    const { x, y } = this.gameObject;
+    const { x: vx, y: vy } = this.gameObject.body.velocity;
+    const { angle: a, angularVelocity: va } = this.gameObject.body;
     return { id, x, y, a, vx, vy, va };
   }
 
   setState({ x, y, a, vx, vy, va }) {
-    this.player.x = x;
-    this.player.y = y;
-    this.player.setRotation(a);
-    this.player.setVelocity(vx, vy);
-    this.player.setAngularVelocity(va);
+    this.gameObject.x = x;
+    this.gameObject.y = y;
+    this.gameObject.setRotation(a);
+    this.gameObject.setVelocity(vx, vy);
+    this.gameObject.setAngularVelocity(va);
   }
 
   destroy() {
-    this.player?.destroy?.();
-    delete this.player;
+    this.gameObject.destroy();
+    delete this.gameObject;
   }
 }
 

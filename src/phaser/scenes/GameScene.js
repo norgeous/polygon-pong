@@ -12,6 +12,8 @@ class GameScene extends Phaser.Scene {
   preload () {
     this.load.setBaseURL('https://labs.phaser.io');
     this.load.image('red', 'assets/particles/red.png');
+    this.load.image('fire1', 'assets/particles/fire1.png');
+    this.load.image('cloud', 'assets/particles/cloud.png');
   }
 
   create () {
@@ -20,7 +22,11 @@ class GameScene extends Phaser.Scene {
     this.matter.world.disableGravity();
     this.matter.world.setBounds(0, 0, width, height, 150);
 
-    this.particles = this.add.particles('red');
+    this.particles = {
+      red: this.add.particles('red'),
+      fire1: this.add.particles('fire1'),
+      cloud: this.add.particles('cloud'),
+    };
 
     // camera
     // this.cameras.main.setBounds(0, 0, width, height);

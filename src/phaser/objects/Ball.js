@@ -6,81 +6,86 @@ class Ball {
     this.oscillator = createOscillator();
 
     const { width, height } = scene.sys.game.canvas;
-
-    // speeding emitter
-    this.emitter = scene.particles.createEmitter({
-      speed: 100,
-      scale: { start: 0.25, end: 0 },
-      blendMode: 'ADD'
-    });
   
     // create ball
-    const ball = scene.add.text(
+    this.text = scene.add.text(
       width/2,
       height/4,
       getBallIcon(),
       { font: '50px Arial', align: 'center' },
     ).setOrigin(0.5);
-    this.ball = scene.matter.add.gameObject(
-      ball,
+
+    this.gameObject = scene.matter.add.gameObject(
+      this.text,
       { shape: { type: 'circle', radius: 26 }},
       // {
       //   shape: { type: 'rectangle', width: 52, height: 52 }, 
       //   chamfer: { radius: 15 },
       // },
     );
-    this.ball
+    this.gameObject
       .setVelocity(0, -4)
       .setFrictionAir(0.001)
       .setBounce(0.5)
       .setMass(10);
 
     // sound on collision
-    this.ball.setOnCollide(data => this.oscillator({
+    this.gameObject.setOnCollide(data => this.oscillator({
       volume: data.collision.depth / 10,
       maxVolume: scene.game.maxVolume,
       frequency: 440, // A4
       duration: 0.05,
     }));
 
+    // speeding emitter
+    this.emitter = scene.particles.red.createEmitter({
+      speed: 100,
+      scale: { start: 0.25, end: 0 },
+      blendMode: 'ADD'
+    });
+
     // emitter follow ball
-    this.emitter.startFollow(ball);
+    this.emitter.startFollow(this.text);
 	}
 
 	update() {
     // ball min speed
     const minVelocity = 5;
-    const { x: vx, y: vy } = this.ball.body.velocity;
+    const { x: vx, y: vy } = this.gameObject.body.velocity;
+
     const speed = Math.hypot(vx, vy);
-    if (speed < minVelocity-0.01) {
+
+    if (speed < minVelocity) {
       const angle = Math.atan2(vy, vx);
       const newVx = Math.cos(angle) * minVelocity;
       const newVy = Math.sin(angle) * minVelocity;
-      this.ball.setVelocity(newVx,newVy);
+      this.gameObject.setVelocity(newVx,newVy);
     }
 
     // if velocity is fast, emit particle effect
-    this.emitter.on = (vx>6 || vx<-6 || vy>6 || vy<-6);
+    this.emitter.on = speed > 6;
+
+    // this.text.setText(Math.round(speed));
 	}
 
   getState() {
-    const { x, y } = this.ball;
-    const { x: vx, y: vy } = this.ball.body.velocity;
-    const { angle: a, angularVelocity: va } = this.ball.body;
+    const { x, y } = this.gameObject;
+    const { x: vx, y: vy } = this.gameObject.body.velocity;
+    const { angle: a, angularVelocity: va } = this.gameObject.body;
     return { x, y, a, vx, vy, va };
   }
 
   setState({ x, y, a, vx, vy, va }) {
-    this.ball.x = x;
-    this.ball.y = y;
-    this.ball.setRotation(a);
-    this.ball.setVelocity(vx, vy);
-    this.ball.setAngularVelocity(va);
+    this.gameObject.x = x;
+    this.gameObject.y = y;
+    this.gameObject.setRotation(a);
+    this.gameObject.setVelocity(vx, vy);
+    this.gameObject.setAngularVelocity(va);
   }
 
   destroy() {
-    this.ball.destroy();
-    delete this.ball;
+    this.gameObject.destroy();
+    delete this.gameObject;
   }
 }
 
