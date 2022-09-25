@@ -1,9 +1,9 @@
 import createOscillator from '../../utils/createOscillator';
-import { getBallIcon } from '../../utils/emoji';
 
 class Ball {
-  constructor(scene, id) {
+  constructor(scene, id, emoji) {
     this.id = id;
+    this.emoji = emoji;
     this.oscillator = createOscillator();
 
     const { width, height } = scene.sys.game.canvas;
@@ -12,7 +12,7 @@ class Ball {
     this.text = scene.add.text(
       width/2,
       height/4,
-      getBallIcon(),
+      this.emoji,
       { font: '50px Arial', align: 'center' },
     ).setOrigin(0.5);
 

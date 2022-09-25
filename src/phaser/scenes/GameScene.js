@@ -58,9 +58,9 @@ class GameScene extends Phaser.Scene {
     });
 
     // add ball object for newly connected players
-    balls.forEach(({ id, state }) => {
+    balls.forEach(({ id, value }) => {
       if (!this.balls[id]) {
-        this.balls[id] = new Ball(this, id);
+        this.balls[id] = new Ball(this, id, value.emoji);
       }
     });
   }

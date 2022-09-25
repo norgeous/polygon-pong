@@ -24,6 +24,8 @@ const usePhaserBalls = ({ scene }) => {
     if (scene) scene.syncronizeBalls(balls);
   }, [scene, balls]);
 
+  // console.log({balls})
+
   return {
     balls,
     setBallById,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getUiIcon } from '../../utils/emoji';
+import { getBallIcon, getUiIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
@@ -12,28 +12,27 @@ const HostControls = () => {
     removeBallById,
   } = useAppContext();
 
-  // console.log('HostControls got',balls);
+  const newBall = () => {
+    const emoji = getBallIcon();
+    setBallById(emoji, { emoji })
+  };
 
   return (
     <Modal
       title={`${getUiIcon('host')} Host Controls`}
       onClose={() => setRoute()}
     >
-      <Button onClick={() => setBallById(Math.round(Math.random()*1000),{test:'hello'})}>
+      <Button onClick={newBall}>
         <span>{getUiIcon('add')}</span>
-        <span>Add Ball (ramdom id)</span>
+        <span>Add Ball</span>
       </Button>
-      <Button onClick={() => setBallById(1,{test:'hello'})}>
-        <span>{getUiIcon('add')}</span>
-        <span>Add Ball 1</span>
-      </Button>
-      {balls.map(({ id, value }) => (
+      {balls.map((ball) => (
         <>
-          <Button onClick={() => removeBallById(id)}>
+          <Button onClick={() => removeBallById(ball.id)}>
             <span>{getUiIcon('remove')}</span>
-            <span>Remove Ball {id}</span>
+            <span>Remove {ball.value.emoji}</span>
           </Button>
-          <pre>{JSON.stringify(value, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(ball, null, 2)}</pre> */}
         </>
       ))}
     </Modal>
