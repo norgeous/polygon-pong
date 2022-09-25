@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 const usePhaserBalls = ({ scene }) => {
   const [_balls, setBalls] = useState({});
-  const balls = Object.values(_balls);
+  const balls = useMemo(() => Object.values(_balls), [_balls]);
   const setBallById = (id, value) => setBalls(oldsBalls => {
     if (!value) {
       delete oldsBalls[id];
-      return oldsBalls;
+      return { ...oldsBalls };
     }
     
     return {
