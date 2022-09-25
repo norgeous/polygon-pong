@@ -57,7 +57,7 @@ const usePeerJsMesh = ({
   }));
 
   const deleteConnectionById = (id) => {
-    setConnectionById(id, { connection: false, idCard: undefined });
+    setConnectionById(id, { connection: false, idCard: undefined, ping: undefined });
   };
 
   const onOpenWrapper = useCallback(conn => {
