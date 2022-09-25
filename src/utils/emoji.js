@@ -1,4 +1,3 @@
-
 const game = {
   default: '?',
   heart_on: '❤️',
@@ -55,6 +54,8 @@ const ui = {
   disconnected: '🚷',
   self: '🫵',
   host: '👑',
+  add: '➕',
+  remove: '➖',
 };
 
 const volume = '🔇,🔈,🔉,🔊,📣'.split(',');

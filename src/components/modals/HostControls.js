@@ -1,5 +1,5 @@
 import React from 'react';
-import { getUiIcon, getBallIcon } from '../../utils/emoji';
+import { getUiIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Button } from '../styled/menu';
@@ -14,11 +14,11 @@ const HostControls = () => {
       onClose={() => setRoute()}
     >
       <Button onClick={() => scene.addBall()}>
-        <span>{getBallIcon()}</span>
+        <span>{getUiIcon('add')}</span>
         <span>Add Ball</span>
       </Button>
       <Button onClick={() => scene.removeBall()}>
-        <span>{getBallIcon()}</span>
+        <span>{getUiIcon('remove')}</span>
         <span>Remove Ball</span>
       </Button>
     </Modal>
