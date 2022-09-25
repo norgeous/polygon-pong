@@ -6,9 +6,7 @@ const SystemInfo = props => {
   const { connection, ...other } = props;
   const { id, connectionType, isHost, idCard = {}, ping } = other;
   const { browserName, city, countryCode, osName, platformType, postal, version } = idCard;
-
   const [open, setOpen] = useState(false);
-
   const status = connectionType === 'local' ? 'SELF' : connection?.open ? 'CONNECTED' : 'DISCONNECTED';
 
   return (
