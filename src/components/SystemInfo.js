@@ -4,8 +4,8 @@ import { Tr, Td } from './styled/table';
 
 const SystemInfo = props => {
   const { connection, ...other } = props;
-  const { id, connectionType, isHost, idCard = {} } = other;
-  const { browserName, city, countryCode, hostFitness, osName, platformType, postal, version } = idCard;
+  const { id, connectionType, isHost, idCard = {}, ping } = other;
+  const { browserName, city, countryCode, osName, platformType, postal, version } = idCard;
 
   const [open, setOpen] = useState(false);
 
@@ -30,6 +30,7 @@ const SystemInfo = props => {
           {countryCode}
         </Td>
         <Td>{isHost && getUiIcon('host')}</Td>
+        <Td>{ping && Math.round(ping)}</Td>
       </Tr>
       {open && (
         <Tr>

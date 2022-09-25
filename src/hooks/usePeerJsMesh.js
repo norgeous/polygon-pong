@@ -76,6 +76,14 @@ const usePeerJsMesh = ({
   const onDataWrapper = useCallback((conn, data) => {
     const { action, payload } = data;
     ({
+      PING: () => conn.send({ action: 'PONG' }),
+      PONG: () => {
+        const rtt = window.performance.now() - connections[conn.peer].pingStart;
+        setConnectionById(conn.peer, {
+          ping: rtt / 2,
+          pingStart: undefined,
+        });
+      },
       CLOSE: () => {
         conn.close();
         deleteConnectionById(conn.peer);
@@ -86,7 +94,7 @@ const usePeerJsMesh = ({
       },
     })[action]?.(payload);
     onData?.(conn, data);
-  }, [onData]);
+  }, [onData, connections]);
 
   // if config changes, join and setPeer
   useEffect(() => {
@@ -163,6 +171,7 @@ const usePeerJsMesh = ({
     }
   }, [connectionsArray, onOpenWrapper, onCloseWrapper, onDataWrapper]);
 
+  // create broadcast function
   const broadcast = useCallback(data => connectionsArray
     .filter(({ connectionType }) => connectionType === 'remote')
     .forEach(({ connection }) => {
@@ -170,6 +179,20 @@ const usePeerJsMesh = ({
         connection.send(data);
       }
     }), [connectionsArray]);
+
+  // every so often, ping all connections, to get latency
+  useEffect(() => {
+    const pingEm = () => {
+      connectionsArray 
+        .filter(({ connectionType, connection }) => connectionType === 'remote' && connection.open)
+        .forEach(({ id, connection }) => {
+          setConnectionById(id, { pingStart: window.performance.now() });
+          connection.send({ action: 'PING' });
+        });
+    };
+    const t = setInterval(pingEm, 2000);
+    return () => clearInterval(t);
+  }, [connectionsArray]);
 
   return {
     peer,
