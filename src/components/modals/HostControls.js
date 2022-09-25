@@ -12,7 +12,7 @@ const HostControls = () => {
     removeBallById,
   } = useAppContext();
 
-  console.log('HostControls got',balls);
+  // console.log('HostControls got',balls);
 
   return (
     <Modal
@@ -21,7 +21,11 @@ const HostControls = () => {
     >
       <Button onClick={() => setBallById(Math.round(Math.random()*1000),{test:'hello'})}>
         <span>{getUiIcon('add')}</span>
-        <span>Add Ball</span>
+        <span>Add Ball (ramdom id)</span>
+      </Button>
+      <Button onClick={() => setBallById(1,{test:'hello'})}>
+        <span>{getUiIcon('add')}</span>
+        <span>Add Ball 1</span>
       </Button>
       {balls.map(({ id, value }) => (
         <>
