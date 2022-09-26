@@ -45,10 +45,8 @@ const App = () => {
         <br/>
         <br/>
         1,000,023
-        <br/>
-        <br/>
-        {showFps && <FpsCounter>{fps}</FpsCounter>}
       </TopLeft>
+      {showFps && <TopLeft><FpsCounter>{fps}</FpsCounter></TopLeft>}
       <TopRight>
         {isHost && (
           <Button onClick={() => setRoute('HOSTCONTROLS')}>
