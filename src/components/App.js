@@ -58,12 +58,6 @@ const App = () => {
         <Button onClick={() => setRoute('NETWORK')}>
           {connectionCount ? `${getUiIcon('network')}×${connectionCount}` : getUiIcon('disconnected')}
         </Button>
-        <Button onClick={() => setRoute('PROFILE')}>
-          {batteryAvailable ?
-            `${batteryPercent > 50 ? getUiIcon('battery_full') : getUiIcon('battery_half')}${batteryPercent}%` :
-            getUiIcon('toolbox')
-          }
-        </Button>
         <Button onClick={() => setRoute('SETTINGS')}>{getUiIcon('settings')}</Button>
       </TopRight>
       <BottomRight>
@@ -71,7 +65,14 @@ const App = () => {
       </BottomRight>
       <Bottom>
       </Bottom>
-      <BottomLeft>{clock}</BottomLeft> 
+      <BottomLeft>
+        {clock}
+        {' '}
+        {batteryAvailable ?
+          `${batteryPercent > 50 ? getUiIcon('battery_full') : getUiIcon('battery_half')}${batteryPercent}%` :
+          getUiIcon('toolbox')
+        }
+      </BottomLeft> 
       <PhaserDiv />
     </>
   );

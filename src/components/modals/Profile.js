@@ -12,28 +12,19 @@ const Profile = () => {
     sysInfo,
   } = useAppContext();
 
-  const reload = () => window.location.reload();
   const updatePwa = async () => {
     await navigator.serviceWorker.ready;
     // At this point, a Service Worker is controlling the current page
     navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_CACHES' });
     localStorage.removeItem('location');
-    reload();
+    window.location.reload();
   };
 
   return (
     <Modal
-      title={`${getUiIcon('toolbox')} More`}
+      title={`${getUiIcon('about')} About`}
       onClose={() => setRoute()}
     >
-      <Button onClick={reload}>
-        <span>{getUiIcon('reload')}</span>
-        <span>Reload</span>
-      </Button>
-      <Button onClick={updatePwa}>
-        <span>{getUiIcon('reset')}</span>
-        <span>Clear cache and reload</span>
-      </Button>
       <Table>
         <Tr>
           <Td>Package Name</Td>
@@ -41,11 +32,13 @@ const Profile = () => {
         </Tr>
         <Tr>
           <Td>Package Version</Td>
-          <Td>{sysInfo.packageConfig.version}</Td>
-        </Tr>
-        <Tr>
-          <Td>FPS</Td>
-          <Td>{fps} / {targetFps} fps</Td>
+          <Td>
+            <Button onClick={updatePwa}>
+              {sysInfo.packageConfig.version}
+              {' '}
+              {getUiIcon('reload')}
+            </Button>
+          </Td>
         </Tr>
       </Table>
     </Modal>

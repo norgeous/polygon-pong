@@ -42,7 +42,7 @@ const ui = {
   default: '?',
   game: '🕹️',
   settings: '⚙️',
-  toolbox: '🧰',
+  // toolbox: '🧰',
   reload: '♻️',
   reset: '🌀',
   info: 'ℹ️',
@@ -56,6 +56,7 @@ const ui = {
   host: '👑',
   add: '➕',
   remove: '➖',
+  about: 'ℹ️',
 };
 
 const volume = '🔇,🔈,🔉,🔊,📣'.split(',');

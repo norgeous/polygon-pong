@@ -56,8 +56,8 @@ const Settings = () => {
       </Button>
 
       <Button onClick={() => setRoute('PROFILE')}>
-        <span>{getUiIcon('toolbox')}</span>
-        <span>More...</span>
+        <span>{getUiIcon('about')}</span>
+        <span>About...</span>
       </Button>
     </Modal>
   );
