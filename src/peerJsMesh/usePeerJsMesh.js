@@ -143,7 +143,7 @@ const usePeerJsMesh = ({
   // });
 
   const [peer, setPeer] = useState();
-  const [open, setOpen] = useState();
+  const [open, setOpen] = useState(false);
 
   const [peerConnections, dispatchPeerConnection] = useReducer((state, { type, payload }) => {
     return ({
@@ -153,12 +153,13 @@ const usePeerJsMesh = ({
       }),
       REMOVE: ({ id }) => ({
         ...state,
-        [id]:  undefined,
+        [id]: undefined,
       }),
     })[type]?.(payload);
   }, {});
 
   const [peerData, dispatchPeerData] = useReducer((state, { type, payload }) => {
+    console.log(type);
     return ({
       OPEN: ({ id }) => ({
         ...state,
@@ -195,6 +196,7 @@ const usePeerJsMesh = ({
       (async () => {
         const newPeer = await join(peerIds, options); // will throw when no seats
         setPeer(newPeer);
+        setOpen(true);
       })();
     } else {
       peer?.destroy();
@@ -217,7 +219,7 @@ const usePeerJsMesh = ({
       // Emitted when a new data connection is established from a remote peer (INCOMING)
       peer.on('connection', dataConnection => dispatchPeerConnection({ type: 'ADD', payload: { dataConnection } }));
     }
-  }, [peer]);
+  }, [peer, setOpen, dispatchPeerConnection]);
 
   // when joining, try to establish outgoing connections to all predefined peer ids (except ours)
   useEffect(() => {
@@ -228,13 +230,12 @@ const usePeerJsMesh = ({
         dispatchPeerConnection({ type: 'ADD', payload: { dataConnection } }); // OUTGOING
       });
     }
-  }, [peer, metadata]);
+  }, [peer]);
 
   // if peerConnections changes (both INCOMING and OUTGOING), register handlers
   useEffect(() => {
-    console.log('REGistering', peerConnections);
-    Object.values(peerConnections).forEach((dataConnection) => {
-
+    Object.values(peerConnections).forEach(dataConnection => {
+      console.log('adding handlers to', dataConnection);
       // Emitted when the connection is established and ready-to-use
       dataConnection.on('open', () => dispatchPeerData({ type: 'OPEN', payload: { id: dataConnection.peer } }));
 

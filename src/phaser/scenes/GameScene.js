@@ -46,7 +46,7 @@ class GameScene extends Phaser.Scene {
       ...Object.values(this.players),
     ].forEach(item => item?.update(this));
 
-    this.game.setFps(Math.round(this.game.loop.actualFps)); // react state update
+    this.game.setFps?.(Math.round(this.game.loop.actualFps)); // react state update
   }
 
   syncronizeBalls (balls) {
