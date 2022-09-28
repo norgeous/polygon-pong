@@ -40,45 +40,50 @@ export const AppProvider = ({ children }) => {
     })[action]?.(payload);
   }, [scene]);
 
-  const { peer, connections, broadcast } = usePeerJsMesh({
-    networkName: 'polygon-pong-multiplayer',
-    maxPeers: 9,
-    active: visibilityState === 'visible',
-    onOpen,
-    onData,
-  });
+  const { peer, connections, broadcast } = {};
+  // const { peer, connections, broadcast } = usePeerJsMesh({
+  //   networkName: 'polygon-pong-multiplayer',
+  //   maxPeers: 9,
+  //   active: visibilityState === 'visible',
+  //   onOpen,
+  //   onData,
+  // });
 
-  const thing = usePeerJsMesh2();
+
+  
+  const thing = usePeerJsMesh2({
+    active: visibilityState === 'visible',
+  });
   console.log(thing)
 
-  const improvedConnections = useMemo(() => {
-    const newIC = connections.map(c => {
-      if (c.connectionType === 'local') {
-        return {
-          ...c,
-          idCard: sysInfo.idCard,
-        };
-      }
-      return c;
-    });
+  // const improvedConnections = useMemo(() => {
+  //   const newIC = connections.map(c => {
+  //     if (c.connectionType === 'local') {
+  //       return {
+  //         ...c,
+  //         idCard: sysInfo.idCard,
+  //       };
+  //     }
+  //     return c;
+  //   });
 
-    const hostId = newIC
-      .filter(({ connection }) => connection?.open)
-      .sort((a, b) => a.idCard?.hostFitness - b.idCard?.hostFitness)[0]?.id;
+  //   const hostId = newIC
+  //     .filter(({ connection }) => connection?.open)
+  //     .sort((a, b) => a.idCard?.hostFitness - b.idCard?.hostFitness)[0]?.id;
 
-    return newIC.map(c => ({
-      ...c,
-      isHost: c.id === hostId,
-    }));
-  }, [connections, sysInfo]);
+  //   return newIC.map(c => ({
+  //     ...c,
+  //     isHost: c.id === hostId,
+  //   }));
+  // }, [connections, sysInfo]);
 
   // when connections change, adjust player object count
-  useEffect(() => {
-    if (gameReady && connections) {
-      const players = connections.filter(({ connection }) => connection.open);
-      scene.syncronizeConnectionsWithPlayers(players);
-    }
-  }, [gameReady, connections]);
+  // useEffect(() => {
+  //   if (gameReady && connections) {
+  //     const players = connections.filter(({ connection }) => connection.open);
+  //     scene.syncronizeConnectionsWithPlayers(players);
+  //   }
+  // }, [gameReady, connections]);
 
   // set react data into game
   useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
@@ -88,38 +93,38 @@ export const AppProvider = ({ children }) => {
   // useEffect(() => { if (gameReady) scene.syncronizeBalls([{id:1},{id:2}]); }, [gameReady]);
 
   // broadcast physics state
-  useEffect(() => {
-    if (gameReady && improvedConnections.length) {
-      const host = improvedConnections.find(({ isHost }) => isHost);
-      if (host.connectionType === 'local') {
-        // if hosting
-        const send = () => {
-          broadcast({
-            action: 'SETGAMESTATE',
-            payload: {
-              balls: Object.values(scene.balls).map(ball => ball.getState()), // all balls
-              players: [scene.players[peer.id].getState()], // host player position
-            },
-          });
-        };
-        const t = setInterval(send, 50); // broadcast poll rate
-        return () => clearInterval(t);
-      }
-      if (host.connectionType === 'remote') {
-        // if not hosting
-        const send = () => {
-          broadcast({
-            action: 'SETGAMESTATE',
-            payload: {
-              players: [scene.players[peer.id].getState()], // player position
-            },
-          });
-        };
-        const t = setInterval(send, 50); // broadcast poll rate
-        return () => clearInterval(t);
-      }
-    }
-  }, [gameReady, improvedConnections, broadcast]);
+  // useEffect(() => {
+  //   if (gameReady && improvedConnections.length) {
+  //     const host = improvedConnections.find(({ isHost }) => isHost);
+  //     if (host.connectionType === 'local') {
+  //       // if hosting
+  //       const send = () => {
+  //         broadcast({
+  //           action: 'SETGAMESTATE',
+  //           payload: {
+  //             balls: Object.values(scene.balls).map(ball => ball.getState()), // all balls
+  //             players: [scene.players[peer.id].getState()], // host player position
+  //           },
+  //         });
+  //       };
+  //       const t = setInterval(send, 50); // broadcast poll rate
+  //       return () => clearInterval(t);
+  //     }
+  //     if (host.connectionType === 'remote') {
+  //       // if not hosting
+  //       const send = () => {
+  //         broadcast({
+  //           action: 'SETGAMESTATE',
+  //           payload: {
+  //             players: [scene.players[peer.id].getState()], // player position
+  //           },
+  //         });
+  //       };
+  //       const t = setInterval(send, 50); // broadcast poll rate
+  //       return () => clearInterval(t);
+  //     }
+  //   }
+  // }, [gameReady, improvedConnections, broadcast]);
 
   return (
     <AppContext.Provider
@@ -131,7 +136,7 @@ export const AppProvider = ({ children }) => {
         showFps, setShowFps, fps, targetFps,
         balls, setBallById, removeBallById,
         sysInfo,
-        peer, connections: improvedConnections, broadcast,
+        // peer, connections: improvedConnections, broadcast,
       }}
     >
       {children}
