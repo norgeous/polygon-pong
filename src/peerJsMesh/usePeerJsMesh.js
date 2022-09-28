@@ -151,42 +151,45 @@ const usePeerJsMesh = ({
         ...state,
         [dataConnection.peer]: dataConnection,
       }),
-      REMOVE: ({ id }) => ({
-        ...state,
-        [id]: undefined,
-      }),
+      REMOVE: ({ id }) => Object.fromEntries(Object.entries(state).filter(([key]) => key !== id)),
     })[type]?.(payload);
   }, {});
 
   const [peerData, dispatchPeerData] = useReducer((state, { type, payload }) => {
     // console.log(type);
+    const setStateByKey = (id, data) => ({
+      ...state,
+      [id]: {
+        ...state[id],
+        ...data,
+      },
+    });
+
     return ({
-      OPEN: ({ id }) => ({
-        ...state,
-        [id]: {
-          ...state[id],
-          open: true,
-          data: undefined,
-        },
+      OPEN: ({ id }) => setStateByKey(id, {
+        open: true,
+        data: {},
       }),
-      DATA: ({ id, data }) => ({
-        ...state,
-        [id]: {
-          ...state[id],
-          data: {
-            ...state[id].data,
-            ...data,
-          },
-        },
+      DATA: ({ id, data: { type: dType, payload: dPayload }}) => {
+        const newState = ({
+          GREETING: () => console.log('GOT GREETING from', id),
+          PING: () => peerConnections[id].send({ type: 'PONG' }),
+          P0NG: () => setStateByKey(id, {
+            ping: 0,
+          }),
+        })[dType]?.(dPayload);
+
+        reducerObject[dType]?.(dPayload);
+
+        console.log('>>>>>>>>>>>>>>>>>..', newState, state);
+
+        return newState || state;
+      },
+      CLOSE: ({ id }) => setStateByKey(id, {
+        open: false,
+        data: undefined,
       }),
-      CLOSE: ({ id }) => ({
-        ...state,
-        [id]: {
-          ...state[id],
-          open: false,
-          data: undefined,
-        },
-      }),
+      SAVEDATA: ({ id, data }) => setStateByKey(id, data),
     })[type]?.(payload);
   }, {});
 
@@ -219,7 +222,7 @@ const usePeerJsMesh = ({
       // Emitted when a new data connection is established from a remote peer (INCOMING)
       peer.on('connection', dataConnection => dispatchPeerConnection({ type: 'ADD', payload: { dataConnection } }));
     }
-  }, [peer, setOpen, dispatchPeerConnection]);
+  }, [peer]);
 
   // when joining, try to establish outgoing connections to all predefined peer ids (except ours)
   useEffect(() => {
@@ -235,9 +238,12 @@ const usePeerJsMesh = ({
   // if peerConnections changes (both INCOMING and OUTGOING), register handlers
   useEffect(() => {
     Object.values(peerConnections).forEach(dataConnection => {
-      console.log('adding handlers to', dataConnection);
+      // console.log('adding handlers to', dataConnection);
       // Emitted when the connection is established and ready-to-use
-      dataConnection.on('open', () => dispatchPeerData({ type: 'OPEN', payload: { id: dataConnection.peer } }));
+      dataConnection.on('open', () => {
+        dataConnection.send({ type: 'GREETING' });
+        dispatchPeerData({ type: 'OPEN', payload: { id: dataConnection.peer } });
+      });
 
       // Emitted when either you or the remote peer closes the data connection (firefox not supported)
       dataConnection.on('close', () => {
@@ -248,6 +254,31 @@ const usePeerJsMesh = ({
       // Emitted when data is received from the remote peer
       dataConnection.on('data', data => dispatchPeerData({ type: 'DATA', payload: { id: dataConnection.peer, data } }));
     });
+  }, [peerConnections]);
+
+
+  // create broadcast function
+  const broadcast = useCallback(data => Object.values(peerConnections)
+    .filter(dataConnection => dataConnection.open)
+    .forEach(connection => {
+      connection.send(data);
+    }), [peerConnections]);
+
+  // every so often, ping all connections, to get latency
+  useEffect(() => {
+    const pingEm = () => {
+      Object.values(peerConnections) 
+        .filter(dataConnection => dataConnection.open)
+        .forEach(dataConnection => {
+          dispatchPeerData({
+            type: 'SAVEDATA',
+            payload: { id: dataConnection.peer, data:{pingStart: window.performance.now()} },
+          });
+          dataConnection.send({ action: 'PING' });
+        });
+    };
+    const t = setInterval(pingEm, 10000);
+    return () => clearInterval(t);
   }, [peerConnections]);
 
   return {
