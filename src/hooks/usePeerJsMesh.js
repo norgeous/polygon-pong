@@ -28,8 +28,8 @@ const usePeerJsMesh = ({
   seats = 9,
   active = true,
   onOpen,
-  onClose,
   onData,
+  onClose,
 }) => {
   // if networkName or seats changes, generate a new list of peerIds
   const peerIds = useMemo(() => getIds({ networkName, seats }), [networkName, seats]);
@@ -57,7 +57,7 @@ const usePeerJsMesh = ({
   }));
 
   const deleteConnectionById = (id) => {
-    setConnectionById(id, { connection: false, idCard: undefined, ping: undefined });
+    setConnectionById(id, { idCard: undefined, ping: undefined });
   };
 
   const onOpenWrapper = useCallback(conn => {
@@ -69,6 +69,7 @@ const usePeerJsMesh = ({
   }, [onOpen]);
 
   const onCloseWrapper = useCallback(conn => {
+    conn.close();
     deleteConnectionById(conn.peer);
     onClose?.(conn);
   }, [onClose]);
@@ -89,12 +90,12 @@ const usePeerJsMesh = ({
         deleteConnectionById(conn.peer);
       },
       SETDATA: (d) => {
-        // console.log('SETDATA', conn.peer, d);
+        console.log('SETDATA', conn.peer, d);
         setConnectionById(conn.peer, d);
       },
     })[action]?.(payload);
     onData?.(conn, data);
-  }, [onData, connections]);
+  }, [onData]);
 
   // if config changes, join and setPeer
   useEffect(() => {
@@ -151,17 +152,20 @@ const usePeerJsMesh = ({
   // if connections or event handlers change,
   // register handlers to remote connections
   useEffect(() => {
+    console.log('reg',connectionsArray,connectionsArray.map(({connection}) => connection.open));
     if (connectionsArray) {
       const remoteConnections = connectionsArray
         .filter(({ connectionType, connection }) => connectionType === 'remote' && connection);
 
+
       remoteConnections.forEach(({ connection }) => {
-        connection.on('open', () => onOpenWrapper(connection));
-        connection.on('close', () => onCloseWrapper(connection));
         connection.on('data', data => onDataWrapper(connection, data));
+        connection.on('close', () => onCloseWrapper(connection));
+        connection.on('open', () => {onOpenWrapper(connection)});
       });
 
       return () => {
+        console.log('dereg');
         remoteConnections.forEach(({ connection }) => {
           connection.off('open');
           connection.off('close');
@@ -181,18 +185,18 @@ const usePeerJsMesh = ({
     }), [connectionsArray]);
 
   // every so often, ping all connections, to get latency
-  useEffect(() => {
-    const pingEm = () => {
-      connectionsArray 
-        .filter(({ connectionType, connection }) => connectionType === 'remote' && connection.open)
-        .forEach(({ id, connection }) => {
-          setConnectionById(id, { pingStart: window.performance.now() });
-          connection.send({ action: 'PING' });
-        });
-    };
-    const t = setInterval(pingEm, 1000);
-    return () => clearInterval(t);
-  }, [connectionsArray]);
+  // useEffect(() => {
+  //   const pingEm = () => {
+  //     connectionsArray 
+  //       .filter(({ connectionType, connection }) => connectionType === 'remote' && connection.open)
+  //       .forEach(({ id, connection }) => {
+  //         setConnectionById(id, { pingStart: window.performance.now() });
+  //         connection.send({ action: 'PING' });
+  //       });
+  //   };
+  //   const t = setInterval(pingEm, 10000);
+  //   return () => clearInterval(t);
+  // }, [connectionsArray]);
 
   return {
     peer,

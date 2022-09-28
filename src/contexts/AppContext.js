@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useCallback } fro
 
 import useLocalStorage from '../hooks/useLocalStorage';
 import usePeerJsMesh from '../hooks/usePeerJsMesh';
+import usePeerJsMesh2 from '../peerJsMesh/usePeerJsMesh';
 import useWakeLock from '../hooks/useWakeLock';
 import usePhaser from '../hooks/usePhaser';
 import useSystemInfo from '../hooks/useSystemInfo';
@@ -22,6 +23,7 @@ export const AppProvider = ({ children }) => {
 
   // DI
   const onOpen = useCallback(conn => {
+    console.log('a connection opened, sending idCard', conn.peer, idCard);
     conn.send({ action: 'SETDATA', payload: { idCard } });
   }, [idCard]);
   
@@ -45,6 +47,9 @@ export const AppProvider = ({ children }) => {
     onOpen,
     onData,
   });
+
+  // const thing = usePeerJsMesh2();
+  // console.log({thing})
 
   const improvedConnections = useMemo(() => {
     const newIC = connections.map(c => {
