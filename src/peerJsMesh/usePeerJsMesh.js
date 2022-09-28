@@ -159,7 +159,7 @@ const usePeerJsMesh = ({
   }, {});
 
   const [peerData, dispatchPeerData] = useReducer((state, { type, payload }) => {
-    console.log(type);
+    // console.log(type);
     return ({
       OPEN: ({ id }) => ({
         ...state,
