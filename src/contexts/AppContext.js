@@ -48,8 +48,8 @@ export const AppProvider = ({ children }) => {
     onData,
   });
 
-  // const thing = usePeerJsMesh2();
-  // console.log({thing})
+  const thing = usePeerJsMesh2();
+  console.log(thing)
 
   const improvedConnections = useMemo(() => {
     const newIC = connections.map(c => {

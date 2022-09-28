@@ -152,7 +152,7 @@ const usePeerJsMesh = ({
   // if connections or event handlers change,
   // register handlers to remote connections
   useEffect(() => {
-    console.log('reg',connectionsArray,connectionsArray.map(({connection}) => connection.open));
+    // console.log('reg',connectionsArray,connectionsArray.map(({connection}) => connection.open));
     if (connectionsArray) {
       const remoteConnections = connectionsArray
         .filter(({ connectionType, connection }) => connectionType === 'remote' && connection);
@@ -165,7 +165,7 @@ const usePeerJsMesh = ({
       });
 
       return () => {
-        console.log('dereg');
+        // console.log('dereg');
         remoteConnections.forEach(({ connection }) => {
           connection.off('open');
           connection.off('close');

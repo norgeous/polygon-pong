@@ -17,7 +17,7 @@ const join = async (peerIds, options) => {
   const peer = await peerIds.reduce(async (memo, id) => {
     const acc = await memo;
     if (acc) return acc; // if already connected skip
-    return await becomePeerId(id. options);
+    return await becomePeerId(id, options);
   }, false);
   if (!peer) throw new Error('no seats');
   return peer;
@@ -28,143 +28,194 @@ const usePeerJsMesh = ({
   seats = 9,
   options,
   active = true,
-  reducerObject,
+  metadata,
+  reducerObject = {},
 } = {}) => {
   // if networkName or seats changes, generate a new list of peerIds
   const peerIds = useMemo(() => getIds({ networkName, seats }), [networkName, seats]);
 
-  const reducer = (state, { type, payload }) => {
-    ({
-      // PING: () => conn.send({ action: 'PONG' }),
-      // PONG: () => {
-      //   const rtt = window.performance.now() - connections[conn.peer].pingStart;
-      //   setConnectionById(conn.peer, {
-      //     ping: rtt / 2,
-      //     pingStart: undefined,
-      //   });
-      // },
-      // CLOSE: () => {
-      //   conn.close();
-      //   deleteConnectionById(conn.peer);
-      // },
-      // SETDATA: (d) => {
-      //   console.log('SETDATA', conn.peer, d);
-      //   setConnectionById(conn.peer, d);
-      // },
-      SETPEER: newPeer => ({
+  // const reducer = (state, { type, payload }) => {
+  //   console.log(type);
+  //   const newState = ({
+  //     // PING: () => conn.send({ action: 'PONG' }),
+  //     // PONG: () => {
+  //     //   const rtt = window.performance.now() - connections[conn.peer].pingStart;
+  //     //   setConnectionById(conn.peer, {
+  //     //     ping: rtt / 2,
+  //     //     pingStart: undefined,
+  //     //   });
+  //     // },
+  //     // CLOSE: () => {
+  //     //   conn.close();
+  //     //   deleteConnectionById(conn.peer);
+  //     // },
+  //     // SETDATA: (d) => {
+  //     //   console.log('SETDATA', conn.peer, d);
+  //     //   setConnectionById(conn.peer, d);
+  //     // },
+  //     SETPEER: newPeer => ({
+  //       ...state,
+  //       peer: newPeer,
+  //     }),
+  //     OPEN: id => ({
+  //       ...state,
+  //       peerId: id,
+  //     }),
+  //     CLOSE: () => ({
+  //       ...state,
+  //       peer: undefined,
+  //     }),
+  //     DISCONNECTED: () => ({
+  //       ...state,
+  //       peer: undefined,
+  //     }),
+  //     CONNECTION: dataConnection => ({
+  //       ...state,
+  //       peerDataConnections: {
+  //         ...state.peerDataConnections,
+  //         [dataConnection.peer]: {
+  //           dataConnection,
+  //           data: {},
+  //         },
+  //       },
+  //     }),
+  //     CALL: mediaConnection => ({
+  //       ...state,
+  //       peerMediaConnections: {
+  //         ...state.peerMediaConnections,
+  //         [mediaConnection.peer]: {
+  //           mediaConnection,
+  //         },
+  //       },
+  //     }),
+  //     DATAOPEN: ({ dataConnection }) => ({
+  //       ...state,
+  //       peerDataConnections: {
+  //         ...state.peerDataConnections,
+  //         [dataConnection.peer]: {
+  //           ...state.peerDataConnections[dataConnection.peer],
+  //           open: true,
+  //         },
+  //       },
+  //     }),
+  //     DATACLOSE: ({ dataConnection }) => ({
+  //       ...state,
+  //       peerDataConnections: {
+  //         ...state.peerDataConnections,
+  //         [dataConnection.peer]: {
+  //           ...state.peerDataConnections[dataConnection.peer],
+  //           close: true,
+  //         },
+  //       },
+  //     }),
+  //     DATA: ({ dataConnection, data }) => {
+  //       const { dtype, dpayload } = data;
+  //       ({
+  //         PING: () => {},
+  //         PONG: () => {},
+  //       })[dtype]?.(dpayload);
+
+  //       return ({
+  //         ...state,
+  //         peerDataConnections: {
+  //           ...state.peerDataConnections,
+  //           [dataConnection.peer]: {
+  //             ...state.peerDataConnections[dataConnection.peer],
+  //             data: {
+  //               ...state.peerDataConnections[dataConnection.peer].data,
+  //               ...data,
+  //             },
+  //           },
+  //         },
+  //       });
+  //     },
+  //   })[type]?.(payload);
+
+  //   reducerObject[type]?.(payload);
+
+  //   return newState;
+  // };
+
+  // const [{ peer, peerId, peerDataConnections }, dispatch] = useReducer(reducer, {
+  //   peer: undefined,
+  //   peerId: undefined,
+  //   peerDataConnections: {},
+  // });
+
+  const [peer, setPeer] = useState();
+  const [open, setOpen] = useState();
+
+  const [peerConnections, dispatchPeerConnection] = useReducer((state, { type, payload }) => {
+    return ({
+      ADD: ({ dataConnection }) => ({
         ...state,
-        peer: newPeer,
+        [dataConnection.peer]: dataConnection,
       }),
-      OPEN: id => ({
+      REMOVE: ({ id }) => ({
         ...state,
-        peerId: id,
+        [id]:  undefined,
       }),
-      CLOSE: () => ({
+    })[type]?.(payload);
+  }, {});
+
+  const [peerData, dispatchPeerData] = useReducer((state, { type, payload }) => {
+    return ({
+      OPEN: ({ id }) => ({
         ...state,
-        peer: undefined,
+        [id]: {
+          ...state[id],
+          open: true,
+          data: undefined,
+        },
       }),
-      DISCONNECTED: () => ({
+      DATA: ({ id, data }) => ({
         ...state,
-        peer: undefined,
-      }),
-      ERROR: err => ({
-        ...state,
-        peer: undefined,
-      }),
-      CONNECTION: dataConnection => ({
-        ...state,
-        peerDataConnections: {
-          ...state.peerDataConnections,
-          [dataConnection.peer]: {
-            dataConnection,
-            data: {},
+        [id]: {
+          ...state[id],
+          data: {
+            ...state[id].data,
+            ...data,
           },
         },
       }),
-      CALL: mediaConnection => ({
+      CLOSE: ({ id }) => ({
         ...state,
-        peerMediaConnections: {
-          ...state.peerMediaConnections,
-          [mediaConnection.peer]: {
-            mediaConnection,
-          },
-        },
-      }),
-      DATAOPEN: ({ dataConnection }) => ({
-        ...state,
-        peerDataConnections: {
-          ...state.peerDataConnections,
-          [dataConnection.peer]: {
-            ...state.peerDataConnections[dataConnection.peer],
-            open: true,
-          },
-        },
-      }),
-      DATACLOSE: ({ dataConnection }) => ({
-        ...state,
-        peerDataConnections: {
-          ...state.peerDataConnections,
-          [dataConnection.peer]: {
-            ...state.peerDataConnections[dataConnection.peer],
-            close: true,
-          },
-        },
-      }),
-      DATAERROR: ({ dataConnection, err }) => ({
-        ...state,
-        peerDataConnections: {
-          ...state.peerDataConnections,
-          [dataConnection.peer]: {
-            ...state.peerDataConnections[dataConnection.peer],
-            error: err,
-          },
-        },
-      }),
-      DATA: ({ dataConnection, data }) => ({
-        ...state,
-        peerDataConnections: {
-          ...state.peerDataConnections,
-          [dataConnection.peer]: {
-            ...state.peerDataConnections[dataConnection.peer],
-            data: {
-              ...state.peerDataConnections[dataConnection.peer].data,
-              ...data,
-            },
-          },
+        [id]: {
+          ...state[id],
+          open: false,
+          data: undefined,
         },
       }),
     })[type]?.(payload);
-    reducerObject[type]?.(payload);
-  };
+  }, {});
 
-  const [{ peer, peerDataConnections}, dispatch] = useReducer(reducer, {
-    peer: undefined,
-    peerId: undefined,
-    peerDataConnections: {},
-  });
-  
   // if config changes or "active", join / leave peerjs service
   useEffect(() => {
     if (active) {
       (async () => {
         const newPeer = await join(peerIds, options); // will throw when no seats
-        dispatch({ type: 'OPEN', payload: newPeer });
+        setPeer(newPeer);
       })();
     } else {
-      state.peer?.destroy();
-      dispatch({ type: 'CLOSE' });
+      peer?.destroy();
+      setPeer();
     }
   }, [peerIds, active]);
 
   // when joining peerjs, setup all listeners
   useEffect(() => {
     if (peer) {
-      peer.on('open', id => dispatch({ type: 'OPEN', payload: id }));
-      peer.on('close', () => dispatch({ type: 'CLOSE' }));
-      peer.on('disconnected', () => dispatch({ type: 'DISCONNECTED' }));
-      peer.on('error', err => dispatch({ type: 'ERROR', payload: err }));
-      peer.on('connection', dataConnection => dispatch({ type: 'CONNECTION', payload: dataConnection }));
-      peer.on('call', mediaConnection => dispatch({ type: 'CALL', payload: mediaConnection }));
+      // Emitted when a connection to the PeerServer is established
+      peer.on('open', id => setOpen(true));
+
+      // Emitted when the peer is destroyed and can no longer accept or create any new connections
+      peer.on('close', () => setOpen(false));
+
+      // Emitted when the peer is disconnected from the signalling server
+      peer.on('disconnected', () => setOpen(false));
+
+      // Emitted when a new data connection is established from a remote peer (INCOMING)
+      peer.on('connection', dataConnection => dispatchPeerConnection({ type: 'ADD', payload: { dataConnection } }));
     }
   }, [peer]);
 
@@ -173,33 +224,36 @@ const usePeerJsMesh = ({
     if (peer) {
       const everyoneExceptUs = peerIds.filter(id => id !== peer.id);
       everyoneExceptUs.forEach(id => {
-        const dataConnection  = peer.connect(
-          id,
-          {
-            label: 'data',
-            metadata: {
-              msg:'hello, i could put some data here',
-            },
-          },
-        );
-        dispatch({ type: 'CONNECTION', payload: dataConnection })
+        const dataConnection  = peer.connect(id, { label: 'data', metadata });
+        dispatchPeerConnection({ type: 'ADD', payload: { dataConnection } }); // OUTGOING
       });
     }
-  }, [peer]);
+  }, [peer, metadata]);
 
-  // if dataConnections changes, register handlers
+  // if peerConnections changes (both INCOMING and OUTGOING), register handlers
   useEffect(() => {
-    Object.values(peerDataConnections).forEach(({ dataConnection }) => {
-      dataConnection.on('open', () => dispatch({ type: 'DATAOPEN', payload: {dataConnection} }));
-      dataConnection.on('close', () => dispatch({ type: 'DATACLOSE', payload: {dataConnection} }));
-      dataConnection.on('error', err => dispatch({ type: 'DATAERROR', payload: {dataConnection, err} }));
-      dataConnection.on('data', data => dispatch({ type: 'DATA', payload: {dataConnection, data} }));
-    });
+    console.log('REGistering', peerConnections);
+    Object.values(peerConnections).forEach((dataConnection) => {
 
-  }, [peerDataConnections]);
+      // Emitted when the connection is established and ready-to-use
+      dataConnection.on('open', () => dispatchPeerData({ type: 'OPEN', payload: { id: dataConnection.peer } }));
+
+      // Emitted when either you or the remote peer closes the data connection (firefox not supported)
+      dataConnection.on('close', () => {
+        dispatchPeerConnection({ type: 'REMOVE', payload: { id: dataConnection.peer } });
+        dispatchPeerData({ type: 'CLOSE', payload: { id: dataConnection.peer } });
+      });
+
+      // Emitted when data is received from the remote peer
+      dataConnection.on('data', data => dispatchPeerData({ type: 'DATA', payload: { id: dataConnection.peer, data } }));
+    });
+  }, [peerConnections]);
 
   return {
-    peerDataConnections,
+    peer,
+    open,
+    peerConnections,
+    peerData,
   };
 };
 
