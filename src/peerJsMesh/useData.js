@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect, useMemo, useCallback } from 'react';
+import { useReducer, useEffect } from 'react';
 
 const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
 
@@ -18,24 +18,22 @@ const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
         data: {},
       }),
       DATA: ({ id, data: { type: dType, payload: dPayload }}) => {
-        const newState = ({
-          GREETING: () => console.log('GOT GREETING from', id),
+        const newData = ({
+          ...dataReducer,
           PING: () => {
             peerConnections[id].send({ type: 'PONG' });
           },
           PONG: () => {
             const { pingStart } = state[id];
             const rtt = window.performance.now() - pingStart;
-            return setStateByKey(id, {
+            return {
               ping: rtt / 2,
               pingStart: undefined,
-            });
+            };
           },
-        })[dType]?.(dPayload);
+        })[dType]?.(id, dPayload);
 
-        console.log('DATA new+',state,id,dType,newState);
-
-        dataReducer[dType]?.(dPayload);
+        const newState = setStateByKey(id, newData);
 
         return newState || state;
       },

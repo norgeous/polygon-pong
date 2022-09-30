@@ -21,7 +21,15 @@ const usePeerJsMesh = ({
   const [peerConnections, dispatchPeerConnection] = useConnections({ peerIds, peer });
 
   // listen for data from remote peers
-  const dataReducer = {};
+  const dataReducer = {
+    GREETING: id => peerConnections[id].send({
+      type:'IDCARD',
+      payload: {
+        browserType: 'daniel',
+      },
+    }),
+    IDCARD: (id, payload) => payload,
+  };
   const peerData = useData(peerConnections, dispatchPeerConnection, dataReducer);
 
   return {
