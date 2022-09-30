@@ -137,6 +137,7 @@ export const AppProvider = ({ children }) => {
         balls, setBallById, removeBallById,
         sysInfo,
         // peer, connections: improvedConnections, broadcast,
+        connections: [],
       }}
     >
       {children}
