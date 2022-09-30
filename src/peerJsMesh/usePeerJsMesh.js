@@ -7,7 +7,6 @@ const usePeerJsMesh = ({
   networkName = 'peerjs-mesh',
   seats = 9,
   active = true,
-  reducerObject = {},
 } = {}) => {
   // if networkName or seats changes, generate a new list of peerIds
   const peerIds = useMemo(() => Array.from(
@@ -22,7 +21,8 @@ const usePeerJsMesh = ({
   const [peerConnections, dispatchPeerConnection] = useConnections({ peerIds, peer });
 
   // listen for data from remote peers
-  const peerData = useData(peerConnections, dispatchPeerConnection);
+  const dataReducer = {};
+  const peerData = useData(peerConnections, dispatchPeerConnection, dataReducer);
 
   return {
     peer,
