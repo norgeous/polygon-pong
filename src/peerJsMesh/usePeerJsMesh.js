@@ -7,6 +7,7 @@ const usePeerJsMesh = ({
   networkName = 'peerjs-mesh',
   seats = 9,
   active = true,
+  idCard = {},
 } = {}) => {
   // if networkName or seats changes, generate a new list of peerIds
   const peerIds = useMemo(() => Array.from(
@@ -16,22 +17,19 @@ const usePeerJsMesh = ({
 
   // connect to peerjs signaling server as next available peerId
   const { peer, open } = usePeerJs({ peerIds, active });
-
   
   // setup connections to all other peers in mesh
   const [peerConnections, dispatchPeerConnection] = useConnections({ peerIds, peer });
 
-  // console.log('CONTEXT', peer?.connections, peerConnections);
-
   // listen for data from remote peers
   const dataReducer = {
-    GREETING: id => peerConnections[id].send({
-      type:'IDCARD',
-      payload: {
-        browserType: 'daniel',
-      },
+    GREETING: ({ id }) => peerConnections[id].send({ type:'IDCARD', payload: idCard }),
+    IDCARD: ({ id, payload, setPeerDataById }) => setPeerDataById(id, { idCard: payload }),
+    PING: ({ id }) => peerConnections[id].send({ type: 'PONG' }),
+    PONG: ({ id, peerData, setPeerDataById }) => setPeerDataById(id, {
+      ping: Math.round((window.performance.now() - peerData[id].pingStart) / 2),
+      pingStart: undefined,
     }),
-    IDCARD: (id, payload) => ({ idCard: payload }),
   };
   const peerData = useData(peerConnections, dispatchPeerConnection, dataReducer);
 

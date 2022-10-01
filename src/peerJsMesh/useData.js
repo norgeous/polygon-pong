@@ -20,35 +20,19 @@ const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
       // Emitted when the connection is established and ready-to-use
       dataConnection.on('open', () => {
         dataConnection.send({ type: 'GREETING' });
-        setPeerDataById(id, { open: true });
+        setPeerDataById(id, {});
       });
 
       // Emitted when either you or the remote peer closes the data connection (firefox not supported)
       dataConnection.on('close', () => {
         dispatchPeerConnection({ type: 'REMOVE', payload: { id } });
-        setPeerDataById(id, { open: false });
+        setPeerData(oldPeerData => Object.fromEntries(Object.entries(oldPeerData).filter(([id]) => id !== dataConnection.peer)));
       });
 
       // Emitted when data is received from the remote peer
       dataConnection.on('data', ({ type, payload }) => {
-        ({
-          ...dataReducer,
-          PING: () => {
-            // console.log('GOT PING, SEND PONG');
-            peerConnections[id].send({ type: 'PONG' });
-          },
-          PONG: () => {
-            // console.log('GOT PONG');
-            const { pingStart } = peerData[id];
-            const rtt = window.performance.now() - pingStart;
-            const latency = Math.round(rtt / 2);
-            // console.log('LATENCY CALC',{id,rtt,latency});
-            setPeerDataById(id, {
-              ping: latency,
-              pingStart: undefined,
-            });
-          },
-        })[type]?.(id, payload);
+        // console.log('Got data >>> ', id, type, payload);
+        dataReducer[type]?.({ id, payload, peerData, setPeerDataById });
       });
     });
 
@@ -60,7 +44,7 @@ const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
         dataConnection.off('data');
       });
     };
-  }, [peerConnections, peerData]);
+  }, [peerConnections, peerData, dataReducer]);
 
   // every so often, ping all connections, to get latency
   useEffect(() => {

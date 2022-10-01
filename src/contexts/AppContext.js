@@ -22,23 +22,23 @@ export const AppProvider = ({ children }) => {
   const { balls, setBallById, removeBallById } = usePhaserBalls({ scene });
 
   // DI
-  const onOpen = useCallback(conn => {
-    console.log('a connection opened, sending idCard', conn.peer, idCard);
-    conn.send({ action: 'SETDATA', payload: { idCard } });
-  }, [idCard]);
+  // const onOpen = useCallback(conn => {
+  //   console.log('a connection opened, sending idCard', conn.peer, idCard);
+  //   conn.send({ action: 'SETDATA', payload: { idCard } });
+  // }, [idCard]);
   
-  const onData = useCallback((conn, data) => {
-    const { action, payload } = data;
-    ({
-      // receive game state
-      SETGAMESTATE: gamePhysicsState => {
-        // deserialise game state and set into scene
-        const { balls, players } = gamePhysicsState;
-        if (balls) balls.forEach(({ id, ...state }) => scene?.balls?.[id].setState?.(state));
-        if (players) players.forEach(({ id, ...state }) => scene?.players?.[id].setState?.(state));
-      },
-    })[action]?.(payload);
-  }, [scene]);
+  // const onData = useCallback((conn, data) => {
+  //   const { action, payload } = data;
+  //   ({
+  //     // receive game state
+  //     SETGAMESTATE: gamePhysicsState => {
+  //       // deserialise game state and set into scene
+  //       const { balls, players } = gamePhysicsState;
+  //       if (balls) balls.forEach(({ id, ...state }) => scene?.balls?.[id].setState?.(state));
+  //       if (players) players.forEach(({ id, ...state }) => scene?.players?.[id].setState?.(state));
+  //     },
+  //   })[action]?.(payload);
+  // }, [scene]);
 
   // const { peer, connections, broadcast } = usePeerJsMesh({
   //   networkName: 'polygon-pong-multiplayer',
@@ -56,7 +56,10 @@ export const AppProvider = ({ children }) => {
     peerConnections,
     peerData,
   } = usePeerJsMesh2({
+    //   networkName: 'polygon-pong-multiplayer',
+    //   maxPeers: 9,
     active: visibilityState === 'visible',
+    idCard,
   });
 
   // const improvedConnections = useMemo(() => {
