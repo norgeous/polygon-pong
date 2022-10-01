@@ -9,6 +9,7 @@ const Network = () => {
   const {
     setRoute,
     connections,
+    peerData,
   } = useAppContext();
 
   return (
@@ -22,6 +23,7 @@ const Network = () => {
           {connections.map(connection => <SystemInfo {...connection} />)}
         </Table>
       )}
+      <pre>{JSON.stringify(peerData,null,2)}</pre>
     </Modal>
   );
 };

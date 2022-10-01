@@ -17,8 +17,11 @@ const usePeerJsMesh = ({
   // connect to peerjs signaling server as next available peerId
   const { peer, open } = usePeerJs({ peerIds, active });
 
+  
   // setup connections to all other peers in mesh
   const [peerConnections, dispatchPeerConnection] = useConnections({ peerIds, peer });
+
+  // console.log('CONTEXT', peer?.connections, peerConnections);
 
   // listen for data from remote peers
   const dataReducer = {
@@ -28,7 +31,7 @@ const usePeerJsMesh = ({
         browserType: 'daniel',
       },
     }),
-    IDCARD: (id, payload) => payload,
+    IDCARD: (id, payload) => ({ idCard: payload }),
   };
   const peerData = useData(peerConnections, dispatchPeerConnection, dataReducer);
 

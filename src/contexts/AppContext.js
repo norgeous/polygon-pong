@@ -40,7 +40,6 @@ export const AppProvider = ({ children }) => {
     })[action]?.(payload);
   }, [scene]);
 
-  const { peer, connections, broadcast } = {};
   // const { peer, connections, broadcast } = usePeerJsMesh({
   //   networkName: 'polygon-pong-multiplayer',
   //   maxPeers: 9,
@@ -51,10 +50,14 @@ export const AppProvider = ({ children }) => {
 
 
   
-  const thing = usePeerJsMesh2({
+  const {
+    peer,
+    open,
+    peerConnections,
+    peerData,
+  } = usePeerJsMesh2({
     active: visibilityState === 'visible',
   });
-  console.log(thing)
 
   // const improvedConnections = useMemo(() => {
   //   const newIC = connections.map(c => {
@@ -138,6 +141,7 @@ export const AppProvider = ({ children }) => {
         sysInfo,
         // peer, connections: improvedConnections, broadcast,
         connections: [],
+        peer, open, peerConnections, peerData,
       }}
     >
       {children}
