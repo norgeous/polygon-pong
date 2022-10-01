@@ -43,11 +43,14 @@ const App = () => {
         {getGameIcon('heart_on')}
         {getGameIcon('heart_on')}
         {getGameIcon('heart_off')}
-        <br/>
-        <br/>
+        &emsp;
+        {getGameIcon('coin')}×22
+        &emsp;
         1,000,023
+        <br/>
+        <br/>
+        {showFps && <><FpsCounter>{fps}</FpsCounter></>}
       </TopLeft>
-      {showFps && <TopLeft><FpsCounter>{fps}</FpsCounter></TopLeft>}
       <TopRight>
         {isHost && (
           <Button onClick={() => setRoute('HOSTCONTROLS')}>
@@ -59,9 +62,8 @@ const App = () => {
         </Button>
         <Button onClick={() => setRoute('SETTINGS')}>{getUiIcon('settings')}</Button>
       </TopRight>
-      <BottomRight>
-        {getGameIcon('coin')}×22
-      </BottomRight>
+      {/* <BottomRight>
+      </BottomRight> */}
       <Bottom>
       </Bottom>
       <BottomLeft>
