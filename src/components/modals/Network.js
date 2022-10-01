@@ -8,7 +8,6 @@ import SystemInfo from '../SystemInfo';
 const Network = () => {
   const {
     setRoute,
-    connections,
     networkOverview,
   } = useAppContext();
 
@@ -17,13 +16,13 @@ const Network = () => {
       title={`${getUiIcon('network')} Network`}
       onClose={() => setRoute()}
     >
-      {!connections.length && `${getUiIcon('disconnected')} No Connections`}
-      {!!connections.length && (
+      {!networkOverview.length && `${getUiIcon('disconnected')} No Connections`}
+      {!!networkOverview.length && (
         <Table>
-          {connections.map(connection => <SystemInfo {...connection} />)}
+          {networkOverview.map(connection => <SystemInfo {...connection} />)}
         </Table>
       )}
-      <pre>{JSON.stringify(networkOverview, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(networkOverview, null, 2)}</pre> */}
     </Modal>
   );
 };
