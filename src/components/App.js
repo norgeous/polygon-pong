@@ -49,7 +49,7 @@ const App = () => {
         1,000,023
         <br/>
         <br/>
-        {showFps && <><FpsCounter>{fps}</FpsCounter></>}
+        {showFps && <FpsCounter>{fps}</FpsCounter>}
       </TopLeft>
       <TopRight>
         {isHost && (
