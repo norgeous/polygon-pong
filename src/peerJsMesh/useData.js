@@ -1,28 +1,58 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useState, useEffect } from 'react';
 
 const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
-
-  const reducer = (state, { type, payload }) => {
-    console.log('>>', type, payload.id, payload.data)
-    const setStateByKey = (id, data) => ({
-      ...state,
+  const [peerData, setPeerData] = useState({});
+  const setPeerDataById = (id, data) => {
+    setPeerData(oldPeerData => ({
+      ...oldPeerData,
       [id]: {
-        ...state?.[id],
+        ...oldPeerData[id],
         ...data,
-      },
-    });
+      }
+    }));
+  };
 
-    return ({
-      OPEN: ({ id }) => setStateByKey(id, {
-        open: true,
-        // data: {},
-      }),
-      CLOSE: ({ id }) => setStateByKey(id, {
-        open: false,
-        // data: undefined,
-      }),
-      DATA: ({ id, data: { type: dType, payload: dPayload }}) => {
-        const newData = ({
+  // const actionReducer = ({ type, payload }) => {
+  //   console.log('>>', type, payload);
+
+  //   return ({
+  //     OPEN: ({ id }) => ,
+  //     CLOSE: ({ id }) => ,
+  //     DATA: ({ id, data: { type: dType, payload: dPayload }}) => {
+  //       const newData = ;
+
+  //       const newState = setStateByKey(id, newData);
+
+  //       return newState || state;
+  //     },
+  //     SAVEDATA: ({ id, data }) => setPeerDataById(id, data),
+  //   })[type]?.(payload);
+  // };
+
+  // const [peerData, dispatchPeerData] = useReducer(reducer, {});
+
+
+
+  // if peerConnections changes (both INCOMING and OUTGOING), register handlers
+  useEffect(() => {
+    Object.values(peerConnections).forEach(dataConnection => {
+      const id = dataConnection.peer;
+
+      // Emitted when the connection is established and ready-to-use
+      dataConnection.on('open', () => {
+        dataConnection.send({ type: 'GREETING' });
+        setPeerDataById(id, { open: true });
+      });
+
+      // Emitted when either you or the remote peer closes the data connection (firefox not supported)
+      dataConnection.on('close', () => {
+        dispatchPeerConnection({ type: 'REMOVE', payload: { id } });
+        setPeerDataById(id, { open: false });
+      });
+
+      // Emitted when data is received from the remote peer
+      dataConnection.on('data', ({ type, payload }) => {
+        ({
           ...dataReducer,
           PING: () => {
             console.log('GOT PING, SEND PONG');
@@ -30,44 +60,17 @@ const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
           },
           PONG: () => {
             console.log('GOT PONG');
-            const { pingStart } = state[id];
+            const { pingStart } = peerData[id];
             const rtt = window.performance.now() - pingStart;
             const latency = Math.round(rtt / 2);
-            console.log('LATENCY CALC',{state,id,rtt,latency});
-            return {
+            console.log('LATENCY CALC',{id,rtt,latency});
+            setPeerDataById(id, {
               ping: latency,
-              // pingStart: undefined,
-            };
+              pingStart: undefined,
+            });
           },
-        })[dType]?.(id, dPayload);
-
-        const newState = setStateByKey(id, newData);
-
-        return newState || state;
-      },
-      SAVEDATA: ({ id, data }) => setStateByKey(id, data),
-    })[type]?.(payload);
-  };
-
-  const [peerData, dispatchPeerData] = useReducer(reducer, {});
-
-  // if peerConnections changes (both INCOMING and OUTGOING), register handlers
-  useEffect(() => {
-    Object.values(peerConnections).forEach(dataConnection => {
-      // Emitted when the connection is established and ready-to-use
-      dataConnection.on('open', () => {
-        dataConnection.send({ type: 'GREETING' });
-        dispatchPeerData({ type: 'OPEN', payload: { id: dataConnection.peer } });
+        })[type]?.(id, payload);
       });
-
-      // Emitted when either you or the remote peer closes the data connection (firefox not supported)
-      dataConnection.on('close', () => {
-        dispatchPeerConnection({ type: 'REMOVE', payload: { id: dataConnection.peer } });
-        dispatchPeerData({ type: 'CLOSE', payload: { id: dataConnection.peer } });
-      });
-
-      // Emitted when data is received from the remote peer
-      dataConnection.on('data', data => dispatchPeerData({ type: 'DATA', payload: { id: dataConnection.peer, data } }));
     });
 
     // teardown
@@ -78,7 +81,7 @@ const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
         dataConnection.off('data');
       });
     };
-  }, [peerConnections]);
+  }, [peerConnections, peerData]);
 
   // every so often, ping all connections, to get latency
   useEffect(() => {
@@ -87,15 +90,9 @@ const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
       Object.values(peerConnections) 
         .filter(dataConnection => dataConnection.open)
         .forEach(dataConnection => {
-          console.log('SEND PING to ',dataConnection);
-          dispatchPeerData({
-            type: 'SAVEDATA',
-            payload: {
-              id: dataConnection.peer,
-              data:{
-                pingStart: window.performance.now(),
-              },
-            },
+          console.log('SEND PING to ',dataConnection.peer);
+          setPeerDataById(dataConnection.peer, {
+            pingStart: window.performance.now(),
           });
           dataConnection.send({ type: 'PING' });
         });
