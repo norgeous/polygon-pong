@@ -29,7 +29,7 @@ const Network = () => {
 
       <Button onClick={() => setEnableNetwork(!enableNetwork)}>
         <span>{getUiIcon(enableNetwork ? 'pause' : 'play')}</span>
-        <span>{enableNetwork ? 'Pause network' : 'Resume network'}</span>
+        <span>{enableNetwork ? 'Pause' : 'Resume'}</span>
       </Button>
     </Modal>
   );
