@@ -7,7 +7,7 @@ const usePeerJsMesh = ({
   networkName = 'peerjs-mesh',
   seats = 9,
   active = true,
-  idCard = {},
+  dataReducer,
 } = {}) => {
   // if networkName or seats changes, generate a new list of peerIds
   const peerIds = useMemo(() => Array.from(
@@ -21,19 +21,26 @@ const usePeerJsMesh = ({
   // setup connections to all other peers in mesh
   const [peerConnections, dispatchPeerConnection] = useConnections({ peerIds, peer });
 
-  // listen for data from remote peers
-  const dataReducer = {
-    GREETING: ({ id }) => peerConnections[id].send({ type:'IDCARD', payload: idCard }),
-    IDCARD: ({ id, payload, setPeerDataById }) => setPeerDataById(id, { idCard: payload }),
-    PING: ({ id }) => peerConnections[id].send({ type: 'PONG' }),
-    PONG: ({ id, peerData, setPeerDataById }) => setPeerDataById(id, {
-      ping: Math.round((window.performance.now() - peerData[id].pingStart) / 2),
-      pingStart: undefined,
-    }),
-  };
+  // data construct
   const peerData = useData(peerConnections, dispatchPeerConnection, dataReducer);
 
+  // create complete list
+  const networkList = useMemo(() => {
+    if (!peer) return [];
+    return peerIds.reduce((acc, id) => [
+      ...acc,
+      {
+        id,
+        index: id.replace(`${networkName}-`,''),
+        type: id === peer.id ? 'local' : 'remote',
+        open: id === peer.id ? open : peerConnections[id]?.open || false,
+        ...peerData[id],
+      },
+    ], []);
+  }, [peerIds, peer, peerConnections, peerData]);
+
   return {
+    networkList,
     peer,
     open,
     peerConnections,
