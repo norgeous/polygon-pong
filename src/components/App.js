@@ -21,14 +21,15 @@ const App = () => {
   const {
     route, setRoute,
     showFps, fps,
-    connections,
+    networkOverview,
     sysInfo,
+    isHost,
   } = useAppContext();
   
   const { batteryAvailable, batteryPercent, clock } = sysInfo;
 
-  const isHost = connections.find(({ connectionType }) => connectionType === 'local')?.isHost;
-  const connectionCount = connections.reduce((acc, {connection}) => connection?.open ? acc+1 : acc, 0);
+  // const isHost = connections.find(({ connectionType }) => connectionType === 'local')?.isHost;
+  const connectionCount = networkOverview.reduce((acc, { open }) => open ? acc + 1 : acc, 0);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 import usePeerJsMesh from '../hooks/usePeerJsMesh';
@@ -13,6 +13,7 @@ const AppContext = createContext({});
 export const AppProvider = ({ children }) => {
   const sysInfo = useSystemInfo();
   const { visibilityState, idCard } = sysInfo;
+  const [enableNetwork, setEnableNetwork] = useState(true);
   
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
@@ -40,14 +41,14 @@ export const AppProvider = ({ children }) => {
   
   const {
     networkList,
-    // peer,
+    peer,
     // open,
     peerConnections,
     // peerData,
   } = usePeerJsMesh2({
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
-    active: visibilityState === 'visible',
+    active: enableNetwork && visibilityState === 'visible',
     dataReducer,
   });
 
@@ -127,9 +128,11 @@ export const AppProvider = ({ children }) => {
         balls, setBallById, removeBallById,
         sysInfo,
         // peer, connections: improvedConnections, broadcast,
-        connections: [],
+        // connections: [],
         // peer, open, peerConnections, peerData,
         networkOverview,
+        isHost: peer?.id === hostId,
+        enableNetwork, setEnableNetwork,
       }}
     >
       {children}

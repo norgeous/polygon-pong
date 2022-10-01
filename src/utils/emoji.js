@@ -57,6 +57,8 @@ const ui = {
   add: '➕',
   remove: '➖',
   about: 'ℹ️',
+  pause: '⏸️',
+  play: '▶️',
 };
 
 const volume = '🔇,🔈,🔉,🔊,📣'.split(',');

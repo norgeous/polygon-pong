@@ -4,10 +4,12 @@ import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Table } from '../styled/table';
 import SystemInfo from '../SystemInfo';
+import { Sideways, Button } from '../styled/menu';
 
 const Network = () => {
   const {
     setRoute,
+    enableNetwork, setEnableNetwork,
     networkOverview,
   } = useAppContext();
 
@@ -22,7 +24,13 @@ const Network = () => {
           {networkOverview.map(connection => <SystemInfo {...connection} />)}
         </Table>
       )}
+
       {/* <pre>{JSON.stringify(networkOverview, null, 2)}</pre> */}
+
+      <Button onClick={() => setEnableNetwork(!enableNetwork)}>
+        <span>{getUiIcon(enableNetwork ? 'pause' : 'play')}</span>
+        <span>{enableNetwork ? 'Pause network' : 'Resume network'}</span>
+      </Button>
     </Modal>
   );
 };
