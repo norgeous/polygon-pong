@@ -35,7 +35,7 @@ export const AppProvider = ({ children }) => {
     }),
     SETGAMESTATE: ({ payload }) => {
       // if gameobjects from payload ar missing add them
-      payload.balls.forEach(({ id, emojiId }) => {
+      payload.balls?.forEach(({ id, emojiId }) => {
         if (!scene.balls[id]) setBallById(id, { emojiId });
       });
       scene.setGameState(payload);
