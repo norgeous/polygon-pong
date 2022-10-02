@@ -25,14 +25,14 @@ const useNetworkGame = ({
       if (isHost) {
         const send = () => {
           broadcast({
-            action: 'SETGAMESTATE',
+            type: 'SETGAMESTATE',
             payload: {
               balls: Object.values(scene.balls).map(ball => ball.getState()), // all balls
               players: [scene.players[peerId].getState()], // host player position
             },
           });
         };
-        const t = setInterval(send, 500); // broadcast poll rate
+        const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
       }
 
@@ -40,13 +40,13 @@ const useNetworkGame = ({
       if (!isHost) {
         const send = () => {
           broadcast({
-            action: 'SETGAMESTATE',
+            type: 'SETGAMESTATE',
             payload: {
               players: [scene.players[peerId].getState()], // player position
             },
           });
         };
-        const t = setInterval(send, 500); // broadcast poll rate
+        const t = setInterval(send, 50); // broadcast poll rate
         return () => clearInterval(t);
       }
     }

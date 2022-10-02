@@ -7,7 +7,7 @@ import { Sideways, Button } from '../styled/menu';
 const HostControls = () => {
   const {
     setRoute,
-    balls,
+    flatBalls,
     setBallById,
     removeBallById,
   } = useAppContext();
@@ -28,9 +28,9 @@ const HostControls = () => {
 
       {getUiIcon('remove')} Remove Ball
       <Sideways>
-        {balls.map((ball) => (
+        {flatBalls.map((ball) => (
           <Button onClick={() => removeBallById(ball.id)}>
-            {ball.value.emoji}
+            {ball.emoji}
           </Button>
         ))}
       </Sideways>

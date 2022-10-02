@@ -91,7 +91,7 @@ export const AppProvider = ({ children }) => {
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, scene,
         showFps, setShowFps, fps, targetFps,
-        balls, setBallById, deleteBallById,
+        balls, flatBalls, setBallById, deleteBallById,
         sysInfo,
         // peer, connections: improvedConnections, broadcast,
         // connections: [],
