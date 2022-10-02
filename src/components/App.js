@@ -27,8 +27,6 @@ const App = () => {
   } = useAppContext();
   
   const { batteryAvailable, batteryPercent, clock } = sysInfo;
-
-  // const isHost = connections.find(({ connectionType }) => connectionType === 'local')?.isHost;
   const connectionCount = networkOverview.reduce((acc, { open }) => open ? acc + 1 : acc, 0);
 
   return (
@@ -46,17 +44,17 @@ const App = () => {
         &emsp;
         {getGameIcon('coin')}×22
         &emsp;
-        1,000,023
+        1,000,024
         <br/>
         <br/>
         {showFps && <FpsCounter>{fps}</FpsCounter>}
       </TopLeft>
       <TopRight>
-        {isHost && (
+        {/* {isHost && ( */}
           <Button onClick={() => setRoute('HOSTCONTROLS')}>
             {getUiIcon('host')}
           </Button>
-        )}
+        {/* )} */}
         <Button onClick={() => setRoute('NETWORK')}>
           {connectionCount ? `${getUiIcon('network')}×${connectionCount}` : getUiIcon('disconnected')}
         </Button>

@@ -14,7 +14,7 @@ const useNetworkGame = ({
   // if host, and no balls, add a ball
   useEffect(() => {
     if (gameReady && isHost && Object.keys(balls).length === 0) {
-      setBallById('one', { emoji: '0' });
+      setBallById('one', { emoji: 'X' });
     }
   }, [gameReady, isHost, balls]);
 

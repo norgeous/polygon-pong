@@ -9,7 +9,7 @@ const HostControls = () => {
     setRoute,
     flatBalls,
     setBallById,
-    removeBallById,
+    deleteBallById,
   } = useAppContext();
 
   return (
@@ -29,7 +29,7 @@ const HostControls = () => {
       {getUiIcon('remove')} Remove Ball
       <Sideways>
         {flatBalls.map((ball) => (
-          <Button onClick={() => removeBallById(ball.id)}>
+          <Button onClick={() => deleteBallById(ball.id)}>
             {ball.emoji}
           </Button>
         ))}
