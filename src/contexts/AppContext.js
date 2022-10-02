@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
-import usePeerJsMesh from '../hooks/usePeerJsMesh';
-import usePeerJsMesh2 from '../peerJsMesh/usePeerJsMesh';
+import usePeerJsMesh from '../peerJsMesh/usePeerJsMesh';
 import useWakeLock from '../hooks/useWakeLock';
 import usePhaser from '../hooks/usePhaser';
 import useSystemInfo from '../hooks/useSystemInfo';
@@ -45,7 +44,7 @@ export const AppProvider = ({ children }) => {
     // open,
     peerConnections,
     // peerData,
-  } = usePeerJsMesh2({
+  } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
     active: enableNetwork && visibilityState === 'visible',
@@ -68,6 +67,16 @@ export const AppProvider = ({ children }) => {
     isHost: entry.id === hostId,
   }));
 
+  // set react data into game
+  useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
+  useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
+
+  // on mount, add balls
+  useEffect(() => { if (gameReady) scene.syncronizeBalls([{
+    id:1,
+    value: { emoji:'O' },
+  }]); }, [gameReady]);
+
   // when connections change, adjust player object count
   // useEffect(() => {
   //   if (gameReady && connections) {
@@ -75,13 +84,6 @@ export const AppProvider = ({ children }) => {
   //     scene.syncronizeConnectionsWithPlayers(players);
   //   }
   // }, [gameReady, connections]);
-
-  // set react data into game
-  useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
-  useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
-
-  // on mount, add balls
-  // useEffect(() => { if (gameReady) scene.syncronizeBalls([{id:1},{id:2}]); }, [gameReady]);
 
   // broadcast physics state
   // useEffect(() => {
