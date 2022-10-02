@@ -89,15 +89,15 @@ class GameScene extends Phaser.Scene {
 
     if (balls) {
       balls.forEach(({ id, emojiId, ...state }) => {
-        if (!this.balls[id]) this.balls[id] = new Ball(this, id, emojiId);
-        this.balls[id].setState(state);
+        // if (!this.balls[id]) this.balls[id] = new Ball(this, id, emojiId);
+        this.balls[id]?.setState(state);
       });
     }
     
     if (players) {
       players.forEach(({ id, type, ...state }) => {
-        if (!this.players[id]) this.players[id] = new Player(this, id, type);
-        this.players[id].setState(state);
+        // if (!this.players[id]) this.players[id] = new Player(this, id, type);
+        this.players[id]?.setState(state);
       });
     }
   }

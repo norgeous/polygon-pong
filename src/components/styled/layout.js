@@ -7,6 +7,7 @@ export const TopLeft = styled.div`
   bottom: auto;
   left: 0;
   padding: 10px;
+  padding-left: 2em;
 `;
 
 export const TopRight = styled.div`
@@ -15,6 +16,7 @@ export const TopRight = styled.div`
   right: 0;
   bottom: auto;
   left: auto;
+  padding-right: 2em;
 `;
 
 export const BottomRight = styled.div`
@@ -24,6 +26,7 @@ export const BottomRight = styled.div`
   bottom: 0;
   left: auto;
   padding: 10px;
+  padding-right: 2em;
 `;
 
 export const Bottom = styled.div`
@@ -42,6 +45,7 @@ export const BottomLeft = styled.div`
   bottom: 0;
   left: 0;
   padding: 10px;
+  padding-left: 2em;
 `;
 
 export const Overlay = styled.div`

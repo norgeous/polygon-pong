@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
+import useStateObject from '../hooks/useStateObject';
+
 import usePeerJsMesh from '../peerJsMesh/usePeerJsMesh';
 import useWakeLock from '../hooks/useWakeLock';
 import usePhaser from '../hooks/usePhaser';
@@ -20,6 +22,8 @@ export const AppProvider = ({ children }) => {
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { gameReady, game, scene, fps, targetFps } = usePhaser();
 
+  const [ballsDb, ballsArray, setBallById, deleteBallById] = useStateObject({});
+
   // peerjs plumbing
   const dataReducer = {
     GREETING: ({ id }) => peerConnections[id].send({ type:'IDCARD', payload: idCard }),
@@ -29,7 +33,13 @@ export const AppProvider = ({ children }) => {
       ping: Math.round((window.performance.now() - peerData[id].pingStart) / 2),
       pingStart: undefined,
     }),
-    SETGAMESTATE: ({ payload }) => scene.setGameState(payload),
+    SETGAMESTATE: ({ payload }) => {
+      // if gameobjects from payload ar missing add them
+      payload.balls.forEach(({ id, emojiId }) => {
+        if (!scene.balls[id]) setBallById(id, { emojiId });
+      });
+      scene.setGameState(payload);
+    },
   };
   
   const {
@@ -63,15 +73,21 @@ export const AppProvider = ({ children }) => {
   }));
 
   const peerId = peer?.id;
+
   const isHost = peerId === hostId;
 
-  const { balls, flatBalls, setBallById, deleteBallById } = useNetworkGame({
+  // const { balls, flatBalls, setBallById, deleteBallById } = 
+  useNetworkGame({
     gameReady,
     scene,
     peerId,
     isHost,
     players: networkOverview.filter(({ open }) => open),
     broadcast,
+    // ballsDb,
+    ballsArray,
+    // setBallById,
+    // deleteBallById,
   });
 
   // set react data into game
@@ -86,11 +102,9 @@ export const AppProvider = ({ children }) => {
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, scene,
         showFps, setShowFps, fps, targetFps,
-        balls, flatBalls, setBallById, deleteBallById,
+        // balls, flatBalls,
+        ballsArray, setBallById, deleteBallById,
         sysInfo,
-        // peer, connections: improvedConnections, broadcast,
-        // connections: [],
-        // peer, open, peerConnections, peerData,
         networkOverview,
         isHost,
         enableNetwork, setEnableNetwork,

@@ -8,8 +8,11 @@ const useNetworkGame = ({
   isHost,
   players,
   broadcast,
+  // ballsDb,
+  ballsArray,
+  // setBallById,
+  // deleteBallById,
 }) => {
-  const [balls, flatBalls, setBallById, deleteBallById] = useStateObject({});
 
   // if host, and no balls, add a ball
   // useEffect(() => {
@@ -24,7 +27,7 @@ const useNetworkGame = ({
       // if hosting
       if (isHost) {
         const send = () => {
-          console.log('HOST SENDING BALLS', Object.values(scene.balls).map(ball => ball.getState()));
+          // console.log('HOST SENDING BALLS', Object.values(scene.balls).map(ball => ball.getState()));
           broadcast({
             type: 'SETGAMESTATE',
             payload: {
@@ -62,12 +65,12 @@ const useNetworkGame = ({
 
   // if ball count changes, adjust the balls in the scene 
   useEffect(() => {
-    if (gameReady && flatBalls.length) {
-      scene.syncronizeBalls(flatBalls);
+    if (gameReady && ballsArray.length) {
+      scene.syncronizeBalls(ballsArray);
     }
-  }, [gameReady, scene, flatBalls]);
+  }, [gameReady, scene, ballsArray]);
 
-  return { balls, flatBalls, setBallById, deleteBallById };
+  // return { balls, flatBalls, setBallById, deleteBallById };
 };
 
 export default useNetworkGame;

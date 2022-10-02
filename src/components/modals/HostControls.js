@@ -7,10 +7,18 @@ import { Sideways, Button } from '../styled/menu';
 const HostControls = () => {
   const {
     setRoute,
-    flatBalls,
+    ballsArray,
     setBallById,
     deleteBallById,
   } = useAppContext();
+
+  const randomBall = emoji => {
+    const newId = Math.random().toString().replace('0.','');
+    const newData = {
+      emojiId: ballEmojis.findIndex(b => b === emoji),
+    };
+    setBallById(newId, newData);
+  };
 
   return (
     <Modal
@@ -19,23 +27,17 @@ const HostControls = () => {
     >
       {getUiIcon('add')} Add Ball
       <Sideways>
-        {ballEmojis.map(e => (
-          <Button onClick={() => setBallById(Math.random(), { emojiId: 0 })}>
-            {e}
-          </Button>
-        ))}
+        {ballEmojis.map(e => <Button onClick={() => randomBall(e)}>{e}</Button>)}
       </Sideways>
 
       {getUiIcon('remove')} Remove Ball
       <Sideways>
-        {flatBalls.map((ball) => (
-          <Button onClick={() => deleteBallById(ball.id)}>
-            {ball.emoji}
+        {ballsArray.map(({id, emojiId}) => (
+          <Button onClick={() => deleteBallById(id)}>
+            {ballEmojis[emojiId]}
           </Button>
         ))}
       </Sideways>
-
-      <pre>{JSON.stringify(flatBalls, null, 2)}</pre>
     </Modal>
   );
 };

@@ -16,14 +16,14 @@ const useStateObject = (initialValue = {}) => {
       .filter(([id]) => id !== deleteId)
   ));
 
-  const flat = useMemo(() => Object.entries(o).map(([id, data]) => ({
+  const a = useMemo(() => Object.entries(o).map(([id, data]) => ({
     id,
     ...data
   })), [o]);
 
   return [
     o, // read
-    flat, // read
+    a, // read
     setById, // create / update
     deletebyId // delete
   ];

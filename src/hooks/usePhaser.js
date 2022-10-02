@@ -15,7 +15,7 @@ const usePhaser = () => {
       scene: [GameScene],
     });
     newGame.setGameReady = setGameReady;
-    // newGame.setFps = setFps;
+    newGame.setFps = setFps;
     setGame(newGame);
   }, []);
 
