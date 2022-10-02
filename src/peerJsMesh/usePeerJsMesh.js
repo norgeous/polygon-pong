@@ -16,6 +16,7 @@ const usePeerJsMesh = ({
   ), [networkName, seats]);
 
   // connect to peerjs signaling server as next available peerId
+  // const options = { serialization: 'binary-utf8' };
   const { peer, open } = usePeerJs({ peerIds, active });
   
   // setup connections to all other peers in mesh

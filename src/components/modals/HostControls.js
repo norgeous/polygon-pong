@@ -20,7 +20,7 @@ const HostControls = () => {
       {getUiIcon('add')} Add Ball
       <Sideways>
         {ballEmojis.map(e => (
-          <Button onClick={() => setBallById(e, { emoji: e })}>
+          <Button onClick={() => setBallById(Math.random(), { emojiId: 0 })}>
             {e}
           </Button>
         ))}
@@ -34,6 +34,8 @@ const HostControls = () => {
           </Button>
         ))}
       </Sideways>
+
+      <pre>{JSON.stringify(flatBalls, null, 2)}</pre>
     </Modal>
   );
 };

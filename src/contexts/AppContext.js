@@ -29,12 +29,7 @@ export const AppProvider = ({ children }) => {
       ping: Math.round((window.performance.now() - peerData[id].pingStart) / 2),
       pingStart: undefined,
     }),
-    SETGAMESTATE: ({ payload }) => {
-      // deserialise game physics state and set into scene
-      const { balls, players } = payload;
-      if (balls) balls.forEach(({ id, ...state }) => scene?.balls?.[id].setState?.(state));
-      if (players) players.forEach(({ id, ...state }) => scene?.players?.[id].setState?.(state));
-    },
+    SETGAMESTATE: ({ payload }) => scene.setGameState(payload),
   };
   
   const {

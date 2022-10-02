@@ -40,16 +40,16 @@ class GameScene extends Phaser.Scene {
   update () {
     if (this.game.visibilityState === 'hidden') this.matter.pause();
     if (this.game.visibilityState === 'visible') this.matter.resume();
+    this.game.setFps?.(Math.round(this.game.loop.actualFps)); // react state update
 
     [
       ...Object.values(this.balls),
       ...Object.values(this.players),
     ].forEach(item => item?.update(this));
-
-    this.game.setFps?.(Math.round(this.game.loop.actualFps)); // react state update
   }
 
   syncronizeBalls (balls) {
+    console.log('sync', balls)
     // delete balls not in the new state
     const ballIds = balls.map(({ id }) => id);
     const deleteIds = Object.keys(this.balls).filter(id => !ballIds.includes(id));
@@ -59,9 +59,9 @@ class GameScene extends Phaser.Scene {
     });
 
     // add ball object for newly connected players
-    balls.forEach(({ id, emoji }) => {
+    balls.forEach(({ id, emojiId }) => {
       if (!this.balls[id]) {
-        this.balls[id] = new Ball(this, id, emoji);
+        this.balls[id] = new Ball(this, id, emojiId);
       }
     });
   }
@@ -81,6 +81,26 @@ class GameScene extends Phaser.Scene {
         this.players[id] = new Player(this, id, type);
       }
     });
+  }
+
+  setGameState(payload) {
+    // deserialise game physics state and set into scene
+    const { balls, players } = payload;
+    // console.log('GameScene.setGameState', balls, players);
+
+    if (balls) {
+      balls.forEach(({ id, emojiId, ...state }) => {
+        if (!this.balls[id]) this.balls[id] = new Ball(this, id, emojiId);
+        this.balls[id].setState(state);
+      });
+    }
+    
+    if (players) {
+      players.forEach(({ id, type, ...state }) => {
+        if (!this.players[id]) this.players[id] = new Player(this, id, type);
+        this.players[id].setState(state);
+      });
+    }
   }
 }
 

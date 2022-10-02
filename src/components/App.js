@@ -50,11 +50,11 @@ const App = () => {
         {showFps && <FpsCounter>{fps}</FpsCounter>}
       </TopLeft>
       <TopRight>
-        {/* {isHost && ( */}
+        {isHost && (
           <Button onClick={() => setRoute('HOSTCONTROLS')}>
             {getUiIcon('host')}
           </Button>
-        {/* )} */}
+        )}
         <Button onClick={() => setRoute('NETWORK')}>
           {connectionCount ? `${getUiIcon('network')}×${connectionCount}` : getUiIcon('disconnected')}
         </Button>

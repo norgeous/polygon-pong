@@ -1,9 +1,10 @@
 import createOscillator from '../../utils/createOscillator';
+import { ballEmojis } from '../../utils/emoji';
 
 class Ball {
-  constructor(scene, id, emoji) {
+  constructor(scene, id, emojiId) {
     this.id = id;
-    this.emoji = emoji;
+    this.emojiId = emojiId;
     this.oscillator = createOscillator();
 
     const { width, height } = scene.sys.game.canvas;
@@ -12,7 +13,7 @@ class Ball {
     this.text = scene.add.text(
       width/2,
       height/4,
-      this.emoji,
+      ballEmojis[this.emojiId],
       { font: '50px Arial', align: 'center' },
     ).setOrigin(0.5);
 
@@ -71,10 +72,11 @@ class Ball {
 
   getState() {
     const id = this.id;
+    const emojiId = this.emojiId;
     const { x, y } = this.gameObject;
     const { x: vx, y: vy } = this.gameObject.body.velocity;
     const { angle: a, angularVelocity: va } = this.gameObject.body;
-    return { id, x, y, a, vx, vy, va };
+    return { id, emojiId, x, y, a, vx, vy, va };
   }
 
   setState({ x, y, a, vx, vy, va }) {

@@ -74,10 +74,11 @@ class Player {
 
   getState() {
     const id = this.id;
+    const type = this.controlType;
     const { x, y } = this.gameObject;
     const { x: vx, y: vy } = this.gameObject.body.velocity;
     const { angle: a, angularVelocity: va } = this.gameObject.body;
-    return { id, x, y, a, vx, vy, va };
+    return { id, type, x, y, a, vx, vy, va };
   }
 
   setState({ x, y, a, vx, vy, va }) {
