@@ -59,9 +59,9 @@ class GameScene extends Phaser.Scene {
     });
 
     // add ball object for newly connected players
-    balls.forEach(({ id, value }) => {
+    balls.forEach(({ id, emoji }) => {
       if (!this.balls[id]) {
-        this.balls[id] = new Ball(this, id, value.emoji);
+        this.balls[id] = new Ball(this, id, emoji);
       }
     });
   }
@@ -76,9 +76,9 @@ class GameScene extends Phaser.Scene {
     });
 
     // add player object for newly connected players
-    connections.forEach(({ id, connectionType }) => {
+    connections.forEach(({ id, type }) => {
       if (!this.players[id]) {
-        this.players[id] = new Player(this, id, connectionType);
+        this.players[id] = new Player(this, id, type);
       }
     });
   }

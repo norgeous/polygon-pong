@@ -5,7 +5,7 @@ import usePeerJsMesh from '../peerJsMesh/usePeerJsMesh';
 import useWakeLock from '../hooks/useWakeLock';
 import usePhaser from '../hooks/usePhaser';
 import useSystemInfo from '../hooks/useSystemInfo';
-import usePhaserBalls from '../hooks/usePhaserBalls';
+import useNetworkGame from '../hooks/useNetworkGame';
 
 const AppContext = createContext({});
 
@@ -19,7 +19,6 @@ export const AppProvider = ({ children }) => {
   const [showFps, setShowFps] = useLocalStorage('showfps', false);
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { gameReady, game, scene, fps, targetFps } = usePhaser();
-  const { balls, setBallById, removeBallById } = usePhaserBalls({ scene });
 
   // peerjs plumbing
   const dataReducer = {
@@ -31,7 +30,7 @@ export const AppProvider = ({ children }) => {
       pingStart: undefined,
     }),
     SETGAMESTATE: ({ payload }) => {
-      // deserialise game state and set into scene
+      // deserialise game physics state and set into scene
       const { balls, players } = payload;
       if (balls) balls.forEach(({ id, ...state }) => scene?.balls?.[id].setState?.(state));
       if (players) players.forEach(({ id, ...state }) => scene?.players?.[id].setState?.(state));
@@ -39,10 +38,11 @@ export const AppProvider = ({ children }) => {
   };
   
   const {
-    networkList,
     peer,
-    // open,
     peerConnections,
+    networkList,
+    broadcast,
+    // open,
     // peerData,
   } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
@@ -67,57 +67,21 @@ export const AppProvider = ({ children }) => {
     isHost: entry.id === hostId,
   }));
 
+  const peerId = peer?.id;
+  const isHost = peerId === hostId;
+
+  const { balls, flatBalls, setBallById, deleteBallById } = useNetworkGame({
+    gameReady,
+    scene,
+    peerId,
+    isHost,
+    players: networkOverview.filter(({ open }) => open),
+    broadcast,
+  });
+
   // set react data into game
   useEffect(() => { if (game && game.maxVolume !== volume) { game.maxVolume = volume; }}, [game, volume]);
   useEffect(() => { if (game && game.visibilityState !== visibilityState) { game.visibilityState = visibilityState; }}, [game, visibilityState]);
-
-  // on mount, add balls
-  useEffect(() => { if (gameReady) scene.syncronizeBalls([{
-    id:1,
-    value: { emoji:'O' },
-  }]); }, [gameReady]);
-
-  // when connections change, adjust player object count
-  // useEffect(() => {
-  //   if (gameReady && connections) {
-  //     const players = connections.filter(({ connection }) => connection.open);
-  //     scene.syncronizeConnectionsWithPlayers(players);
-  //   }
-  // }, [gameReady, connections]);
-
-  // broadcast physics state
-  // useEffect(() => {
-  //   if (gameReady && improvedConnections.length) {
-  //     const host = improvedConnections.find(({ isHost }) => isHost);
-  //     if (host.connectionType === 'local') {
-  //       // if hosting
-  //       const send = () => {
-  //         broadcast({
-  //           action: 'SETGAMESTATE',
-  //           payload: {
-  //             balls: Object.values(scene.balls).map(ball => ball.getState()), // all balls
-  //             players: [scene.players[peer.id].getState()], // host player position
-  //           },
-  //         });
-  //       };
-  //       const t = setInterval(send, 50); // broadcast poll rate
-  //       return () => clearInterval(t);
-  //     }
-  //     if (host.connectionType === 'remote') {
-  //       // if not hosting
-  //       const send = () => {
-  //         broadcast({
-  //           action: 'SETGAMESTATE',
-  //           payload: {
-  //             players: [scene.players[peer.id].getState()], // player position
-  //           },
-  //         });
-  //       };
-  //       const t = setInterval(send, 50); // broadcast poll rate
-  //       return () => clearInterval(t);
-  //     }
-  //   }
-  // }, [gameReady, improvedConnections, broadcast]);
 
   return (
     <AppContext.Provider
@@ -127,13 +91,13 @@ export const AppProvider = ({ children }) => {
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, scene,
         showFps, setShowFps, fps, targetFps,
-        balls, setBallById, removeBallById,
+        balls, setBallById, deleteBallById,
         sysInfo,
         // peer, connections: improvedConnections, broadcast,
         // connections: [],
         // peer, open, peerConnections, peerData,
         networkOverview,
-        isHost: peer?.id === hostId,
+        isHost,
         enableNetwork, setEnableNetwork,
       }}
     >

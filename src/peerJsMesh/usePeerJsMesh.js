@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import usePeerJs from './usePeerJs';
 import useConnections from './useConnections';
 import useData from './useData';
@@ -39,12 +39,19 @@ const usePeerJsMesh = ({
     ], []);
   }, [peerIds, peer, peerConnections, peerData]);
 
+  const broadcast = useCallback(packet => {
+    Object.values(peerConnections).forEach(connection => {
+      connection.send(packet);
+    });
+  }, [peerConnections]);
+
   return {
-    networkList,
     peer,
-    open,
     peerConnections,
-    peerData,
+    networkList,
+    broadcast,
+    // open,
+    // peerData,
   };
 };
 
