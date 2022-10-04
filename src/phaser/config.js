@@ -4,8 +4,10 @@ const config = {
     mode: Phaser.Scale.FIT,
     parent: 'phaser',
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 20 * 50,
-    height: 10 * 50,
+    // width: 20 * 50,
+    // height: 10 * 50,
+    width: 500,
+    height: 500,
   },
   pixelArt: true,
   antialias: false,
@@ -14,7 +16,7 @@ const config = {
   physics: {
     default: 'matter',
     matter: {
-      // debug: true,
+      debug: true,
       // gravity: { y: 200 },
     }
   },

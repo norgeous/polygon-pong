@@ -17,10 +17,10 @@ class GameScene extends Phaser.Scene {
   }
 
   create () {
-    const { width, height } = this.sys.game.canvas;
+    // const { width, height } = this.sys.game.canvas;
 
     this.matter.world.disableGravity();
-    this.matter.world.setBounds(0, 0, width, height, 150);
+    this.matter.world.setBounds(10, 10, 480, 480, 1000);
 
     this.particles = {
       red: this.add.particles('red'),
@@ -30,14 +30,17 @@ class GameScene extends Phaser.Scene {
 
     // camera
     // this.cameras.main.setBounds(0, 0, width, height);
-    // this.cameras.main.setZoom(0.5);
     // this.cameras.main.centerOn(width/2, height/2);
-    // this.cameras.main.setAngle(90);
+    // this.cameras.main.setZoom(0.5);
+    this.cameras.main.setAngle(45/2);
 
     this.game.setGameReady(true); // react state update
   }
 
   update () {
+    // console.log(this.cameras.main);
+    this.cameras.main.setRotation(this.cameras.main.rotation+0.01);
+
     if (this.game.visibilityState === 'hidden') this.matter.pause();
     if (this.game.visibilityState === 'visible') this.matter.resume();
     this.game.setFps?.(Math.round(this.game.loop.actualFps)); // react state update
