@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import createOscillator from '../../utils/createOscillator';
 
 class Player {
@@ -39,6 +40,18 @@ class Player {
         duration: 0.05,
       });
     });
+
+
+    const playerCount = 60;
+    for (let i=0; i<playerCount; i++) {
+      const graphics2 = scene.add.graphics(250, 250);
+      graphics2.lineStyle(4, 0x00ff00, 1);
+      const line2 = new Phaser.Geom.Line(0,400, 500,400);
+      const rads2 = Phaser.Math.DegToRad((360/playerCount)*i);
+      Phaser.Geom.Line.RotateAroundXY(line2, 250, 250, rads2);
+      graphics2.strokeLineShape(line2);
+    }
+
 	}
 
 	update(scene) {
