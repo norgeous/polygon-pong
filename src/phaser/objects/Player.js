@@ -42,15 +42,23 @@ class Player {
     });
 
 
-    const playerCount = 60;
+    const playerCount = 3;
     for (let i=0; i<playerCount; i++) {
       const graphics2 = scene.add.graphics(250, 250);
-      graphics2.lineStyle(4, 0x00ff00, 1);
-      const line2 = new Phaser.Geom.Line(0,400, 500,400);
+      graphics2.lineStyle(2, i?0x00ffff:0x00ff00, 1);
+      const line2 = new Phaser.Geom.Line(100,450, 400,450);
       const rads2 = Phaser.Math.DegToRad((360/playerCount)*i);
       Phaser.Geom.Line.RotateAroundXY(line2, 250, 250, rads2);
       graphics2.strokeLineShape(line2);
     }
+
+
+    const graphics3 = scene.add.graphics(250, 250);
+    graphics3.lineStyle(2, 0xffff00, 1);
+    this.line = new Phaser.Geom.Line(100,450, 400,450);
+    // const rads = Phaser.Math.DegToRad((360/playerCount)*i);
+    // Phaser.Geom.Line.RotateAroundXY(line2, 250, 250, rads2);
+    graphics3.strokeLineShape(this.line);
 
 	}
 
@@ -63,10 +71,16 @@ class Player {
     if (this.controlType === 'local') {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
       if (this.gameObject.x !== this.pointer.x || this.gameObject.y !== height-40) {
-        this.gameObject.setVelocity(
-          (this.pointer.x - this.gameObject.x)/10,
-          (height-100 - this.gameObject.y)/100
-        );
+        const nearestPoint = Phaser.Geom.Line.GetNearestPoint(this.line, {x:this.gameObject.x,y:this.gameObject.y});
+        const direction = Math.atan((nearestPoint.x - this.gameObject.x) / (nearestPoint.y - this.gameObject.y));
+        const speed = nearestPoint.y >= this.gameObject.y ? 1 : -1;
+        const vx = (speed * Math.sin(direction)) + ((this.pointer.x - this.gameObject.x)/10);
+        const vy = (speed * Math.cos(direction));
+        console.log(nearestPoint);
+        this.gameObject.setVelocity(vx, vy);
+        // this.gameObject.setVelocityX(
+        //   (this.pointer.x - this.gameObject.x)/10,
+        // );
       }
     }
 
