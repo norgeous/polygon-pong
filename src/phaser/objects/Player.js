@@ -56,8 +56,8 @@ class Player {
     const graphics3 = scene.add.graphics(250, 250);
     graphics3.lineStyle(2, 0xffff00, 1);
     this.line = new Phaser.Geom.Line(100,450, 400,450);
-    // const rads = Phaser.Math.DegToRad((360/playerCount)*i);
-    // Phaser.Geom.Line.RotateAroundXY(line2, 250, 250, rads2);
+    const rads = Phaser.Math.DegToRad(45);
+    Phaser.Geom.Line.RotateAroundXY(this.line, 250, 250, rads);
     graphics3.strokeLineShape(this.line);
 
 	}
@@ -74,13 +74,10 @@ class Player {
         const nearestPoint = Phaser.Geom.Line.GetNearestPoint(this.line, {x:this.gameObject.x,y:this.gameObject.y});
         const direction = Math.atan((nearestPoint.x - this.gameObject.x) / (nearestPoint.y - this.gameObject.y));
         const speed = nearestPoint.y >= this.gameObject.y ? 1 : -1;
-        const vx = (speed * Math.sin(direction)) + ((this.pointer.x - this.gameObject.x)/10);
-        const vy = (speed * Math.cos(direction));
-        console.log(nearestPoint);
+        const vx = (speed * Math.sin(direction)) + (this.pointer.velocity?.x/5||0);
+        const vy = (speed * Math.cos(direction)) + (this.pointer.velocity?.y/5||0);
         this.gameObject.setVelocity(vx, vy);
-        // this.gameObject.setVelocityX(
-        //   (this.pointer.x - this.gameObject.x)/10,
-        // );
+        console.log(this.pointer.primaryDown)
       }
     }
 
