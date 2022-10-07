@@ -4,36 +4,37 @@ import createOscillator from '../../utils/createOscillator';
 class Player {
   constructor(scene, id, controlType) {
     this.id = id;
+    this.index = 0;
     this.controlType = controlType;
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
+    this.axisAngle = 0;
     
     const { width, height } = scene.sys.game.canvas;
     this.pointer = { x:width/2, y:0 };
 
+    // the track for the player
+    this.axisGraphics = scene.add.graphics(250, 250);
+    this.axisGraphics.lineStyle(60, 0xffff00, 6);
+    this.axis = new Phaser.Geom.Line(200,300, 300,300);
+    this.axisGraphics.strokeLineShape(this.axis);
 
-    const graphics3 = scene.add.graphics(250, 250);
-    graphics3.lineStyle(2, 0xffff00, 1);
-    this.line = new Phaser.Geom.Line(100,450, 400,450);
-    const rads = Phaser.Math.DegToRad(45);
-    Phaser.Geom.Line.RotateAroundXY(this.line, 250, 250, rads);
-    graphics3.strokeLineShape(this.line);
-    
-        
+    // the player
     const container = scene.add.container(0, 0);
     const color = this.controlType === 'local' ? 0x008888 : 0x220022;
     const graphics = scene.add.graphics();
     graphics.fillStyle(color, 1);
     graphics.fillRoundedRect(-100, -15, 200, 30, 15);
-    const text = scene.add.text(0, 0, 'P1', {
+    this.text = scene.add.text(0, 0, 'P1', {
       font: '30px Arial',
       align: 'center',
       color: 'black',
       fontWeight: 'bold',
     }).setOrigin(0.5);
-    container.add([graphics, text]);
+    container.add([graphics, this.text]);
 
 
+    // physics object for player
     this.gameObject = scene.matter.add.gameObject(
       container,
       {
@@ -46,7 +47,6 @@ class Player {
       .setFrictionAir(0.001)
       .setBounce(0.9)
       .setMass(100);
-    
     this.gameObject.name = 'player';
 
 
@@ -56,20 +56,20 @@ class Player {
         volume: data.collision.depth / 10,
         maxVolume: scene.game.maxVolume,
         frequency: 261.63, // C4
-        duration: 0.05,
+        duration: 0.1,
       });
     });
 
 
-    const playerCount = 3;
-    for (let i=0; i<playerCount; i++) {
-      const graphics2 = scene.add.graphics(250, 250);
-      graphics2.lineStyle(2, i?0x00ffff:0x00ff00, 1);
-      const line2 = new Phaser.Geom.Line(100,450, 400,450);
-      const rads2 = Phaser.Math.DegToRad((360/playerCount)*i);
-      Phaser.Geom.Line.RotateAroundXY(line2, 250, 250, rads2);
-      graphics2.strokeLineShape(line2);
-    }
+    // const playerCount = 3;
+    // for (let i=0; i<playerCount; i++) {
+    //   const graphics2 = scene.add.graphics(250, 250);
+    //   graphics2.lineStyle(2, i?0x00ffff:0x00ff00, 1);
+    //   const line2 = new Phaser.Geom.Line(100,450, 400,450);
+    //   const rads2 = Phaser.Math.DegToRad((360/playerCount)*i);
+    //   Phaser.Geom.Line.RotateAroundXY(line2, 250, 250, rads2);
+    //   graphics2.strokeLineShape(line2);
+    // }
 
 
 
@@ -77,7 +77,24 @@ class Player {
     if (this.controlType === 'local') {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
+
+    this.index = 4;
+    this.updateAxisAngle(scene, 6);
 	}
+
+  updateAxisAngle(scene, playerCount) {
+    const { width, height } = scene.sys.game.canvas;
+    const twoPi = 2 * Math.PI;
+    this.axisAngle = (twoPi / playerCount) * this.index;
+    Phaser.Geom.Line.RotateAroundXY(this.axis, width/2, height/2, this.axisAngle);
+    this.axisGraphics.clear();
+    this.axisGraphics.lineStyle(6, 0xffff00, 1);
+    this.axisGraphics.strokeLineShape(this.axis);
+
+    this.gameObject.setRotation(this.axisAngle);
+    this.gameObject.setAngularVelocity(0);
+    this.text.setText(`P${this.index}: ${this.axisAngle.toFixed(2)}r`);
+  }
 
 	update(scene) {
     if (!this.gameObject) return;
@@ -88,7 +105,7 @@ class Player {
     if (this.controlType === 'local') {
 
       if (this.gameObject.x !== this.pointer.x || this.gameObject.y !== height-40) {
-        const nearestPoint = Phaser.Geom.Line.GetNearestPoint(this.line, {x:this.gameObject.x,y:this.gameObject.y});
+        const nearestPoint = Phaser.Geom.Line.GetNearestPoint(this.axis, this.gameObject);
         const distance = Phaser.Math.Distance.BetweenPoints(this.gameObject, nearestPoint);
         const direction = Math.atan((nearestPoint.x - this.gameObject.x) / (nearestPoint.y - this.gameObject.y));
         const speed = nearestPoint.y >= this.gameObject.y ? 1 : -1;
@@ -108,9 +125,11 @@ class Player {
       }
     }
 
-    // slowly correct angle to flat
+    // slowly correct angle
     const { angle, angularVelocity } = this.gameObject.body;
-    this.gameObject.setAngularVelocity(((angularVelocity-(angle/100))*.99));
+    const diff = this.axisAngle - angle;
+    const newAv = (angularVelocity + (diff / 100)) * 0.99;
+    this.gameObject.setAngularVelocity(newAv);
 	}
 
 
