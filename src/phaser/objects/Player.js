@@ -115,20 +115,9 @@ class Player {
 	update(scene) {
     if (!this.gameObject) return;
 
-    // const { height } = scene.sys.game.canvas;
-
     // player follow cursor or touch gesture
     if (this.controlType === 'local') {
       const nearestPoint = getNearestPointWithinLine(this.axis, this.gameObject);
-      const distance = Phaser.Math.Distance.BetweenPoints(this.gameObject, nearestPoint);
-      // const direction = Math.atan((nearestPoint.x - this.gameObject.x) / (nearestPoint.y - this.gameObject.y));
-      // const speed = nearestPoint.y >= this.gameObject.y ? 1 : -1;
-      // const speed2 = speed * (distance/2||0);
-      // const vx = (speed2 * Math.sin(direction)) + (this.pointer.velocity?.x/5||0);
-      // const vy = (speed2 * Math.cos(direction)) + (this.pointer.velocity?.y/5||0);
-
-      // console.log(nearestPoint.x, nearestPoint.y);
-
       const mvx = (this.pointer.velocity?.x * 0.2) || 0;
       const mvy = (this.pointer.velocity?.y * 0.2) || 0;
       const rvx = (this.gameObject.x - nearestPoint.x) * -0.5;
