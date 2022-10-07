@@ -105,8 +105,7 @@ class Player {
       const nearestPoint = getNearestPointWithinLine(this.axis, this.gameObject);
 
       const mv = new Phaser.Math.Vector2(this.pointer.velocity?.x || 0, this.pointer.velocity?.y || 0);
-      mv.rotate(this.axisAngle);
-      console.log(mv, this.axisAngle);
+      mv.rotate(this.axisAngle); // match pointer movement vector to camera rotation
 
       const mvx = mv.x * 0.2;
       const mvy = mv.y * 0.2;
