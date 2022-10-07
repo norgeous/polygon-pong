@@ -60,6 +60,10 @@ class Player {
     Phaser.Geom.Line.RotateAroundXY(this.line, 250, 250, rads);
     graphics3.strokeLineShape(this.line);
 
+    // if local, start listening for mousemove / swipes
+    if (this.controlType === 'local') {
+      scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
+    }
 	}
 
 	update(scene) {
@@ -69,15 +73,17 @@ class Player {
 
     // player follow cursor or touch gesture
     if (this.controlType === 'local') {
-      scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
+
       if (this.gameObject.x !== this.pointer.x || this.gameObject.y !== height-40) {
         const nearestPoint = Phaser.Geom.Line.GetNearestPoint(this.line, {x:this.gameObject.x,y:this.gameObject.y});
+        const distance = Phaser.Math.Distance.BetweenPoints(this.gameObject, nearestPoint);
         const direction = Math.atan((nearestPoint.x - this.gameObject.x) / (nearestPoint.y - this.gameObject.y));
         const speed = nearestPoint.y >= this.gameObject.y ? 1 : -1;
-        const vx = (speed * Math.sin(direction)) + (this.pointer.velocity?.x/5||0);
-        const vy = (speed * Math.cos(direction)) + (this.pointer.velocity?.y/5||0);
-        this.gameObject.setVelocity(vx, vy);
-        console.log(this.pointer.primaryDown)
+        const speed2 = speed * (distance/2||0);
+        const vx = (speed2 * Math.sin(direction)) + (this.pointer.velocity?.x/5||0);
+        const vy = (speed2 * Math.cos(direction)) + (this.pointer.velocity?.y/5||0);
+        if (vx && vy) this.gameObject.setVelocity(vx, vy);
+        // console.log(this.pointer.primaryDown, vx,vy)
       }
     }
 
@@ -92,7 +98,7 @@ class Player {
 
     // slowly correct angle to flat
     const { angle, angularVelocity } = this.gameObject.body;
-    this.gameObject.setAngularVelocity((angularVelocity-(angle/100))*.99);
+    this.gameObject.setAngularVelocity(((angularVelocity-(angle/100))*.99)+0.1);
 	}
 
 
