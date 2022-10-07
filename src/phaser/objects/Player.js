@@ -10,14 +10,32 @@ class Player {
     
     const { width, height } = scene.sys.game.canvas;
     this.pointer = { x:width/2, y:0 };
+
+
+    const graphics3 = scene.add.graphics(250, 250);
+    graphics3.lineStyle(2, 0xffff00, 1);
+    this.line = new Phaser.Geom.Line(100,450, 400,450);
+    const rads = Phaser.Math.DegToRad(45);
+    Phaser.Geom.Line.RotateAroundXY(this.line, 250, 250, rads);
+    graphics3.strokeLineShape(this.line);
     
+        
+    const container = scene.add.container(0, 0);
     const color = this.controlType === 'local' ? 0x008888 : 0x220022;
     const graphics = scene.add.graphics();
     graphics.fillStyle(color, 1);
     graphics.fillRoundedRect(-100, -15, 200, 30, 15);
+    const text = scene.add.text(0, 0, 'P1', {
+      font: '20px Arial',
+      align: 'center',
+      color: 'black',
+      fontWeight: 'bold',
+    }).setOrigin(0.5);
+    container.add([graphics, text]);
+
 
     this.gameObject = scene.matter.add.gameObject(
-      graphics,
+      container,
       {
         shape: { type: 'rectangle', width: 200, height: 30 },
         isStatic: false,
@@ -30,6 +48,7 @@ class Player {
       .setMass(100);
     
     this.gameObject.name = 'player';
+
 
     // sound on collision
     this.gameObject.setOnCollide(data => {
@@ -53,12 +72,6 @@ class Player {
     }
 
 
-    const graphics3 = scene.add.graphics(250, 250);
-    graphics3.lineStyle(2, 0xffff00, 1);
-    this.line = new Phaser.Geom.Line(100,450, 400,450);
-    const rads = Phaser.Math.DegToRad(45);
-    Phaser.Geom.Line.RotateAroundXY(this.line, 250, 250, rads);
-    graphics3.strokeLineShape(this.line);
 
     // if local, start listening for mousemove / swipes
     if (this.controlType === 'local') {
@@ -83,7 +96,6 @@ class Player {
         const vx = (speed2 * Math.sin(direction)) + (this.pointer.velocity?.x/5||0);
         const vy = (speed2 * Math.cos(direction)) + (this.pointer.velocity?.y/5||0);
         if (vx && vy) this.gameObject.setVelocity(vx, vy);
-        // console.log(this.pointer.primaryDown, vx,vy)
       }
     }
 
@@ -98,7 +110,7 @@ class Player {
 
     // slowly correct angle to flat
     const { angle, angularVelocity } = this.gameObject.body;
-    this.gameObject.setAngularVelocity(((angularVelocity-(angle/100))*.99)+0.1);
+    this.gameObject.setAngularVelocity(((angularVelocity-(angle/100))*.99));
 	}
 
 
