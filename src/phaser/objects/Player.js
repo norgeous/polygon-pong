@@ -32,8 +32,6 @@ class Player {
     // the track for the player
     this.axisGraphics = scene.add.graphics(250, 250);
     this.axis = new Phaser.Geom.Line(100,400, 400,400);
-    // this.axisGraphics.lineStyle(60, 0x222200, 6);
-    // this.axisGraphics.strokeLineShape(this.axis);
 
     // the player
     const container = scene.add.container(0, 0);
@@ -76,26 +74,13 @@ class Player {
       });
     });
 
-
-    // const playerCount = 3;
-    // for (let i=0; i<playerCount; i++) {
-    //   const graphics2 = scene.add.graphics(250, 250);
-    //   graphics2.lineStyle(2, i?0x00ffff:0x00ff00, 1);
-    //   const line2 = new Phaser.Geom.Line(100,450, 400,450);
-    //   const rads2 = Phaser.Math.DegToRad((360/playerCount)*i);
-    //   Phaser.Geom.Line.RotateAroundXY(line2, 250, 250, rads2);
-    //   graphics2.strokeLineShape(line2);
-    // }
-
-
-
     // if local, start listening for mousemove / swipes
     if (this.controlType === 'local') {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
 
-    this.index = 1;
-    this.updateAxisAngle(scene, 20);
+    this.index = 2;
+    this.updateAxisAngle(scene, 3);
 	}
 
   updateAxisAngle(scene, playerCount) {
@@ -118,8 +103,13 @@ class Player {
     // player follow cursor or touch gesture
     if (this.controlType === 'local') {
       const nearestPoint = getNearestPointWithinLine(this.axis, this.gameObject);
-      const mvx = (this.pointer.velocity?.x * 0.2) || 0;
-      const mvy = (this.pointer.velocity?.y * 0.2) || 0;
+
+      const mv = new Phaser.Math.Vector2(this.pointer.velocity?.x || 0, this.pointer.velocity?.y || 0);
+      mv.rotate(this.axisAngle);
+      console.log(mv, this.axisAngle);
+
+      const mvx = mv.x * 0.2;
+      const mvy = mv.y * 0.2;
       const rvx = (this.gameObject.x - nearestPoint.x) * -0.5;
       const rvy = (this.gameObject.y - nearestPoint.y) * -0.5;
       const vx = mvx + rvx;
