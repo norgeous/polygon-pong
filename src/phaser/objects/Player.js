@@ -1,6 +1,22 @@
 import Phaser from 'phaser';
 import createOscillator from '../../utils/createOscillator';
 
+const limit = (value, min, max) => {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+};
+
+const getNearestPointWithinLine = (line, point) => {
+  const nearestPointAlongAxis = Phaser.Geom.Line.GetNearestPoint(line, point);
+  const nearestX = limit(nearestPointAlongAxis.x, line.left, line.right);
+  const nearestY = limit(nearestPointAlongAxis.y, line.top, line.bottom);
+  return {
+    x: nearestX,
+    y: nearestY,
+  };
+};
+
 class Player {
   constructor(scene, id, controlType) {
     this.id = id;
@@ -16,7 +32,7 @@ class Player {
     // the track for the player
     this.axisGraphics = scene.add.graphics(250, 250);
     this.axisGraphics.lineStyle(60, 0xffff00, 6);
-    this.axis = new Phaser.Geom.Line(200,300, 300,300);
+    this.axis = new Phaser.Geom.Line(200,400, 300,400);
     this.axisGraphics.strokeLineShape(this.axis);
 
     // the player
@@ -78,8 +94,8 @@ class Player {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
 
-    this.index = 4;
-    this.updateAxisAngle(scene, 6);
+    this.index = 1;
+    this.updateAxisAngle(scene, 20);
 	}
 
   updateAxisAngle(scene, playerCount) {
@@ -99,31 +115,38 @@ class Player {
 	update(scene) {
     if (!this.gameObject) return;
 
-    const { height } = scene.sys.game.canvas;
+    // const { height } = scene.sys.game.canvas;
 
     // player follow cursor or touch gesture
     if (this.controlType === 'local') {
+      const nearestPoint = getNearestPointWithinLine(this.axis, this.gameObject);
+      const distance = Phaser.Math.Distance.BetweenPoints(this.gameObject, nearestPoint);
+      // const direction = Math.atan((nearestPoint.x - this.gameObject.x) / (nearestPoint.y - this.gameObject.y));
+      // const speed = nearestPoint.y >= this.gameObject.y ? 1 : -1;
+      // const speed2 = speed * (distance/2||0);
+      // const vx = (speed2 * Math.sin(direction)) + (this.pointer.velocity?.x/5||0);
+      // const vy = (speed2 * Math.cos(direction)) + (this.pointer.velocity?.y/5||0);
 
-      if (this.gameObject.x !== this.pointer.x || this.gameObject.y !== height-40) {
-        const nearestPoint = Phaser.Geom.Line.GetNearestPoint(this.axis, this.gameObject);
-        const distance = Phaser.Math.Distance.BetweenPoints(this.gameObject, nearestPoint);
-        const direction = Math.atan((nearestPoint.x - this.gameObject.x) / (nearestPoint.y - this.gameObject.y));
-        const speed = nearestPoint.y >= this.gameObject.y ? 1 : -1;
-        const speed2 = speed * (distance/2||0);
-        const vx = (speed2 * Math.sin(direction)) + (this.pointer.velocity?.x/5||0);
-        const vy = (speed2 * Math.cos(direction)) + (this.pointer.velocity?.y/5||0);
-        if (vx && vy) this.gameObject.setVelocity(vx, vy);
-      }
+      // console.log(nearestPoint.x, nearestPoint.y);
+
+      const mvx = (this.pointer.velocity?.x * 0.2) || 0;
+      const mvy = (this.pointer.velocity?.y * 0.2) || 0;
+      const rvx = (this.gameObject.x - nearestPoint.x) * -0.5;
+      const rvy = (this.gameObject.y - nearestPoint.y) * -0.5;
+      const vx = mvx + rvx;
+      const vy = mvy + rvy;
+      if (vx) this.gameObject.setVelocityX(vx);
+      if (vy) this.gameObject.setVelocityY(vy);
     }
 
     // glide to position for remote players
-    if (this.controlType === 'remote') {
-      if (this.gameObject.y !== height-40) {
-        this.gameObject.setVelocityY(
-          (height-100 - this.gameObject.y)/100
-        );
-      }
-    }
+    // if (this.controlType === 'remote') {
+    //   if (this.gameObject.y !== height-40) {
+    //     this.gameObject.setVelocityY(
+    //       (height-100 - this.gameObject.y)/100
+    //     );
+    //   }
+    // }
 
     // slowly correct angle
     const { angle, angularVelocity } = this.gameObject.body;
