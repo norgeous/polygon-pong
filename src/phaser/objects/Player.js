@@ -26,7 +26,7 @@ class Player {
     graphics.fillStyle(color, 1);
     graphics.fillRoundedRect(-100, -15, 200, 30, 15);
     const text = scene.add.text(0, 0, 'P1', {
-      font: '20px Arial',
+      font: '30px Arial',
       align: 'center',
       color: 'black',
       fontWeight: 'bold',
