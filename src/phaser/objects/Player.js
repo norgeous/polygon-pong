@@ -31,9 +31,9 @@ class Player {
 
     // the track for the player
     this.axisGraphics = scene.add.graphics(250, 250);
-    this.axisGraphics.lineStyle(60, 0xffff00, 6);
-    this.axis = new Phaser.Geom.Line(200,400, 300,400);
-    this.axisGraphics.strokeLineShape(this.axis);
+    this.axis = new Phaser.Geom.Line(100,400, 400,400);
+    // this.axisGraphics.lineStyle(60, 0x222200, 6);
+    // this.axisGraphics.strokeLineShape(this.axis);
 
     // the player
     const container = scene.add.container(0, 0);
@@ -104,7 +104,7 @@ class Player {
     this.axisAngle = (twoPi / playerCount) * this.index;
     Phaser.Geom.Line.RotateAroundXY(this.axis, width/2, height/2, this.axisAngle);
     this.axisGraphics.clear();
-    this.axisGraphics.lineStyle(6, 0xffff00, 1);
+    this.axisGraphics.lineStyle(6, 0x222200, 1);
     this.axisGraphics.strokeLineShape(this.axis);
 
     this.gameObject.setRotation(this.axisAngle);
