@@ -27,10 +27,11 @@ class Player {
     this.axisAngle = 0;
     
     const { width, height } = scene.sys.game.canvas;
-    this.pointer = {};//{ x:width / 2, y:0 };
+    this.pointer = {};
 
     // the track for the player
-    this.axisGraphics = scene.add.graphics(250, 250);
+    this.axisGraphics = scene.add.graphics(width/2, height/2);
+    this.otherAxisGraphics = scene.add.graphics(width/2, height/2); // temporary
 
     // the player
     const container = scene.add.container(0, 0);
@@ -89,10 +90,10 @@ class Player {
 
     // calculate the length of the polygon side
     const apothem = 200; // distance from the center of the polygon to the midpoint of any side
-    const lengthOfSide = (2 * apothem) * Math.sin(twoPi / adjustedPlayerCount);
+    const lengthOfSide = 2 * apothem * Math.tan(Math.PI / adjustedPlayerCount);
     const lineCenterX = width / 2;
-    const x1 = lineCenterX - (lengthOfSide / 4);
-    const x2 = lineCenterX + (lengthOfSide / 4);
+    const x1 = lineCenterX - (lengthOfSide / 2);
+    const x2 = lineCenterX + (lengthOfSide / 2);
     const lineCenterY = height / 2;
     const y1 = lineCenterY + apothem;
     const y2 = lineCenterY + apothem;
@@ -107,12 +108,11 @@ class Player {
 
     // draw some other lines (temporary)
     for(let i=1; i<adjustedPlayerCount; i++) {
-      console.log({i});
       const line = new Phaser.Geom.Line(x1,y1, x2,y2); // line in default "bottom" position
       const angle = (twoPi / adjustedPlayerCount) * i;
       Phaser.Geom.Line.RotateAroundXY(line, width / 2, height / 2, angle);
-      // this.axisGraphics.lineStyle(4, 0x111100, 0.5);
-      this.axisGraphics.strokeLineShape(line);
+      this.otherAxisGraphics.lineStyle(6, 0x220022, 1);
+      this.otherAxisGraphics.strokeLineShape(line);
     }
 
     // instantly rotate player to new angle
