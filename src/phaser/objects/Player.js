@@ -18,19 +18,19 @@ const getNearestPointWithinLine = (line, point) => {
 };
 
 class Player {
-  constructor(scene, id, controlType) {
+  constructor(scene, id, controlType, line, angle) {
+    this.axis = line;
     this.id = id;
     this.index = 0;
     this.controlType = controlType;
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
-    this.axisAngle = 0;
+    this.axisAngle = angle;
     
     const { width, height } = scene.sys.game.canvas;
     this.pointer = {};
 
     // the track for the player
-    this.otherAxisGraphics = scene.add.graphics(width/2, height/2); // temporary
     this.axisGraphics = scene.add.graphics(width/2, height/2);
 
     // the player
@@ -79,8 +79,8 @@ class Player {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
 
-    this.index = 1;
-    this.updateAxisAngle(scene, 3);
+    // this.index = 0;
+    // this.updateAxisAngle(scene, 4);
 	}
 
   updateAxisAngle(scene, playerCount) {
@@ -99,19 +99,10 @@ class Player {
     const y2 = lineCenterY + apothem;
     this.axis = new Phaser.Geom.Line(x1,y1, x2,y2); // line in default "bottom" position
 
-    // draw some other lines (temporary)
-    for(let i=0; i<adjustedPlayerCount; i++) {
-      const line = new Phaser.Geom.Line(x1,y1, x2,y2); // line in default "bottom" position
-      const angle = (twoPi / adjustedPlayerCount) * i;
-      Phaser.Geom.Line.RotateAroundXY(line, width / 2, height / 2, angle);
-      this.otherAxisGraphics.lineStyle(8, 0x110011, 1);
-      this.otherAxisGraphics.strokeLineShape(line);
-    }
-
     // rotate and draw the line
     this.axisAngle = (twoPi / adjustedPlayerCount) * this.index;
     Phaser.Geom.Line.RotateAroundXY(this.axis, width / 2, height / 2, this.axisAngle);
-    this.axisGraphics.clear();
+    // this.axisGraphics.clear();
     this.axisGraphics.lineStyle(4, 0x002222, 1);
     this.axisGraphics.strokeLineShape(this.axis);
 

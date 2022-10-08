@@ -1,5 +1,6 @@
 import Ball from '../objects/Ball';
 import Player from '../objects/Player';
+import Polygon from '../objects/Polygon';
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -40,7 +41,9 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setZoom(0.5);
     
     this.cameras.main.centerOn(this.worldbounds.width / 2, this.worldbounds.height / 2);
-    this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
+    // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
+
+    this.poly = new Polygon(this);
 
     this.game.setGameReady(true); // react state update
   }
@@ -67,7 +70,7 @@ class GameScene extends Phaser.Scene {
       delete this.balls[id];
     });
 
-    // add ball object for newly connected players
+    // add ball objects
     balls.forEach(({ id, emojiId }) => {
       if (!this.balls[id]) {
         this.balls[id] = new Ball(this, id, emojiId);
@@ -84,12 +87,18 @@ class GameScene extends Phaser.Scene {
       delete this.players[id];
     });
 
+    this.poly.set(200, connectedIds.length); // set and redraw
+
     // add player object for newly connected players
-    connections.forEach(({ id, type }) => {
+    connections.forEach(({ id, type }, i) => {
       if (!this.players[id]) {
-        this.players[id] = new Player(this, id, type);
+        const line = this.poly.lines[i];
+        const twoPi = 2 * Math.PI;
+        const angle = (twoPi / connections.length) * i;
+        this.players[id] = new Player(this, id, type, line, angle);
       }
     });
+
   }
 
   setGameState(payload) {
