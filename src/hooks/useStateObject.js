@@ -22,7 +22,6 @@ const useStateObject = (initialValue = {}) => {
   })), [o]);
 
   return [
-    o, // read
     a, // read
     setById, // create / update
     deletebyId // delete

@@ -2,18 +2,24 @@ import React, { useState } from 'react';
 import { getUiIcon, getFlagIcon, getOsIcon, getPlatformIcon, getBrowserIcon } from '../utils/emoji';
 import { Tr, Td } from './styled/table';
 
+const getStatus = (type, open) => {
+  if (type === 'local') return 'SELF';
+  if (type === 'cpu') return 'CPU';
+  if (open === 'open') return 'CONNECTED';
+  return 'DISCONNECTED';
+};
+
 const SystemInfo = props => {
   const { connection, ...other } = props;
   const { id, type, open, isHost, idCard = {}, ping } = other;
   const { browserName, city, countryCode, osName, platformType, postal, version } = idCard;
   const [openView, setOpenView] = useState(false);
-  const status = type === 'local' ? 'SELF' : open ? 'CONNECTED' : 'DISCONNECTED';
+  const status = getStatus(type, open);
 
   return (
     <>
       <Tr onClick={() => setOpenView(!openView)}>
-        <Td>{id?.replace('polygon-pong-multiplayer-','')}</Td>
-        <Td> {getUiIcon(status)}</Td>
+        <Td>{getUiIcon(status)}</Td>
         <Td>{browserName && getBrowserIcon(browserName)}</Td>
         <Td>{osName &&getOsIcon(osName)}</Td>
         <Td>{platformType && getPlatformIcon(platformType)}</Td>

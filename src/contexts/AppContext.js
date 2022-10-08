@@ -22,7 +22,8 @@ export const AppProvider = ({ children }) => {
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { gameReady, game, scene, fps, targetFps } = usePhaser();
 
-  const [ballsDb, ballsArray, setBallById, deleteBallById] = useStateObject({});
+  const [ballsArray, setBallById, deleteBallById] = useStateObject({});
+  const [cpuPlayers, setCpuPlayerById, deleteCpuPlayerById] = useStateObject({});
 
   // peerjs plumbing
   const dataReducer = {
@@ -67,16 +68,21 @@ export const AppProvider = ({ children }) => {
       return (prev.idCard?.hostFitness > current.idCard.hostFitness) ? prev : current;
     }, {}).id;
   
-  const networkOverview = enhancedNetworkList.map(entry => ({
-    ...entry,
-    isHost: entry.id === hostId,
-  }));
+  const networkOverview = [
+    ...enhancedNetworkList.map(entry => ({
+      ...entry,
+      isHost: entry.id === hostId,
+    })),
+    ...cpuPlayers.map(cpuPlayer => ({
+      ...cpuPlayer,
+      type: 'cpu',
+    })),
+  ];
 
   const peerId = peer?.id;
 
   const isHost = peerId === hostId;
 
-  // const { balls, flatBalls, setBallById, deleteBallById } = 
   useNetworkGame({
     gameReady,
     scene,
@@ -84,10 +90,7 @@ export const AppProvider = ({ children }) => {
     isHost,
     players: networkOverview.filter(({ open }) => open),
     broadcast,
-    // ballsDb,
     ballsArray,
-    // setBallById,
-    // deleteBallById,
   });
 
   // set react data into game
@@ -102,12 +105,12 @@ export const AppProvider = ({ children }) => {
         wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled,
         game, scene,
         showFps, setShowFps, fps, targetFps,
-        // balls, flatBalls,
         ballsArray, setBallById, deleteBallById,
         sysInfo,
         networkOverview,
         isHost,
         enableNetwork, setEnableNetwork,
+        cpuPlayers, setCpuPlayerById, deleteCpuPlayerById,
       }}
     >
       {children}

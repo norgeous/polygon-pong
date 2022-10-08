@@ -44,6 +44,7 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
 
     this.poly = new Polygon(this);
+    this.poly2 = new Polygon(this);
 
     this.game.setGameReady(true); // react state update
   }
@@ -90,6 +91,7 @@ class GameScene extends Phaser.Scene {
     // set polygon side count to match connections
     const adjustedPlayerCount = ({ 1: 4, 2: 4 })[connectedIds.length] || connectedIds.length;
     this.poly.set(200, adjustedPlayerCount); // set and redraw
+    this.poly2.set(400, adjustedPlayerCount); // set and redraw
 
     // add player object for newly connected players
     connections.forEach(({ id, type }, i) => {

@@ -9,7 +9,7 @@ const AddRemove = ({item, count = 0, add, remove}) => {
         <Button onClick={remove}>
           {getUiIcon('remove')}
         </Button>
-        {item}×{String(Math.round(count)).padStart(2, '0')}
+        {item}×{String(Math.round(count)).padStart(3, '0')}
         <Button onClick={add}>
           {getUiIcon('add')}
         </Button>

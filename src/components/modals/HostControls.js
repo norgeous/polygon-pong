@@ -40,11 +40,6 @@ const HostControls = () => {
           />
         ))}
       </Sideways>
-
-      <AddRemove
-        item={`${getUiIcon('cpu')}`}
-        count={0}
-      />
     </Modal>
   );
 };
