@@ -22,7 +22,8 @@ const SystemInfo = props => {
         <Td right style={{ fontFamily: 'monospace' }}>
           {ping && String(Math.round(ping || 0)).padStart(3, '0')}
         </Td>
-        <Td>{isHost && getUiIcon('host')}</Td>
+        <Td title="is host">{isHost && getUiIcon('host')}</Td>
+        <Td>{openView ? getUiIcon('up') : getUiIcon('down')}</Td>
       </Tr>
       {openView && (
         <Tr>

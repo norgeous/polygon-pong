@@ -18,35 +18,36 @@ const getNearestPointWithinLine = (line, point) => {
 };
 
 class Player {
-  constructor(scene, id, controlType, line, angle) {
-    this.axis = line;
-    this.id = id;
-    this.index = 0;
+  constructor(scene, index, controlType, line, angle) {
+    this.index = index;
     this.controlType = controlType;
+    this.axis = line;
+    this.axisAngle = angle;
+
     this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
-    this.axisAngle = angle;
     
     const { width, height } = scene.sys.game.canvas;
     this.pointer = {};
 
     // the track for the player
-    this.axisGraphics = scene.add.graphics(width/2, height/2);
+    this.axisGraphics = scene.add.graphics(width / 2, height / 2);
+    this.axisGraphics.lineStyle(8, 0x002222, 1);
+    this.axisGraphics.strokeLineShape(this.axis);
 
-    // the player
+    // the player graphics
     const container = scene.add.container(0, 0);
     const color = this.controlType === 'local' ? 0x008888 : 0x220022;
     const graphics = scene.add.graphics();
     graphics.fillStyle(color, 1);
     graphics.fillRoundedRect(-100, -15, 200, 30, 15);
-    this.text = scene.add.text(0, 0, 'P1', {
+    this.text = scene.add.text(0, 0, `P${this.index}: ${this.axisAngle.toFixed(2)}r`, {
       font: '30px Arial',
       align: 'center',
       color: 'black',
       fontWeight: 'bold',
     }).setOrigin(0.5);
     container.add([graphics, this.text]);
-
 
     // physics object for player
     this.gameObject = scene.matter.add.gameObject(
@@ -61,8 +62,12 @@ class Player {
       .setFrictionAir(0.001)
       .setBounce(0.9)
       .setMass(100);
-    this.gameObject.name = 'player';
 
+    // this.gameObject.name = 'player';
+
+    // instantly rotate player to new angle
+    this.gameObject.setRotation(this.axisAngle);
+    this.gameObject.setAngularVelocity(0);
 
     // sound on collision
     this.gameObject.setOnCollide(data => {
@@ -78,39 +83,7 @@ class Player {
     if (this.controlType === 'local') {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
-
-    // this.index = 0;
-    // this.updateAxisAngle(scene, 4);
 	}
-
-  updateAxisAngle(scene, playerCount) {
-    const adjustedPlayerCount = ({ 1: 4, 2: 4 })[playerCount] || playerCount;
-    const { width, height } = scene.worldbounds;
-    const twoPi = 2 * Math.PI;
-
-    // calculate the length of the polygon side
-    const apothem = 200; // distance from the center of the polygon to the midpoint of any side
-    const lengthOfSide = 2 * apothem * Math.tan(Math.PI / adjustedPlayerCount);
-    const lineCenterX = width / 2;
-    const x1 = lineCenterX - (lengthOfSide / 2);
-    const x2 = lineCenterX + (lengthOfSide / 2);
-    const lineCenterY = height / 2;
-    const y1 = lineCenterY + apothem;
-    const y2 = lineCenterY + apothem;
-    this.axis = new Phaser.Geom.Line(x1,y1, x2,y2); // line in default "bottom" position
-
-    // rotate and draw the line
-    this.axisAngle = (twoPi / adjustedPlayerCount) * this.index;
-    Phaser.Geom.Line.RotateAroundXY(this.axis, width / 2, height / 2, this.axisAngle);
-    // this.axisGraphics.clear();
-    this.axisGraphics.lineStyle(4, 0x002222, 1);
-    this.axisGraphics.strokeLineShape(this.axis);
-
-    // instantly rotate player to new angle
-    this.gameObject.setRotation(this.axisAngle);
-    this.gameObject.setAngularVelocity(0);
-    this.text.setText(`P${this.index}: ${this.axisAngle.toFixed(2)}r`);
-  }
 
 	update(scene) {
     // calculate "return to track" velocity

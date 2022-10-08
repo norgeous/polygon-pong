@@ -87,18 +87,20 @@ class GameScene extends Phaser.Scene {
       delete this.players[id];
     });
 
-    this.poly.set(200, connectedIds.length); // set and redraw
+    // set polygon side count to match connections
+    const adjustedPlayerCount = ({ 1: 4, 2: 4 })[connectedIds.length] || connectedIds.length;
+    this.poly.set(200, adjustedPlayerCount); // set and redraw
 
     // add player object for newly connected players
     connections.forEach(({ id, type }, i) => {
       if (!this.players[id]) {
-        const line = this.poly.lines[i];
+        const index = connections.length === 2 && i === 1 ? 2 : i;
+        const line = this.poly.lines[index];
         const twoPi = 2 * Math.PI;
-        const angle = (twoPi / connections.length) * i;
-        this.players[id] = new Player(this, id, type, line, angle);
+        const angle = (twoPi / adjustedPlayerCount) * index;
+        this.players[id] = new Player(this, index, type, line, angle);
       }
     });
-
   }
 
   setGameState(payload) {

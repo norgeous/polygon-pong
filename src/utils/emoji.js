@@ -54,11 +54,14 @@ const ui = {
   disconnected: '🚷',
   self: '🫵',
   host: '👑',
+  cpu: '🦾',
   add: '➕',
   remove: '➖',
   about: 'ℹ️',
   pause: '⏸️',
   play: '▶️',
+  up: '🔺',
+  down: '🔻',
 };
 
 const volume = '🔇,🔈,🔉,🔊,📣'.split(',');
