@@ -31,7 +31,6 @@ class Player {
 
     // the track for the player
     this.axisGraphics = scene.add.graphics(250, 250);
-    this.axis = new Phaser.Geom.Line(100,400, 400,400);
 
     // the player
     const container = scene.add.container(0, 0);
@@ -79,15 +78,31 @@ class Player {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
 
-    this.index = 0;
-    this.updateAxisAngle(scene, 1);
+    this.index = 1;
+    this.updateAxisAngle(scene, 5);
 	}
 
   updateAxisAngle(scene, playerCount) {
     const { width, height } = scene.sys.game.canvas;
     const twoPi = 2 * Math.PI;
+
+    const apothem = 150; // distance from the center of the polygon to the midpoint of any side
+    const lengthOfSide = (2 * apothem) * Math.sin(twoPi / playerCount);
+    const lineCenterX = 500 / 2;
+    const x1 = lineCenterX - (lengthOfSide / 2);
+    const x2 = lineCenterX + (lengthOfSide / 2);
+    const lineCenterY = 500 / 2;
+    const y1 = lineCenterY + apothem;
+    const y2 = lineCenterY + apothem;
+
+    console.log({playerCount,apothem,lengthOfSide,lineCenterX,lineCenterY,x1,y1, x2,y2});
+
+    this.axis = new Phaser.Geom.Line(x1,y1, x2,y2);
+    // this.axis = new Phaser.Geom.Line(lineCenterX-10,lineCenterY,lineCenterX+10,lineCenterY);
+    // this.axis = new Phaser.Geom.Line(0,0,10,10);
+
     this.axisAngle = (twoPi / playerCount) * this.index;
-    Phaser.Geom.Line.RotateAroundXY(this.axis, width/2, height/2, this.axisAngle);
+    Phaser.Geom.Line.RotateAroundXY(this.axis, 500/2, 500/2, this.axisAngle);
     this.axisGraphics.clear();
     this.axisGraphics.lineStyle(6, 0x222200, 1);
     this.axisGraphics.strokeLineShape(this.axis);
@@ -98,35 +113,28 @@ class Player {
   }
 
 	update(scene) {
-    if (!this.gameObject) return;
-
+    // calculate "return to track" velocity
+    const nearestPoint = getNearestPointWithinLine(this.axis, this.gameObject);
+    const rvx = (this.gameObject.x - nearestPoint.x) * -0.5;
+    const rvy = (this.gameObject.y - nearestPoint.y) * -0.5;
+    
     // player follow cursor or touch gesture
+    let mvx = 0;
+    let mvy = 0;
     if (this.controlType === 'local') {
-      const nearestPoint = getNearestPointWithinLine(this.axis, this.gameObject);
-
       const mv = new Phaser.Math.Vector2(this.pointer.velocity?.x || 0, this.pointer.velocity?.y || 0);
       mv.rotate(this.axisAngle); // match pointer movement vector to camera rotation
-
-      const mvx = mv.x * 0.2;
-      const mvy = mv.y * 0.2;
-      const rvx = (this.gameObject.x - nearestPoint.x) * -0.5;
-      const rvy = (this.gameObject.y - nearestPoint.y) * -0.5;
-      const vx = mvx + rvx;
-      const vy = mvy + rvy;
-      if (vx) this.gameObject.setVelocityX(vx);
-      if (vy) this.gameObject.setVelocityY(vy);
+      mvx = mv.x * 0.2;
+      mvy = mv.y * 0.2;
     }
 
-    // glide to position for remote players
-    // if (this.controlType === 'remote') {
-    //   if (this.gameObject.y !== height-40) {
-    //     this.gameObject.setVelocityY(
-    //       (height-100 - this.gameObject.y)/100
-    //     );
-    //   }
-    // }
+    // add pointer and return to track velocity and apply
+    const vx = mvx + rvx;
+    const vy = mvy + rvy;
+    if (vx) this.gameObject.setVelocityX(vx);
+    if (vy) this.gameObject.setVelocityY(vy);
 
-    // slowly correct angle
+    // slowly correct player angle (springy)
     const { angle, angularVelocity } = this.gameObject.body;
     const diff = this.axisAngle - angle;
     const newAv = (angularVelocity + (diff / 100)) * 0.99;
