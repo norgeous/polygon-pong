@@ -2,23 +2,9 @@ import React from 'react';
 import { getUiIcon, ballEmojis } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
-import { Sideways, Outline, Button } from '../styled/menu';
+import { Sideways } from '../styled/menu';
+import AddRemove from '../AddRemove';
 
-const AddRemoveControl = ({item, count = 0, add, remove}) => {
-  return (
-    <Sideways>
-      <Outline>
-        <Button onClick={remove}>
-          {getUiIcon('remove')}
-        </Button>
-        {item}×{String(Math.round(count)).padStart(2, '0')}
-        <Button onClick={add}>
-          {getUiIcon('add')}
-        </Button>
-      </Outline>
-    </Sideways>
-  );
-};
 
 const HostControls = () => {
   const {
@@ -43,7 +29,7 @@ const HostControls = () => {
     >
       <Sideways>
         {ballEmojis.map((e, i) => (
-          <AddRemoveControl
+          <AddRemove
             item={e}
             count={ballsArray.filter(({ emojiId }) => emojiId === i).length}
             add={() => randomBall(e)}
@@ -55,7 +41,7 @@ const HostControls = () => {
         ))}
       </Sideways>
 
-      <AddRemoveControl
+      <AddRemove
         item={`${getUiIcon('cpu')}`}
         count={0}
       />

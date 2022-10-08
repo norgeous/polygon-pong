@@ -5,6 +5,7 @@ import Modal from '../Modal';
 import { Table } from '../styled/table';
 import SystemInfo from '../SystemInfo';
 import { Button } from '../styled/menu';
+// import AddRemove from '../AddRemove';
 
 const Network = () => {
   const {
@@ -15,7 +16,7 @@ const Network = () => {
 
   return (
     <Modal
-      title={`${getUiIcon('network')} Network`}
+      title={`${getUiIcon('network')} Players`}
       onClose={() => setRoute()}
     >
       {!networkOverview.length && `${getUiIcon('disconnected')} No Connections`}
@@ -32,10 +33,10 @@ const Network = () => {
         <span>{enableNetwork ? 'Pause Network' : 'Resume Network'}</span>
       </Button>
 
-      <Button>
-        <span>{getUiIcon('cpu')}</span>
-        <span>Add CPU player</span>
-      </Button>
+      {/* <AddRemove
+        item={`${getUiIcon('cpu')}`}
+        count={0}
+      /> */}
     </Modal>
   );
 };
