@@ -5,6 +5,11 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
 
+    this.worldbounds = {
+      width: 500,
+      height: 500,
+    };
+
     this.balls = {};
     this.players = {};
   }
@@ -20,7 +25,7 @@ class GameScene extends Phaser.Scene {
     // const { width, height } = this.sys.game.canvas;
 
     this.matter.world.disableGravity();
-    this.matter.world.setBounds(0, 0, 500, 500, 1000);
+    this.matter.world.setBounds(0, 0, this.worldbounds.width, this.worldbounds.height, 1000);
 
     this.particles = {
       red: this.add.particles('red'),

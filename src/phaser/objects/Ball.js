@@ -7,12 +7,12 @@ class Ball {
     this.emojiId = emojiId;
     this.oscillator = createOscillator();
 
-    const { width, height } = scene.sys.game.canvas;
+    const { width, height } = scene.worldbounds;
   
     // create ball
     this.text = scene.add.text(
-      width/2,
-      height/4,
+      width / 2,
+      height / 2,
       ballEmojis[this.emojiId],
       { font: '50px Arial', align: 'center' },
     ).setOrigin(0.5);

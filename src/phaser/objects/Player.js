@@ -83,26 +83,22 @@ class Player {
 	}
 
   updateAxisAngle(scene, playerCount) {
-    const { width, height } = scene.sys.game.canvas;
+    const { width, height } = scene.worldbounds;
     const twoPi = 2 * Math.PI;
 
     const apothem = 150; // distance from the center of the polygon to the midpoint of any side
     const lengthOfSide = (2 * apothem) * Math.sin(twoPi / playerCount);
-    const lineCenterX = 500 / 2;
+    const lineCenterX = width / 2;
     const x1 = lineCenterX - (lengthOfSide / 2);
     const x2 = lineCenterX + (lengthOfSide / 2);
-    const lineCenterY = 500 / 2;
+    const lineCenterY = height / 2;
     const y1 = lineCenterY + apothem;
     const y2 = lineCenterY + apothem;
-
-    console.log({playerCount,apothem,lengthOfSide,lineCenterX,lineCenterY,x1,y1, x2,y2});
-
+    // console.log({playerCount,apothem,lengthOfSide,lineCenterX,lineCenterY,x1,y1, x2,y2});
     this.axis = new Phaser.Geom.Line(x1,y1, x2,y2);
-    // this.axis = new Phaser.Geom.Line(lineCenterX-10,lineCenterY,lineCenterX+10,lineCenterY);
-    // this.axis = new Phaser.Geom.Line(0,0,10,10);
 
     this.axisAngle = (twoPi / playerCount) * this.index;
-    Phaser.Geom.Line.RotateAroundXY(this.axis, 500/2, 500/2, this.axisAngle);
+    Phaser.Geom.Line.RotateAroundXY(this.axis, width / 2, height / 2, this.axisAngle);
     this.axisGraphics.clear();
     this.axisGraphics.lineStyle(6, 0x222200, 1);
     this.axisGraphics.strokeLineShape(this.axis);
