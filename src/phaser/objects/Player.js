@@ -27,7 +27,7 @@ class Player {
     this.axisAngle = 0;
     
     const { width, height } = scene.sys.game.canvas;
-    this.pointer = { x:width/2, y:0 };
+    this.pointer = {};//{ x:width / 2, y:0 };
 
     // the track for the player
     this.axisGraphics = scene.add.graphics(250, 250);
@@ -78,31 +78,44 @@ class Player {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
 
-    this.index = 1;
-    this.updateAxisAngle(scene, 5);
+    this.index = 0;
+    this.updateAxisAngle(scene, 7);
 	}
 
   updateAxisAngle(scene, playerCount) {
+    const adjustedPlayerCount = ({ 1: 4, 2: 4 })[playerCount] || playerCount;
     const { width, height } = scene.worldbounds;
     const twoPi = 2 * Math.PI;
 
-    const apothem = 150; // distance from the center of the polygon to the midpoint of any side
-    const lengthOfSide = (2 * apothem) * Math.sin(twoPi / playerCount);
+    // calculate the length of the polygon side
+    const apothem = 200; // distance from the center of the polygon to the midpoint of any side
+    const lengthOfSide = (2 * apothem) * Math.sin(twoPi / adjustedPlayerCount);
     const lineCenterX = width / 2;
-    const x1 = lineCenterX - (lengthOfSide / 2);
-    const x2 = lineCenterX + (lengthOfSide / 2);
+    const x1 = lineCenterX - (lengthOfSide / 4);
+    const x2 = lineCenterX + (lengthOfSide / 4);
     const lineCenterY = height / 2;
     const y1 = lineCenterY + apothem;
     const y2 = lineCenterY + apothem;
-    // console.log({playerCount,apothem,lengthOfSide,lineCenterX,lineCenterY,x1,y1, x2,y2});
-    this.axis = new Phaser.Geom.Line(x1,y1, x2,y2);
+    this.axis = new Phaser.Geom.Line(x1,y1, x2,y2); // line in default "bottom" position
 
-    this.axisAngle = (twoPi / playerCount) * this.index;
+    // rotate and draw the line
+    this.axisAngle = (twoPi / adjustedPlayerCount) * this.index;
     Phaser.Geom.Line.RotateAroundXY(this.axis, width / 2, height / 2, this.axisAngle);
     this.axisGraphics.clear();
     this.axisGraphics.lineStyle(6, 0x222200, 1);
     this.axisGraphics.strokeLineShape(this.axis);
 
+    // draw some other lines (temporary)
+    for(let i=1; i<adjustedPlayerCount; i++) {
+      console.log({i});
+      const line = new Phaser.Geom.Line(x1,y1, x2,y2); // line in default "bottom" position
+      const angle = (twoPi / adjustedPlayerCount) * i;
+      Phaser.Geom.Line.RotateAroundXY(line, width / 2, height / 2, angle);
+      // this.axisGraphics.lineStyle(4, 0x111100, 0.5);
+      this.axisGraphics.strokeLineShape(line);
+    }
+
+    // instantly rotate player to new angle
     this.gameObject.setRotation(this.axisAngle);
     this.gameObject.setAngularVelocity(0);
     this.text.setText(`P${this.index}: ${this.axisAngle.toFixed(2)}r`);
