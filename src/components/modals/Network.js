@@ -4,7 +4,7 @@ import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
 import { Table } from '../styled/table';
 import SystemInfo from '../SystemInfo';
-import { Sideways, Button } from '../styled/menu';
+import { Button } from '../styled/menu';
 
 const Network = () => {
   const {

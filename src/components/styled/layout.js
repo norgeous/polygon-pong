@@ -67,6 +67,7 @@ export const OverlayInner = styled.div`
   gap: 10px;
 
   max-height: 80%;
+  max-width: 452px;
   overflow: auto;
   overflow: overlay;
 `;

@@ -2,7 +2,23 @@ import React from 'react';
 import { getUiIcon, ballEmojis } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
-import { Sideways, Button } from '../styled/menu';
+import { Sideways, Outline, Button } from '../styled/menu';
+
+const AddRemoveControl = ({item, count = 0, add, remove}) => {
+  return (
+    <Sideways>
+      <Outline>
+        <Button onClick={remove}>
+          {getUiIcon('remove')}
+        </Button>
+        {item}×{String(Math.round(count)).padStart(2, '0')}
+        <Button onClick={add}>
+          {getUiIcon('add')}
+        </Button>
+      </Outline>
+    </Sideways>
+  );
+};
 
 const HostControls = () => {
   const {
@@ -25,19 +41,24 @@ const HostControls = () => {
       title={`${getUiIcon('host')} Host Controls`}
       onClose={() => setRoute()}
     >
-      {getUiIcon('add')} Add Ball
       <Sideways>
-        {ballEmojis.map(e => <Button onClick={() => randomBall(e)}>{e}</Button>)}
-      </Sideways>
-
-      {getUiIcon('remove')} Remove Ball
-      <Sideways>
-        {ballsArray.map(({id, emojiId}) => (
-          <Button onClick={() => deleteBallById(id)}>
-            {ballEmojis[emojiId]}
-          </Button>
+        {ballEmojis.map((e, i) => (
+          <AddRemoveControl
+            item={e}
+            count={ballsArray.filter(({ emojiId }) => emojiId === i).length}
+            add={() => randomBall(e)}
+            remove={() => {
+              const firstAdded = ballsArray.find(({ emojiId }) => emojiId === i);
+              deleteBallById(firstAdded.id);
+            }}
+          />
         ))}
       </Sideways>
+
+      <AddRemoveControl
+        item={`${getUiIcon('cpu')}`}
+        count={0}
+      />
     </Modal>
   );
 };
