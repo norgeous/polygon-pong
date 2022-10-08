@@ -79,8 +79,8 @@ class Player {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
     }
 
-    this.index = 2;
-    this.updateAxisAngle(scene, 3);
+    this.index = 0;
+    this.updateAxisAngle(scene, 1);
 	}
 
   updateAxisAngle(scene, playerCount) {
