@@ -6,8 +6,8 @@ class GameScene extends Phaser.Scene {
     super();
 
     this.worldbounds = {
-      width: 500,
-      height: 500,
+      width: 1000,
+      height: 1000,
     };
 
     this.balls = {};
@@ -36,11 +36,11 @@ class GameScene extends Phaser.Scene {
     // camera
     // this.cameras.main.setBounds(0, 0, width, height);
     // this.cameras.main.centerOn(width/2, height/2);
-    // this.cameras.main.setRotation(-(((2*Math.PI)/3)*2));
     // this.cameras.main.setZoom(0.705);
     // this.cameras.main.setZoom(0.5);
     
-    this.cameras.main.centerOn(250, 250);
+    this.cameras.main.centerOn(this.worldbounds.width / 2, this.worldbounds.height / 2);
+    this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
 
     this.game.setGameReady(true); // react state update
   }
