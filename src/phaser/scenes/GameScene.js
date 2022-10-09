@@ -89,7 +89,7 @@ class GameScene extends Phaser.Scene {
     });
 
     // draw play area for this number of players
-    this.poly.set(200, 300, 400, connectedIds.length); // set and redraw
+    this.poly.set(200, 300, 10000, connectedIds.length); // set and redraw
     // this.poly2.set(300, adjustedPlayerCount); // set and redraw
 
     // add player object for newly connected players
