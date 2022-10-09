@@ -8,7 +8,7 @@ const limit = (value, min, max) => {
 };
 
 const getNearestPointWithinLine = (line, point) => {
-  const nearestPointAlongAxis = Phaser.Geom.Line.GetNearestPoint(line, point);
+  const nearestPointAlongAxis = Phaser.Geom.Line.GetNearestPoint(line, point); // can be outside of line end
   const nearestX = limit(nearestPointAlongAxis.x, line.left, line.right);
   const nearestY = limit(nearestPointAlongAxis.y, line.top, line.bottom);
   return {
@@ -24,7 +24,6 @@ class Player {
     this.axis = line;
     this.axisAngle = angle;
 
-    this.oscillator = createOscillator();
     this.oscillatorImpact = createOscillator();
     
     const { width, height } = scene.sys.game.canvas;

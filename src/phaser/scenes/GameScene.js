@@ -44,7 +44,7 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
 
     this.poly = new Polygon(this);
-    this.poly2 = new Polygon(this);
+    // this.poly2 = new Polygon(this);
 
     this.game.setGameReady(true); // react state update
   }
@@ -88,10 +88,9 @@ class GameScene extends Phaser.Scene {
       delete this.players[id];
     });
 
-    // set polygon side count to match connections
-    const adjustedPlayerCount = ({ 1: 4, 2: 4 })[connectedIds.length] || connectedIds.length;
-    this.poly.set(200, adjustedPlayerCount); // set and redraw
-    this.poly2.set(400, adjustedPlayerCount); // set and redraw
+    // draw play area for this number of players
+    this.poly.set(200, 300, 350, connectedIds.length); // set and redraw
+    // this.poly2.set(300, adjustedPlayerCount); // set and redraw
 
     // add player object for newly connected players
     connections.forEach(({ id, type }, i) => {
@@ -99,7 +98,7 @@ class GameScene extends Phaser.Scene {
         const index = connections.length === 2 && i === 1 ? 2 : i;
         const line = this.poly.lines[index];
         const twoPi = 2 * Math.PI;
-        const angle = (twoPi / adjustedPlayerCount) * index;
+        const angle = (twoPi / connectedIds.length) * index;
         this.players[id] = new Player(this, index, type, line, angle);
       }
     });
@@ -108,7 +107,6 @@ class GameScene extends Phaser.Scene {
   setGameState(payload) {
     // deserialise game physics state and set into scene
     const { balls, players } = payload;
-    // console.log('GameScene.setGameState', balls, players);
 
     if (balls) {
       balls.forEach(({ id, emojiId, ...state }) => {
