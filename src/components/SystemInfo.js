@@ -40,7 +40,7 @@ const getStatus = (type, open) => {
 
 const SystemInfo = props => {
   const { connection, ...other } = props;
-  const { index, type, open, isHost, idCard = {}, ping } = other;
+  const { index, type, open, isHost, idCard = {}, ping = 0 } = other;
   const { browserName, city, countryCode, lat, long, osName, platformType, version } = idCard;
   const [openView, setOpenView] = useState(false);
   const status = getStatus(type, open);
@@ -54,11 +54,11 @@ const SystemInfo = props => {
         <Td title={browserName}>{browserName && getBrowserIcon(browserName)}</Td>
         <Td title={osName}>{osName && getOsIcon(osName)}</Td>
         <Td title={platformType}>{platformType && getPlatformIcon(platformType)}</Td>
-        <Td title={version}>{version && getUiIcon('game')} {version}</Td>
-        <Td>{countryCode && getFlagIcon(countryCode)} {city}</Td>
-        <Td title={timeOfDay}>{getTimeOfDayIcon(timeOfDay)}</Td>
-        <Td right style={{ fontFamily: 'monospace' }}>
-          {ping && String(Math.round(ping || 0)).padStart(3, '0')}
+        <Td title={version}>{version && getUiIcon('game')}</Td>
+        <Td title={`${city} ${countryCode}`}>{countryCode && getFlagIcon(countryCode)}</Td>
+        <Td title={timeOfDay}>{timeOfDay && getTimeOfDayIcon(timeOfDay)}</Td>
+        <Td title={`${ping} ping`} right>
+          {String(Math.round(ping)).padStart(2, '0')}
         </Td>
         <Td title="is host">{isHost && getUiIcon('host')}</Td>
         <Td>{openView ? getUiIcon('up') : getUiIcon('down')}</Td>

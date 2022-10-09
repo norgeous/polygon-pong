@@ -2,7 +2,7 @@ import React from 'react';
 import { getUiIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import Modal from '../Modal';
-import { Table } from '../styled/table';
+import { Container, Table } from '../styled/table';
 import SystemInfo from '../SystemInfo';
 import { Button } from '../styled/menu';
 import AddRemove from '../AddRemove';
@@ -35,9 +35,11 @@ const Network = () => {
 
       {!networkOverview.length && `${getUiIcon('disconnected')} No Connections`}
       {!!networkOverview.length && (
-        <Table>
-          {networkOverview.map(connection => <SystemInfo {...connection} />)}
-        </Table>
+        <Container>
+          <Table>
+            {networkOverview.map(connection => <SystemInfo {...connection} />)}
+          </Table>
+        </Container>
       )}
 
       <Button onClick={() => setEnableNetwork(!enableNetwork)}>
