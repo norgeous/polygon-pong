@@ -60,8 +60,18 @@ class Polygon {
     this.lineGraphics.clear();
     this.lineGraphics.lineStyle(40, 0x110011, 1);
     this.lines.forEach(line => this.lineGraphics.strokeLineShape(line));
-    this.wallInnerLines.forEach(line => this.lineGraphics.strokeLineShape(line));
-    this.wallOuterLines.forEach(line => this.lineGraphics.strokeLineShape(line));
+    
+    this.lineGraphics.fillStyle(0x001111, 1);
+    this.wallInnerLines.forEach((inner, i) => {
+      const outer = this.wallOuterLines[i];
+      const points = [
+        { x: Math.round(inner.x1), y: Math.round(inner.y1) },
+        { x: Math.round(inner.x2), y: Math.round(inner.y2) },
+        { x: Math.round(outer.x2), y: Math.round(outer.y2) },
+        { x: Math.round(outer.x1), y: Math.round(outer.y1) },
+      ];
+      this.lineGraphics.fillPoints(points, true);
+    });
   }
 }
 
