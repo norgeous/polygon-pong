@@ -28,12 +28,12 @@ const platform = {
 };
 
 const browser = {
-  default: '🌐',
-  chrome: '🪞',
+  default: '?',
+  chrome: '🌐',
   firefox: '🦊',
   'android browser': '🤖',
   opera: '🅾️',
-  safari: '🦓',
+  safari: '🧭',
   'microsoft edge': '🌎',
   ie: '💩',
 };
@@ -96,6 +96,14 @@ const intlLetters = {
   joiner: '\u200d',
 };
 
+const times = {
+  sunrise: '🌄', 
+  daytime: '🏙️', 
+  sunset: '🌇', 
+  nighttime: '🌃',
+  default: '?',
+};
+
 export const getGameIcon = name => game[name.toLowerCase()] || game.default;
 export const getBallIcon = () => ballEmojis[Math.floor(Math.random() * ballEmojis.length)];
 export const getClockIcon = i => clock[i-1] || clock[11];
@@ -114,3 +122,5 @@ export const getFlagIcon = countryCode => countryCode
   ?.split('')
   .map(letter => intlLetters[letter])
   .join(intlLetters.joiner) || null;
+
+export const getTimeOfDayIcon = timeOfDay => times[timeOfDay.toLowerCase()] || times.default;
