@@ -25,7 +25,10 @@ const Network = () => {
         count={cpuPlayers.length}
         add={() => {
           const newId = Math.random().toString().replace('0.','');
-          setCpuPlayerById(newId, { behaviour: 'normal' });
+          setCpuPlayerById(newId, {
+            behaviour: 'nearestBall',
+            movementSpeed: 1,
+          });
         }}
         remove={() => {
           const firstAdded = cpuPlayers[0];
