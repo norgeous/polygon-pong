@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 import useStateObject from '../hooks/useStateObject';
@@ -14,28 +14,30 @@ const AppContext = createContext({});
 export const AppProvider = ({ children }) => {
   const sysInfo = useSystemInfo();
   const { visibilityState, idCard } = sysInfo;
-  const [enableNetwork, setEnableNetwork] = useState(true);
+  const [enableNetwork, setEnableNetwork] = useLocalStorage('enableNetwork', true);
   
   const [route, setRoute] = useLocalStorage('route', 'MAINMENU');
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
-  const [showFps, setShowFps] = useLocalStorage('showfps', false);
+  const [showFps, setShowFps] = useLocalStorage('showFps', false);
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { gameReady, game, scene, fps, targetFps } = usePhaser();
 
+  const [players, setPlayerById, deletePlayerById] = useStateObject({});
   const [ballsArray, setBallById, deleteBallById] = useStateObject({});
-  const [cpuPlayers, setCpuPlayerById, deleteCpuPlayerById] = useStateObject({});
+  // const [cpuPlayers, setCpuPlayerById, deleteCpuPlayerById] = useStateObject({});
 
   // peerjs plumbing
   const dataReducer = {
     GREETING: ({ id }) => peerConnections[id].send({ type:'IDCARD', payload: idCard }),
-    IDCARD: ({ id, payload, setPeerDataById }) => setPeerDataById(id, { idCard: payload }),
+    // IDCARD: ({ id, payload, setPeerDataById }) => setPeerDataById(id, { idCard: payload }),
+    IDCARD: ({ id, payload }) => setPlayerById(id, { idCard: payload }),
     PING: ({ id }) => peerConnections[id].send({ type: 'PONG' }),
     PONG: ({ id, peerData, setPeerDataById }) => setPeerDataById(id, {
       ping: Math.round((window.performance.now() - peerData[id].pingStart) / 2),
       pingStart: undefined,
     }),
     SETGAMESTATE: ({ payload }) => {
-      // if gameobjects from payload ar missing add them
+      // if gameobjects from payload are missing, add them
       payload.balls?.forEach(({ id, emojiId }) => {
         if (!scene.balls[id]) setBallById(id, { emojiId });
       });
@@ -48,8 +50,6 @@ export const AppProvider = ({ children }) => {
     peerConnections,
     networkList,
     broadcast,
-    // open,
-    // peerData,
   } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
@@ -73,11 +73,15 @@ export const AppProvider = ({ children }) => {
       ...entry,
       isHost: entry.id === hostId,
     })),
-    ...cpuPlayers.map(cpuPlayer => ({
-      ...cpuPlayer,
-      type: 'cpu',
-    })),
+    // ...cpuPlayers.map(cpuPlayer => ({
+    //   ...cpuPlayer,
+    //   type: 'cpu',
+    // })),
   ];
+
+  // const playerList = [
+  //   ...networkOverview.filter(item => item.type === 'cpu' || item.open),
+  // ];
 
   const peerId = peer?.id;
 
@@ -110,7 +114,9 @@ export const AppProvider = ({ children }) => {
         networkOverview,
         isHost,
         enableNetwork, setEnableNetwork,
-        cpuPlayers, setCpuPlayerById, deleteCpuPlayerById,
+        players, setPlayerById, deletePlayerById,
+
+        // cpuPlayers, setCpuPlayerById, deleteCpuPlayerById, playerList, // delete
       }}
     >
       {children}

@@ -5,14 +5,14 @@ import Modal from '../Modal';
 import { Container, Table } from '../styled/table';
 import SystemInfo from '../SystemInfo';
 import { Button } from '../styled/menu';
-import AddRemove from '../AddRemove';
+import AddRemoveCpuPlayers from '../controls/AddRemoveCpuPlayers';
 
 const Network = () => {
   const {
     setRoute,
     enableNetwork, setEnableNetwork,
     networkOverview,
-    cpuPlayers, setCpuPlayerById, deleteCpuPlayerById,
+    players,
   } = useAppContext();
 
   return (
@@ -20,21 +20,7 @@ const Network = () => {
       title={`${getUiIcon('network')} Players`}
       onClose={() => setRoute()}
     >
-      <AddRemove
-        item={`${getUiIcon('cpu')}`}
-        count={cpuPlayers.length}
-        add={() => {
-          const newId = Math.random().toString().replace('0.','');
-          setCpuPlayerById(newId, {
-            behaviour: 'nearestBall',
-            movementSpeed: 1,
-          });
-        }}
-        remove={() => {
-          const firstAdded = cpuPlayers[0];
-          deleteCpuPlayerById(firstAdded.id);
-        }}
-      />
+      <AddRemoveCpuPlayers />
 
       {!networkOverview.length && `${getUiIcon('disconnected')} No Connections`}
       {!!networkOverview.length && (
@@ -49,6 +35,8 @@ const Network = () => {
         <span>{getUiIcon(enableNetwork ? 'pause' : 'play')}</span>
         <span>{enableNetwork ? 'Pause Network' : 'Resume Network'}</span>
       </Button>
+
+      <pre>{JSON.stringify(players,null,2)}</pre>
     </Modal>
   );
 };
