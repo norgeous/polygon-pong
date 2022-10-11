@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect } from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
-import useStateObject from '../hooks/useStateObject';
+import useStateArray from '../hooks/useStateArray';
 
 import usePeerJsMesh from '../peerJsMesh/usePeerJsMesh';
 import useWakeLock from '../hooks/useWakeLock';
@@ -22,17 +22,20 @@ export const AppProvider = ({ children }) => {
   const [wakeLockAvailable, wakeLockEnabled, setWakeLockEnabled] = useWakeLock();
   const { gameReady, game, scene, fps, targetFps } = usePhaser();
 
-  const [players, setPlayerById, deletePlayerById] = useStateObject({});
-  const [ballsArray, setBallById, deleteBallById] = useStateObject({});
-  // const [cpuPlayers, setCpuPlayerById, deleteCpuPlayerById] = useStateObject({});
+  const [players, setPlayerById, deletePlayerById] = useStateArray();
+  const [ballsArray, setBallById, deleteBallById] = useStateArray();
 
   // peerjs plumbing
+  const connectionReducer = {
+    OPEN: ({ id, payload }) => setPlayerById(id, payload),
+    CLOSE: ({ id }) => deletePlayerById(id),
+    // INTERVAL: () => {},
+  };
   const dataReducer = {
-    GREETING: ({ id }) => peerConnections[id].send({ type:'IDCARD', payload: idCard }),
-    // IDCARD: ({ id, payload, setPeerDataById }) => setPeerDataById(id, { idCard: payload }),
+    GREETING: ({ id }) => connections.find(({ id: cid }) => cid === id).send({ type:'IDCARD', payload: idCard }),
     IDCARD: ({ id, payload }) => setPlayerById(id, { idCard: payload }),
-    PING: ({ id }) => peerConnections[id].send({ type: 'PONG' }),
-    PONG: ({ id, peerData, setPeerDataById }) => setPeerDataById(id, {
+    PING: ({ id }) => connections.find(({ id: cid }) => cid === id).send({ type: 'PONG' }),
+    PONG: ({ id, peerData }) => setPlayerById(id, {
       ping: Math.round((window.performance.now() - peerData[id].pingStart) / 2),
       pingStart: undefined,
     }),
@@ -46,53 +49,32 @@ export const AppProvider = ({ children }) => {
   };
   
   const {
+    peerIds,
     peer,
-    peerConnections,
-    networkList,
+    connections,
+    peerData,
     broadcast,
   } = usePeerJsMesh({
     networkName: 'polygon-pong-multiplayer',
     maxPeers: 9,
     active: enableNetwork && visibilityState === 'visible',
+    connectionReducer,
     dataReducer,
+    // setPlayerById,
+    // deletePlayerById,
   });
-
-  const enhancedNetworkList = networkList.map(entry => ({
-    ...entry,
-    ...(entry.type === 'local' && {idCard}),
-  }));
-
-  const hostId = enhancedNetworkList
-    .reduce((prev, current) => {
-      if (!current.idCard?.hostFitness) return prev;
-      return (prev.idCard?.hostFitness > current.idCard.hostFitness) ? prev : current;
-    }, {}).id;
-  
-  const networkOverview = [
-    ...enhancedNetworkList.map(entry => ({
-      ...entry,
-      isHost: entry.id === hostId,
-    })),
-    // ...cpuPlayers.map(cpuPlayer => ({
-    //   ...cpuPlayer,
-    //   type: 'cpu',
-    // })),
-  ];
-
-  // const playerList = [
-  //   ...networkOverview.filter(item => item.type === 'cpu' || item.open),
-  // ];
 
   const peerId = peer?.id;
 
-  const isHost = peerId === hostId;
+  // const isHost = peerId === hostId;
+  const isHost = true;
 
   useNetworkGame({
     gameReady,
     scene,
     peerId,
     isHost,
-    players: networkOverview.filter(({ open }) => open),
+    players,
     broadcast,
     ballsArray,
   });
@@ -111,12 +93,9 @@ export const AppProvider = ({ children }) => {
         showFps, setShowFps, fps, targetFps,
         ballsArray, setBallById, deleteBallById,
         sysInfo,
-        networkOverview,
         isHost,
         enableNetwork, setEnableNetwork,
         players, setPlayerById, deletePlayerById,
-
-        // cpuPlayers, setCpuPlayerById, deleteCpuPlayerById, playerList, // delete
       }}
     >
       {children}

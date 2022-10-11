@@ -16,18 +16,18 @@ import {
 } from './styled/layout';
 import { Button } from './styled/common';
 import { getUiIcon, getGameIcon } from '../utils/emoji';
+import AddRemoveCpuPlayers from './controls/AddRemoveCpuPlayers';
 
 const App = () => {
   const {
     route, setRoute,
     showFps, fps,
-    networkOverview,
+    players,
     sysInfo,
     isHost,
   } = useAppContext();
   
   const { batteryAvailable, batteryPercent, clock } = sysInfo;
-  const connectionCount = networkOverview.reduce((acc, { open }) => open ? acc + 1 : acc, 0);
 
   return (
     <>
@@ -55,8 +55,9 @@ const App = () => {
             {getUiIcon('host')}
           </Button>
         )}
+        <AddRemoveCpuPlayers />
         <Button onClick={() => setRoute('NETWORK')}>
-          {connectionCount ? `${getUiIcon('network')}×${connectionCount}` : getUiIcon('disconnected')}
+          {players.length ? `${getUiIcon('network')}×${players.length}` : getUiIcon('disconnected')}
         </Button>
         <Button onClick={() => setRoute('SETTINGS')}>{getUiIcon('settings')}</Button>
       </TopRight>

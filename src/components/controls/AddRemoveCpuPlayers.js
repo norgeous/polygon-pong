@@ -22,6 +22,7 @@ const AddRemoveCpuPlayers = () => {
           type: 'cpu',
           behaviour: 'nearestBall',
           movementSpeed: 1,
+          idCard: {},
         });
       }}
       remove={() => {

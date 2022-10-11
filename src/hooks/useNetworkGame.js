@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import useStateObject from './useStateObject';
+import useStateArray from './useStateArray';
 
 const useNetworkGame = ({
   gameReady,
@@ -46,7 +46,7 @@ const useNetworkGame = ({
           broadcast({
             type: 'SETGAMESTATE',
             payload: {
-              players: [scene.players[peerId].getState()], // player position
+              players: [scene.players[peerId]?.getState()], // player position
             },
           });
         };
@@ -59,7 +59,7 @@ const useNetworkGame = ({
   // if player count changes, adjust the players in the scene
   useEffect(() => {
     if (gameReady && players.length) {
-      scene.syncronizeConnectionsWithPlayers(players);
+      scene.syncronizePlayers(players);
     }
   }, [gameReady, scene, players]);
 

@@ -22,9 +22,9 @@ const usePeerJs = ({
   peerIds,
   options,
   active = true,
+  connectionReducer,
 } = {}) => {
   const [peer, setPeer] = useState();
-  const [open, setOpen] = useState(false);
 
   // if config changes or "active", join / leave peerjs service
   useEffect(() => {
@@ -32,7 +32,6 @@ const usePeerJs = ({
       (async () => {
         const newPeer = await join(peerIds, options); // will throw when no seats
         setPeer(newPeer);
-        setOpen(true);
       })();
     } else {
       peer?.destroy();
@@ -43,20 +42,22 @@ const usePeerJs = ({
   // when joining peerjs, setup all listeners
   useEffect(() => {
     if (peer) {
-      // Emitted when a connection to the PeerServer is established
-      peer.on('open', id => setOpen(true));
+      // save the connection to players array
+      connectionReducer['OPEN']({
+        id: peer.id,
+        payload: { type: 'local' },
+      });
 
       // Emitted when the peer is destroyed and can no longer accept or create any new connections
-      peer.on('close', () => setOpen(false));
+      peer.on('close', () => connectionReducer['CLOSE']({ id: peer.id }));
 
       // Emitted when the peer is disconnected from the signalling server
-      peer.on('disconnected', () => setOpen(false));
+      peer.on('disconnected', () => connectionReducer['CLOSE']({ id: peer.id }));
     }
   }, [peer]);
 
   return {
     peer,
-    open,
   };
 };
 

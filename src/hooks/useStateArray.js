@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 
-const useStateObject = (initialValue = {}) => {
+const useStateArray = (initialValue = {}) => {
   const [o, setO] = useState(initialValue);
 
   const setById = (id, data) => setO(oldO => ({
@@ -28,4 +28,4 @@ const useStateObject = (initialValue = {}) => {
   ];
 };
 
-export default useStateObject;
+export default useStateArray;

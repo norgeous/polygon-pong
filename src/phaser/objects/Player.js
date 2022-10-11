@@ -31,8 +31,6 @@ class Player {
 
     // the track for the player
     this.axisGraphics = scene.add.graphics(width / 2, height / 2);
-    this.axisGraphics.lineStyle(8, 0x002222, 1);
-    this.axisGraphics.strokeLineShape(this.axis);
 
     // the player graphics
     const container = scene.add.container(0, 0);
@@ -57,16 +55,10 @@ class Player {
         chamfer: { radius: 15 },
       },
     )
-      .setPosition(width/2, height-100)
+      .setPosition(width/2, height/2)
       .setFrictionAir(0.001)
       .setBounce(0.9)
       .setMass(100);
-
-    // this.gameObject.name = 'player';
-
-    // instantly rotate player to new angle
-    this.gameObject.setRotation(this.axisAngle);
-    this.gameObject.setAngularVelocity(0);
 
     // sound on collision
     this.gameObject.setOnCollide(data => {
@@ -79,10 +71,25 @@ class Player {
     });
 
     // if local, start listening for mousemove / swipes
-    if (this.controlType === 'local') {
+    // if (this.controlType === 'local') {
       scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
-    }
+    // }
+
+    this.redraw();
 	}
+
+  redraw () {
+    this.text.setText(`P${this.index}: ${this.axisAngle.toFixed(2)}r`);
+
+    // draw the axis
+    this.axisGraphics.clear();
+    this.axisGraphics.lineStyle(6, 0x002222, 1);
+    this.axisGraphics.strokeLineShape(this.axis);
+    
+    // instantly rotate player to new angle
+    this.gameObject.setRotation(this.axisAngle);
+    this.gameObject.setAngularVelocity(0);
+  }
 
 	update(scene) {
     // calculate "return to track" velocity
@@ -93,12 +100,12 @@ class Player {
     // player follow cursor or touch gesture
     let mvx = 0;
     let mvy = 0;
-    if (this.controlType === 'local') {
+    // if (this.controlType === 'local') {
       const mv = new Phaser.Math.Vector2(this.pointer.velocity?.x || 0, this.pointer.velocity?.y || 0);
       mv.rotate(this.axisAngle); // match pointer movement vector to camera rotation
       mvx = mv.x * 0.2;
       mvy = mv.y * 0.2;
-    }
+    // }
 
     // add pointer and return to track velocity and apply
     const vx = mvx + rvx;
@@ -112,7 +119,6 @@ class Player {
     const newAv = (angularVelocity + (diff / 100)) * 0.99;
     this.gameObject.setAngularVelocity(newAv);
 	}
-
 
   getState() {
     const id = this.id;
@@ -132,6 +138,8 @@ class Player {
   }
 
   destroy() {
+    // this.axisGraphics.clear();
+    this.axisGraphics.destroy();
     this.gameObject.destroy();
     delete this.gameObject;
   }

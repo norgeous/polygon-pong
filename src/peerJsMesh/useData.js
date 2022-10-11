@@ -1,20 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import useStateArray from '../hooks/useStateArray';
 
-const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
-  const [peerData, setPeerData] = useState({});
-  const setPeerDataById = (id, data) => {
-    setPeerData(oldPeerData => ({
-      ...oldPeerData,
-      [id]: {
-        ...oldPeerData[id],
-        ...data,
-      }
-    }));
-  };
+const useData = ({
+  connections,
+  dataReducer = {},
+}) => {
+  const [peerData, setPeerDataById, deletePeerDataById] = useStateArray();
 
-  // if peerConnections changes (both INCOMING and OUTGOING), register handlers
+  // if connections changes (both INCOMING and OUTGOING), register handlers
   useEffect(() => {
-    Object.values(peerConnections).forEach(dataConnection => {
+    connections.forEach(({ dataConnection }) => {
       const id = dataConnection.peer;
 
       // Emitted when the connection is established and ready-to-use
@@ -25,48 +20,40 @@ const useData = (peerConnections, dispatchPeerConnection, dataReducer = {}) => {
 
       // Emitted when either you or the remote peer closes the data connection (firefox not supported)
       dataConnection.on('close', () => {
-        dispatchPeerConnection({ type: 'REMOVE', payload: { id } });
-        setPeerData(oldPeerData => Object.fromEntries(Object.entries(oldPeerData).filter(([id]) => id !== dataConnection.peer)));
+        deletePeerDataById(id);
       });
 
       // Emitted when data is received from the remote peer
       dataConnection.on('data', ({ type, payload }) => {
-        // console.log('Got data >>> ', id, type, payload);
         dataReducer[type]?.({ id, payload, peerData, setPeerDataById });
       });
     });
 
     // teardown
     return () => {
-      Object.values(peerConnections).forEach(dataConnection => {
+      connections.forEach(({ dataConnection }) => {
         dataConnection.off('open');
         dataConnection.off('close');
         dataConnection.off('data');
       });
     };
-  }, [peerConnections, peerData, dataReducer]);
+  }, [connections, peerData, dataReducer]);
 
   // every so often, ping all connections, to get latency
   useEffect(() => {
     const pingEm = () => {
-      // console.log('pingEm');
-      Object.values(peerConnections) 
-        .filter(dataConnection => dataConnection.open)
-        .forEach(dataConnection => {
-          // console.log('SEND PING to ',dataConnection.peer);
-          setPeerDataById(dataConnection.peer, {
-            pingStart: window.performance.now(),
-          });
-          dataConnection.send({ type: 'PING' });
+      connections.forEach(({ dataConnection }) => {
+        setPeerDataById(dataConnection.peer, {
+          pingStart: window.performance.now(),
         });
+        dataConnection.send({ type: 'PING' });
+      });
     };
-    // console.log('setInterval');
     const t = setInterval(pingEm, 10000);
     return () => {
-      // console.log('clearInterval');
       clearInterval(t);
     };
-  }, [peerConnections]);
+  }, [connections]);
 
   return peerData;
 };

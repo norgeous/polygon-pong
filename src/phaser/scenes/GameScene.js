@@ -79,29 +79,38 @@ class GameScene extends Phaser.Scene {
     });
   }
 
-  syncronizeConnectionsWithPlayers (connections) {
-    // delete exisiting players not in new connections (they logged off)
-    const connectedIds = connections.map(({ id }) => id);
+  syncronizePlayers (players) {
+    console.log('players before', this.players);
+    // delete exisiting players not in new players (they logged off)
+    const connectedIds = players.map(({ id }) => id);
     const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id));
     deleteIds.forEach(id => {
+      console.log('deleting player', id);
       this.players[id].destroy();
       delete this.players[id];
     });
 
     // draw play area for this number of players
-    this.poly.set(200, 300, 10000, connectedIds.length); // set and redraw
-    // this.poly2.set(300, adjustedPlayerCount); // set and redraw
+    this.poly.set(200, 300, 10000, players.length); // set and redraw
 
     // add player object for newly connected players
-    connections.forEach(({ id, type }, i) => {
+    players.forEach(({ id, type }, i) => {
+      const index = players.length === 2 && i === 1 ? 2 : i;
+      const line = this.poly.lines[i];
+      const twoPi = 2 * Math.PI;
+      const angle = (twoPi / connectedIds.length) * i;
       if (!this.players[id]) {
-        const index = connections.length === 2 && i === 1 ? 2 : i;
-        const line = this.poly.lines[index];
-        const twoPi = 2 * Math.PI;
-        const angle = (twoPi / connectedIds.length) * index;
         this.players[id] = new Player(this, index, type, line, angle);
+      } else {
+        this.players[id].index = index;
+        this.players[id].axis = line;
+        this.players[id].axisAngle = angle;
+        console.log('call redraw on exisitng');
+        this.players[id].redraw();
       }
     });
+
+    console.log('players after', this.players);
   }
 
   setGameState(payload) {

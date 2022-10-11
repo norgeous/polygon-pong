@@ -118,9 +118,12 @@ export const getVolumeIcon = v => {
   if (v > 0.66 && v <= 0.99) return volume[3];
   if (v >= 1) return volume[4];
 };
-export const getFlagIcon = countryCode => countryCode
-  ?.split('')
-  .map(letter => intlLetters[letter])
-  .join(intlLetters.joiner) || null;
+export const getFlagIcon = countryCode => {
+  if (!countryCode) return '🏴‍☠️';
+  return countryCode
+    ?.split('')
+    .map(letter => intlLetters[letter])
+    .join(intlLetters.joiner) || null;
+};
 
 export const getTimeOfDayIcon = timeOfDay => times[timeOfDay.toLowerCase()] || times.default;

@@ -11,7 +11,6 @@ const Network = () => {
   const {
     setRoute,
     enableNetwork, setEnableNetwork,
-    networkOverview,
     players,
   } = useAppContext();
 
@@ -22,14 +21,14 @@ const Network = () => {
     >
       <AddRemoveCpuPlayers />
 
-      {!networkOverview.length && `${getUiIcon('disconnected')} No Connections`}
+      {/* {!networkOverview.length && `${getUiIcon('disconnected')} No Connections`}
       {!!networkOverview.length && (
         <Container>
           <Table>
             {networkOverview.map(connection => <SystemInfo {...connection} />)}
           </Table>
         </Container>
-      )}
+      )} */}
 
       <Button onClick={() => setEnableNetwork(!enableNetwork)}>
         <span>{getUiIcon(enableNetwork ? 'pause' : 'play')}</span>
