@@ -53,25 +53,27 @@ class Polygon {
     this.wallInnerLines = calculatePolygonLines(this.cx,this.cy, this.wallsApothem, adjustedPlayerCount);
     this.wallOuterLines = calculatePolygonLines(this.cx,this.cy, this.wallsOuterApothem, adjustedPlayerCount);
 
-    this.draw();
-	}
-  
-  draw() {
-    this.lineGraphics.clear();
-    this.lineGraphics.lineStyle(40, 0x110011, 1);
-    this.lines.forEach(line => this.lineGraphics.strokeLineShape(line));
-    
-    this.lineGraphics.fillStyle(0x001111, 1);
-    this.wallInnerLines.forEach((inner, i) => {
+    this.goalPolys = this.wallInnerLines.map((inner, i) => {
       const outer = this.wallOuterLines[i];
-      const points = [
+      return [
         { x: Math.round(inner.x1), y: Math.round(inner.y1) },
         { x: Math.round(inner.x2), y: Math.round(inner.y2) },
         { x: Math.round(outer.x2), y: Math.round(outer.y2) },
         { x: Math.round(outer.x1), y: Math.round(outer.y1) },
       ];
-      this.lineGraphics.fillPoints(points, true);
     });
+
+    this.draw();
+	}
+  
+  draw() {
+    this.lineGraphics.clear();
+
+    this.lineGraphics.lineStyle(40, 0x110011, 1);
+    this.lines.forEach(line => this.lineGraphics.strokeLineShape(line));
+    
+    this.lineGraphics.fillStyle(0x001111, 1);
+    this.goalPolys.forEach(goal => this.lineGraphics.fillPoints(goal, true));
   }
 }
 

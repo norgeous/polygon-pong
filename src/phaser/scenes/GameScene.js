@@ -80,12 +80,12 @@ class GameScene extends Phaser.Scene {
   }
 
   syncronizePlayers (players) {
-    console.log('players before', this.players);
+    // console.log('players before', this.players);
     // delete exisiting players not in new players (they logged off)
     const connectedIds = players.map(({ id }) => id);
     const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id));
     deleteIds.forEach(id => {
-      console.log('deleting player', id);
+      // console.log('deleting player', id);
       this.players[id].destroy();
       delete this.players[id];
     });
@@ -105,12 +105,12 @@ class GameScene extends Phaser.Scene {
         this.players[id].index = index;
         this.players[id].axis = line;
         this.players[id].axisAngle = angle;
-        console.log('call redraw on exisitng');
+        // console.log('call redraw on exisitng');
         this.players[id].redraw();
       }
     });
 
-    console.log('players after', this.players);
+    // console.log('players after', this.players);
   }
 
   setGameState(payload) {
