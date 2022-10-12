@@ -53,7 +53,7 @@ class Polygon {
     this.wallInnerLines = calculatePolygonLines(this.cx,this.cy, this.wallsApothem, adjustedPlayerCount);
     this.wallOuterLines = calculatePolygonLines(this.cx,this.cy, this.wallsOuterApothem, adjustedPlayerCount);
 
-    this.goalPolys = this.wallInnerLines.map((inner, i) => {
+    this.goals = this.wallInnerLines.map((inner, i) => {
       const outer = this.wallOuterLines[i];
       return [
         { x: Math.round(inner.x1), y: Math.round(inner.y1) },
@@ -73,7 +73,7 @@ class Polygon {
     this.lines.forEach(line => this.lineGraphics.strokeLineShape(line));
     
     this.lineGraphics.fillStyle(0x001111, 1);
-    this.goalPolys.forEach(goal => this.lineGraphics.fillPoints(goal, true));
+    this.goals.forEach(goal => this.lineGraphics.fillPoints(goal, true));
   }
 }
 

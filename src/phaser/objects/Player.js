@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import createOscillator from '../../utils/createOscillator';
+import Wall from './Wall';
 
 const limit = (value, min, max) => {
   if (value < min) return min;
@@ -18,10 +19,12 @@ const getNearestPointWithinLine = (line, point) => {
 };
 
 class Player {
-  constructor(scene, index, controlType, line, angle) {
+  constructor(scene, index, controlType, line, angle, goal) {
+    this.scene = scene;
     this.index = index;
     this.controlType = controlType;
     this.axis = line;
+    this.goal = goal;
     this.axisAngle = angle;
 
     this.oscillatorImpact = createOscillator();
@@ -60,6 +63,9 @@ class Player {
       .setBounce(0.9)
       .setMass(100);
 
+    // goal
+    this.goalGraphics = scene.add.graphics();
+
     // sound on collision
     this.gameObject.setOnCollide(data => {
       this.oscillatorImpact({
@@ -89,6 +95,26 @@ class Player {
     // instantly rotate player to new angle
     this.gameObject.setRotation(this.axisAngle);
     this.gameObject.setAngularVelocity(0);
+
+    // draw the player's goal
+    // this.goalGraphics.clear();
+    // this.goalGraphics.fillStyle(0x001111, 1);
+    // this.goalGraphics.fillPoints(this.goal, true);
+
+    // physics object for the player's goal
+    // const g = this.scene.matter.add.gameObject(
+    //   this.goalGraphics,
+    //   {
+    //     shape: { type: 'fromVerts', verts: this.goal },
+    //     isStatic: false,
+    //   },
+    // )
+    //   .setFrictionAir(0.001)
+    //   .setBounce(0.9)
+    //   .setMass(100);
+
+    this.goalObject?.destroy?.();
+    this.goalObject = new Wall(this.scene, this.goal);
   }
 
 	update(scene) {
@@ -142,6 +168,8 @@ class Player {
     this.axisGraphics.destroy();
     this.gameObject.destroy();
     delete this.gameObject;
+
+    this.goalObject?.destroy?.();
   }
 }
 
