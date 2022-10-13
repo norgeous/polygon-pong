@@ -7,8 +7,8 @@ class GameScene extends Phaser.Scene {
     super();
 
     this.worldbounds = {
-      width: 1000,
-      height: 1000,
+      width: 4000,
+      height: 4000,
     };
 
     this.balls = {};
@@ -38,7 +38,7 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setBounds(0, 0, width, height);
     // this.cameras.main.centerOn(width/2, height/2);
     // this.cameras.main.setZoom(0.705);
-    this.cameras.main.setZoom(0.8);
+    // this.cameras.main.setZoom(0.8);
     
     this.cameras.main.centerOn(this.worldbounds.width / 2, this.worldbounds.height / 2);
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
@@ -91,13 +91,13 @@ class GameScene extends Phaser.Scene {
     });
 
     // draw play area for this number of players
-    this.poly.set(200, 300, 400, players.length); // set and redraw
+    this.poly.set(250, 450, 1200, players.length); // set and redraw
 
     // add player object for newly connected players
     players.forEach(({ id, type }, i) => {
       const index = players.length === 2 && i === 1 ? 2 : i;
       const line = this.poly.lines[i];
-      const goal = this.poly.goals[i];
+      const goal = this.poly.goals[index];
       const twoPi = 2 * Math.PI;
       const angle = (twoPi / connectedIds.length) * i;
       if (!this.players[id]) {
