@@ -40,6 +40,7 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.centerOn(width/2, height/2);
     // this.cameras.main.setZoom(0.705);
     // this.cameras.main.setZoom(0.8);
+    // this.cameras.main.setZoom(0.25);
     
     this.cameras.main.centerOn(this.worldbounds.width / 2, this.worldbounds.height / 2);
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
@@ -103,6 +104,8 @@ class GameScene extends Phaser.Scene {
       if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
       else this.seats[id].redraw(seatConfig);
     });
+
+    console.log('syncronized seats', this.seats);
   }
 
   setGameState(payload) {

@@ -47,7 +47,7 @@ class Player {
     this.bat?.destroy?.();
     this.bat = new Bat(this.scene, {
       size: 100,
-      color: 0xFF0000,
+      color,
       label: `${this.controlType} P${this.label}: ${this.trackPointsAngle.toFixed(1)}r`,
     });
 
@@ -65,9 +65,12 @@ class Player {
     this.bat.gameObject.setRotation(this.trackPointsAngle);
     this.bat.gameObject.setAngularVelocity(0);
     this.bat.gameObject.setBounce(0.9);
+
+
+    console.log('player created', this.bat, 0xFF0000);
   }
 
-	update(scene) {
+	update() {
     // calculate "return to track" velocity
     const nearestPoint = getNearestPointWithinLine(this.trackPoints, this.bat.gameObject);
     const rvx = (this.bat.gameObject.x - nearestPoint.x) * -0.5;
@@ -94,6 +97,8 @@ class Player {
     const diff = this.trackPointsAngle - angle;
     const newAv = (angularVelocity + (diff / 100)) * 0.99;
     this.bat.gameObject.setAngularVelocity(newAv);
+
+    console.log('player updated');
 	}
 
   getState() {
