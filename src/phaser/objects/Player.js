@@ -103,11 +103,8 @@ class Player {
         // sort by distance
         .sort((a,b) => a.d - b.d)[0];
 
-      
-      mvx = (this.bat.gameObject.x - closestBall?.x||0) * -0.03;
-      mvy = (this.bat.gameObject.y - closestBall?.y||0) * -0.03;
-
-      // console.log(JSON.stringify(ballPoints));
+      mvx = (this.bat.gameObject.x - closestBall?.x||0) * -0.3;
+      mvy = (this.bat.gameObject.y - closestBall?.y||0) * -0.3;
     }
 
     // add pointer and return to track velocity and apply
