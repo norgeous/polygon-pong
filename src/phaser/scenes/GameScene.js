@@ -13,6 +13,7 @@ class GameScene extends Phaser.Scene {
 
     this.balls = {};
     this.players = {};
+    this.seats = {};
   }
 
   preload () {
@@ -84,7 +85,6 @@ class GameScene extends Phaser.Scene {
     const connectedIds = players.map(({ id }) => id);
     const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id));
     deleteIds.forEach(id => {
-      // console.log('deleting player', id);
       this.players[id].destroy();
       delete this.players[id];
     });
@@ -93,29 +93,16 @@ class GameScene extends Phaser.Scene {
     this.poly.set(250, 450, 1200, players.length); // set and redraw
 
     // add player object for newly connected players
-    players.forEach(({ id, type }, i) => {
+    players.forEach(({ id, controlType }, i) => {
       const index = players.length === 2 && i === 1 ? 2 : i;
-      const line = this.poly.lines[i];
+      const trackPoints = this.poly.lines[i];
       const goal = this.poly.goals[index];
-      const twoPi = 2 * Math.PI;
-      const angle = (twoPi / connectedIds.length) * i;
-      if (!this.players[id]) {
-        this.players[id] = new Seat(this, index, type, line, angle, goal);
-      } else {
-        this.players[id].index = index;
-        this.players[id].axis = line;
-        this.players[id].axisAngle = angle;
-        this.players[id].goal = goal;
-        // console.log('call redraw on exisitng');
-        this.players[id].redraw();
-      }
+
+      // draw the seat (wall+track+player)
+      const seatConfig = { index, controlType, trackPoints, goal };
+      if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
+      else this.seats[id].redraw(seatConfig);
     });
-
-    // console.log('players after', this.players);
-
-    // new!
-    // step 1: make a polygon based on number of connections
-    // step 2: make a seat for each side of the polygon which includes a wall (always) and a player and track (optionally)
   }
 
   setGameState(payload) {

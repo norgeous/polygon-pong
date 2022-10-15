@@ -12,9 +12,9 @@ const AddRemoveCpuPlayers = () => {
     deletePlayerById,
   } = useAppContext();
 
-  const localPlayers = players.filter(({ type }) => type === 'local');
-  const remotePlayers = players.filter(({ type }) => type === 'remote');
-  const cpuPlayers = players.filter(({ type }) => type === 'cpu');
+  const localPlayers = players.filter(({ controlType }) => controlType === 'local');
+  const remotePlayers = players.filter(({ controlType }) => controlType === 'remote');
+  const cpuPlayers = players.filter(({ controlType }) => controlType === 'cpu');
 
   return (
     <>
@@ -23,7 +23,7 @@ const AddRemoveCpuPlayers = () => {
         count={localPlayers.length}
         add={() => {
           setPlayerById(getNewId(), {
-            type: 'local',
+            controlType: 'local',
             idCard: {},
           });
         }}
@@ -34,7 +34,7 @@ const AddRemoveCpuPlayers = () => {
         count={remotePlayers.length}
         add={() => {
           setPlayerById(getNewId(), {
-            type: 'remote',
+            controlType: 'remote',
             idCard: {},
           });
         }}
@@ -45,7 +45,7 @@ const AddRemoveCpuPlayers = () => {
         count={cpuPlayers.length}
         add={() => {
           setPlayerById(getNewId(), {
-            type: 'cpu',
+            controlType: 'cpu',
             behaviour: 'nearest ball',
             movementSpeed: 1,
             idCard: {},

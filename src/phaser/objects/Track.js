@@ -4,6 +4,8 @@ class Track {
     this.line = line;
     this.color = color;
 
+    const { width, height } = scene.sys.game.canvas;
+
     // the track for the player
     this.axisGraphics = this.scene.add.graphics(width / 2, height / 2);
 

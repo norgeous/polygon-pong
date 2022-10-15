@@ -1,18 +1,18 @@
 import Phaser from 'phaser';
 
-export const calculatePolygonLines = (cx,cy, apothem = 200, sides = 3) => {
+export const calculatePolygonLines = (cx,cy, apothem = 200, sideCount = 3) => {
   const twoPi = 2 * Math.PI;
 
   // calculate the length of the polygon side
-  const lengthOfSide = 2 * apothem * Math.tan(Math.PI / sides);
+  const lengthOfSide = 2 * apothem * Math.tan(Math.PI / sideCount);
   const x1 = cx - (lengthOfSide / 2);
   const x2 = cx + (lengthOfSide / 2);
   const y1 = cy + apothem;
   const y2 = cy + apothem;
 
-  const sides = Array.from({ length: sides }, (_, i) => {
+  const sides = Array.from({ length: sideCount }, (_, i) => {
     const line = new Phaser.Geom.Line(x1,y1, x2,y2); // line in default "bottom" position
-    const angle = (twoPi / sides) * i;
+    const angle = (twoPi / sideCount) * i;
     Phaser.Geom.Line.RotateAroundXY(line, cx, cy, angle);
     return line;
   });

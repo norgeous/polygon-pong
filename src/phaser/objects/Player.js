@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import createOscillator from '../../utils/createOscillator';
-import Track from './Track';
-import Wall from './Wall';
+import Bat from './Bat';
 
 const limit = (value, min, max) => {
   if (value < min) return min;
@@ -20,106 +19,66 @@ const getNearestPointWithinLine = (line, point) => {
 };
 
 class Player {
-  constructor(scene, index, controlType, line, angle, goal) {
+  constructor(scene, args) {
     this.scene = scene;
-    this.index = index;
-    this.controlType = controlType;
-    this.axis = line;
-    this.goal = goal;
-    this.axisAngle = angle;
-
     this.oscillatorImpact = createOscillator();
-    
-    const { width, height } = scene.sys.game.canvas;
     this.pointer = {};
 
-    // the track for the player
-    this.axisGraphics = scene.add.graphics(width / 2, height / 2);
+    this.redraw(args);
+	}
 
-    // the player graphics
-    const container = scene.add.container(0, 0);
+  redraw ({ size, label, trackPoints, controlType }) {
+    this.size = size;
+    this.label = label;
+    this.trackPoints = trackPoints;
+    this.controlType = controlType;
+
+    const { x1, y1, x2, y2 } = this.trackPoints;
+    this.trackPointsAngle = Phaser.Math.Angle.Between(x1, y1, x2, y2);
+
     const color = this.controlType === 'local' ? 0x008888 : 0x220022;
-    const graphics = scene.add.graphics();
-    graphics.fillStyle(color, 1);
-    graphics.fillRoundedRect(-100, -15, 200, 30, 15);
-    this.text = scene.add.text(0, 0, `P${this.index}: ${this.axisAngle.toFixed(2)}r`, {
-      font: '30px Arial',
-      align: 'center',
-      color: 'black',
-      fontWeight: 'bold',
-    }).setOrigin(0.5);
-    container.add([graphics, this.text]);
 
-    // physics object for player
-    this.gameObject = scene.matter.add.gameObject(
-      container,
-      {
-        shape: { type: 'rectangle', width: 200, height: 30 },
-        isStatic: false,
-        chamfer: { radius: 15 },
-      },
-    )
-      .setPosition(width/2, height/2)
-      .setFrictionAir(0.001)
-      .setBounce(0.9)
-      .setMass(100);
+    // if local, start listening for mousemove / swipes
+    if (this.controlType === 'local') {
+      this.scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, this.scene);
+    }
 
-    // goal
-    this.goalGraphics = scene.add.graphics();
+    // update bat
+    this.bat?.destroy?.();
+    this.bat = new Bat(this.scene, {
+      size: 100,
+      color: 0xFF0000,
+      label: `${this.controlType} P${this.label}: ${this.trackPointsAngle.toFixed(1)}r`,
+    });
 
-    // sound on collision
-    this.gameObject.setOnCollide(data => {
+    // sound on bat collision
+    this.bat.gameObject.setOnCollide(data => {
       this.oscillatorImpact({
         volume: data.collision.depth / 10,
-        maxVolume: scene.game.maxVolume,
+        maxVolume: this.scene.game.maxVolume,
         frequency: 261.63, // C4
         duration: 0.1,
       });
     });
-
-    // if local, start listening for mousemove / swipes
-    if (this.controlType === 'local') {
-      scene.input.on('pointermove', (pointer) => { this.pointer = pointer; }, scene);
-    }
-
-    this.redraw();
-	}
-
-  redraw () {
-    const color = {
-      local: 0x004444,
-      remote: 0x440044,
-      cpu: 0x222222,
-    }[this.controlType];
-
-    this.text.setText(`P${this.index}: ${this.axisAngle.toFixed(2)}r`);
-
-    // draw the axis
-    this.track?.destroy?.();
-    this.track = new Track(this.scene, this.axis, color);
     
-    // instantly rotate player to new angle
-    this.gameObject.setRotation(this.axisAngle);
-    this.gameObject.setAngularVelocity(0);
-    this.gameObject.setBounce(0.9);
-
-    this.goalObject?.destroy?.();
-    this.goalObject = new Wall(this.scene, this.goal, color);
-
+    // instantly rotate bat to new angle
+    this.bat.gameObject.setRotation(this.trackPointsAngle);
+    this.bat.gameObject.setAngularVelocity(0);
+    this.bat.gameObject.setBounce(0.9);
   }
 
 	update(scene) {
     // calculate "return to track" velocity
-    const nearestPoint = getNearestPointWithinLine(this.axis, this.gameObject);
-    const rvx = (this.gameObject.x - nearestPoint.x) * -0.5;
-    const rvy = (this.gameObject.y - nearestPoint.y) * -0.5;
+    const nearestPoint = getNearestPointWithinLine(this.trackPoints, this.bat.gameObject);
+    const rvx = (this.bat.gameObject.x - nearestPoint.x) * -0.5;
+    const rvy = (this.bat.gameObject.y - nearestPoint.y) * -0.5;
     
     // player follow cursor or touch gesture
     let mvx = 0;
     let mvy = 0;
     if (this.controlType === 'local') {
       const mv = new Phaser.Math.Vector2(this.pointer.velocity?.x || 0, this.pointer.velocity?.y || 0);
-      mv.rotate(this.axisAngle); // match pointer movement vector to camera rotation
+      mv.rotate(this.trackPointsAngle); // match pointer movement vector to camera rotation
       mvx = mv.x * 0.2;
       mvy = mv.y * 0.2;
     }
@@ -127,40 +86,36 @@ class Player {
     // add pointer and return to track velocity and apply
     const vx = mvx + rvx;
     const vy = mvy + rvy;
-    if (vx) this.gameObject.setVelocityX(vx);
-    if (vy) this.gameObject.setVelocityY(vy);
+    if (vx) this.bat.gameObject.setVelocityX(vx);
+    if (vy) this.bat.gameObject.setVelocityY(vy);
 
     // slowly correct player angle (springy)
-    const { angle, angularVelocity } = this.gameObject.body;
-    const diff = this.axisAngle - angle;
+    const { angle, angularVelocity } = this.bat.gameObject.body;
+    const diff = this.trackPointsAngle - angle;
     const newAv = (angularVelocity + (diff / 100)) * 0.99;
-    this.gameObject.setAngularVelocity(newAv);
+    this.bat.gameObject.setAngularVelocity(newAv);
 	}
 
   getState() {
     const id = this.id;
     const type = this.controlType;
-    const { x, y } = this.gameObject;
-    const { x: vx, y: vy } = this.gameObject.body.velocity;
-    const { angle: a, angularVelocity: va } = this.gameObject.body;
+    const { x, y } = this.bat.gameObject;
+    const { x: vx, y: vy } = this.bat.gameObject.body.velocity;
+    const { angle: a, angularVelocity: va } = this.bat.gameObject.body;
     return { id, type, x, y, a, vx, vy, va };
   }
 
   setState({ x, y, a, vx, vy, va }) {
-    this.gameObject.x = x;
-    this.gameObject.y = y;
-    this.gameObject.setRotation(a);
-    this.gameObject.setVelocity(vx, vy);
-    this.gameObject.setAngularVelocity(va);
+    this.bat.gameObject.x = x;
+    this.bat.gameObject.y = y;
+    this.bat.gameObject.setRotation(a);
+    this.bat.gameObject.setVelocity(vx, vy);
+    this.bat.gameObject.setAngularVelocity(va);
   }
 
   destroy() {
-    this.axisGraphics.destroy();
-    this.gameObject.destroy();
-    delete this.gameObject;
-
-    this.goalObject?.destroy?.();
-    this.track?.destroy?.();
+    this.bat.gameObject.destroy();
+    delete this.bat.gameObject;
   }
 }
 
