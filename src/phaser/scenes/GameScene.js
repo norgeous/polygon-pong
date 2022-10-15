@@ -85,10 +85,10 @@ class GameScene extends Phaser.Scene {
   syncronizePlayers (players) {
     // delete exisiting players not in new players (they logged off)
     const connectedIds = players.map(({ id }) => id);
-    const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id));
+    const deleteIds = Object.keys(this.seats).filter(id => !connectedIds.includes(id));
     deleteIds.forEach(id => {
-      this.players[id].destroy();
-      delete this.players[id];
+      this.seats[id].destroy();
+      delete this.seats[id];
     });
 
     // draw play area for this number of players

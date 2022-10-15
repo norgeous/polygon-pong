@@ -23,7 +23,7 @@ const useNetworkGame = ({
             type: 'SETGAMESTATE',
             payload: {
               balls: Object.values(scene.balls).map(ball => ball.getState()), // all balls
-              players: [scene.players[peerId]?.getState()], // host player position
+              players: [scene.seats[peerId]?.getState?.()], // host player position
             },
           });
         };
@@ -37,7 +37,7 @@ const useNetworkGame = ({
           broadcast({
             type: 'SETGAMESTATE',
             payload: {
-              players: [scene.players[peerId]?.getState()], // player position
+              players: [scene.seats[peerId]?.getState?.()], // player position
             },
           });
         };

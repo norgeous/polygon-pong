@@ -27,9 +27,8 @@ class Player {
     this.redraw(args);
 	}
 
-  redraw ({ size, label, trackPoints, controlType, color }) {
+  redraw ({ size, trackPoints, controlType, color }) {
     this.size = size;
-    this.label = label;
     this.trackPoints = trackPoints;
     this.controlType = controlType;
 
@@ -63,6 +62,9 @@ class Player {
     this.bat.gameObject.setRotation(this.trackPointsAngle);
     this.bat.gameObject.setAngularVelocity(0);
     this.bat.gameObject.setBounce(0.9);
+
+    const middle = Phaser.Geom.Line.GetMidPoint(trackPoints);
+    this.bat.gameObject.setPosition(middle.x, middle.y);
   }
 
 	update() {
@@ -79,6 +81,33 @@ class Player {
       mv.rotate(this.trackPointsAngle); // match pointer movement vector to camera rotation
       mvx = mv.x * 0.2;
       mvy = mv.y * 0.2;
+    }
+
+    // cpu follow ball AI
+    if (this.controlType === 'cpu') {
+      const batPoint = [
+        this.bat.gameObject.x,
+        this.bat.gameObject.y,
+      ];
+      // for all the balls
+      const closestBall = Object.values(this.scene.balls)
+        // find the position and distance
+        .map(({ gameObject: { x, y } }) => {
+          const lineBetweenBatAndBall = new Phaser.Geom.Line(...batPoint, x, y);
+          return {
+            x,
+            y,
+            d: Phaser.Geom.Line.Length(lineBetweenBatAndBall), // find how far each of those are from bat
+          };
+        })
+        // sort by distance
+        .sort((a,b) => a.d - b.d)[0];
+
+      
+      mvx = (this.bat.gameObject.x - closestBall?.x||0) * -0.03;
+      mvy = (this.bat.gameObject.y - closestBall?.y||0) * -0.03;
+
+      // console.log(JSON.stringify(ballPoints));
     }
 
     // add pointer and return to track velocity and apply

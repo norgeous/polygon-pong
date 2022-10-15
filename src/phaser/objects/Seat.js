@@ -32,7 +32,6 @@ class Seat {
     // draw the player
     const playerConfig = {
       size: 100,
-      label: 'hello',
       trackPoints,
       controlType,
       color,
