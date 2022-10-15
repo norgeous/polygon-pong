@@ -85,36 +85,26 @@ class Player {
 	}
 
   redraw () {
+    const color = {
+      local: 0x004444,
+      remote: 0x440044,
+      cpu: 0x222222,
+    }[this.controlType];
+
     this.text.setText(`P${this.index}: ${this.axisAngle.toFixed(2)}r`);
 
     // draw the axis
     this.axisGraphics.clear();
-    this.axisGraphics.lineStyle(6, 0x002222, 1);
+    this.axisGraphics.lineStyle(6, color, 1);
     this.axisGraphics.strokeLineShape(this.axis);
     
     // instantly rotate player to new angle
     this.gameObject.setRotation(this.axisAngle);
     this.gameObject.setAngularVelocity(0);
-
-    // draw the player's goal
-    // this.goalGraphics.clear();
-    // this.goalGraphics.fillStyle(0x001111, 1);
-    // this.goalGraphics.fillPoints(this.goal, true);
-
-    // physics object for the player's goal
-    // const g = this.scene.matter.add.gameObject(
-    //   this.goalGraphics,
-    //   {
-    //     shape: { type: 'fromVerts', verts: this.goal },
-    //     isStatic: false,
-    //   },
-    // )
-    //   .setFrictionAir(0.001)
-    //   .setBounce(0.9)
-    //   .setMass(100);
+    this.gameObject.setBounce(0.9);
 
     this.goalObject?.destroy?.();
-    this.goalObject = new Wall(this.scene, this.goal);
+    this.goalObject = new Wall(this.scene, this.goal, color);
   }
 
 	update(scene) {

@@ -1,5 +1,5 @@
 class Wall {
-  constructor(scene, points) {
+  constructor(scene, points, color = 0x004444) {
     this.scene = scene;
     this.points = points;
 
@@ -14,7 +14,7 @@ class Wall {
     const cy = this.body.centerOffset.y;
 
     const polyVerts = this.body.vertices.map(vert => ({ x: vert.x - bx + cx, y: vert.y - by + cy }));
-    this.poly = this.scene.add.polygon(bx, by, polyVerts, 0x004444);
+    this.poly = this.scene.add.polygon(bx, by, polyVerts, color);
     this.poly.setDisplayOrigin(cx, cy);
     
     this.gameObject = this.scene.matter.add.gameObject(this.poly, this.body, false);
