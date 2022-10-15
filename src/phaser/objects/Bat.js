@@ -18,7 +18,7 @@ class Bat {
     this.text = this.scene.add.text(0, 0, this.label, {
       font: '30px Arial',
       align: 'center',
-      color: 'black',
+      color: '#331133',
       fontWeight: 'bold',
     }).setOrigin(0.5);
 
@@ -38,8 +38,6 @@ class Bat {
       .setFrictionAir(0.001)
       .setBounce(0.9)
       .setMass(100);
-
-    console.log({width, height});
 	}
 
   destroy() {

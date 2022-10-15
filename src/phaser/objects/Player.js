@@ -65,9 +65,6 @@ class Player {
     this.bat.gameObject.setRotation(this.trackPointsAngle);
     this.bat.gameObject.setAngularVelocity(0);
     this.bat.gameObject.setBounce(0.9);
-
-
-    console.log('player created', this.bat, 0xFF0000);
   }
 
 	update() {
@@ -97,8 +94,6 @@ class Player {
     const diff = this.trackPointsAngle - angle;
     const newAv = (angularVelocity + (diff / 100)) * 0.99;
     this.bat.gameObject.setAngularVelocity(newAv);
-
-    console.log('player updated');
 	}
 
   getState() {

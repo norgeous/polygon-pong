@@ -45,7 +45,7 @@ const usePeerJs = ({
       // save the connection to players array
       connectionReducer['OPEN']({
         id: peer.id,
-        payload: { type: 'local' },
+        payload: { controlType: 'local' },
       });
 
       // Emitted when the peer is destroyed and can no longer accept or create any new connections

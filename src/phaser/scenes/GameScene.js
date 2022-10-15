@@ -104,8 +104,6 @@ class GameScene extends Phaser.Scene {
       if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
       else this.seats[id].redraw(seatConfig);
     });
-
-    console.log('syncronized seats', this.seats);
   }
 
   setGameState(payload) {

@@ -30,16 +30,8 @@ const getTimeOfDay = (lat, long) => {
   return 'unknown';
 };
 
-const getStatus = (type, open) => {
-  if (type === 'local') return 'SELF';
-  if (type === 'cpu') return 'CPU';
-  if (open === 'open') return 'CONNECTED';
-  return 'DISCONNECTED';
-};
-
-
 const SystemInfo = ({ connection, ...other }) => {
-  const { index, type, open, isHost, idCard = {}, ping = 0 } = other;
+  const { index, controlType, open, isHost, idCard = {}, ping = 0 } = other;
   const { browserName, city, countryCode, lat, long, osName, platformType, version } = idCard;
   const [openView, setOpenView] = useState(false);
   // const status = getStatus(type, open);
@@ -49,7 +41,7 @@ const SystemInfo = ({ connection, ...other }) => {
     <>
       <Tr onClick={() => setOpenView(!openView)}>
         <Td>{index}</Td>
-        <Td>{getPlayerTypeIcon(type)}</Td>
+        <Td>{getPlayerTypeIcon(controlType)}</Td>
         <Td title={browserName}>{browserName && getBrowserIcon(browserName)}</Td>
         <Td title={osName}>{osName && getOsIcon(osName)}</Td>
         <Td title={platformType}>{platformType && getPlatformIcon(platformType)}</Td>

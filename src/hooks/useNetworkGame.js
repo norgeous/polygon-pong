@@ -13,21 +13,12 @@ const useNetworkGame = ({
   // setBallById,
   // deleteBallById,
 }) => {
-
-  // if host, and no balls, add a ball
-  // useEffect(() => {
-  //   if (gameReady && isHost && Object.keys(balls).length === 0) {
-  //     setBallById('one', { emoji: 'X' });
-  //   }
-  // }, [gameReady, isHost, balls]);
-
   // broadcast physics state
   useEffect(() => {
     if (gameReady && broadcast) {
       // if hosting
       if (isHost) {
         const send = () => {
-          // console.log('HOST SENDING BALLS', Object.values(scene.balls).map(ball => ball.getState()));
           broadcast({
             type: 'SETGAMESTATE',
             payload: {
