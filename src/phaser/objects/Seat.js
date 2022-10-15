@@ -35,6 +35,7 @@ class Seat {
       label: 'hello',
       trackPoints,
       controlType,
+      color,
     };
     if (!this.player) this.player = new Player(this.scene, playerConfig);
     else this.player.redraw(playerConfig);

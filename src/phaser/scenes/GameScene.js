@@ -60,7 +60,8 @@ class GameScene extends Phaser.Scene {
 
     [
       ...Object.values(this.balls),
-      ...Object.values(this.players),
+      // ...Object.values(this.players),
+      ...Object.values(this.seats),
     ].forEach(item => item?.update(this));
   }
 

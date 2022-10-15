@@ -27,7 +27,7 @@ class Player {
     this.redraw(args);
 	}
 
-  redraw ({ size, label, trackPoints, controlType }) {
+  redraw ({ size, label, trackPoints, controlType, color }) {
     this.size = size;
     this.label = label;
     this.trackPoints = trackPoints;
@@ -35,8 +35,6 @@ class Player {
 
     const { x1, y1, x2, y2 } = this.trackPoints;
     this.trackPointsAngle = Phaser.Math.Angle.Between(x1, y1, x2, y2);
-
-    const color = this.controlType === 'local' ? 0x008888 : 0x220022;
 
     // if local, start listening for mousemove / swipes
     if (this.controlType === 'local') {
@@ -72,7 +70,7 @@ class Player {
     const nearestPoint = getNearestPointWithinLine(this.trackPoints, this.bat.gameObject);
     const rvx = (this.bat.gameObject.x - nearestPoint.x) * -0.5;
     const rvy = (this.bat.gameObject.y - nearestPoint.y) * -0.5;
-    
+
     // player follow cursor or touch gesture
     let mvx = 0;
     let mvy = 0;
