@@ -16,9 +16,9 @@ class Bat {
 
     // text on bat
     this.text = this.scene.add.text(0, 0, this.label, {
-      font: '30px Arial',
+      font: '26px Arial',
       align: 'center',
-      color: '#331133',
+      color: 'black',
       fontWeight: 'bold',
     }).setOrigin(0.5);
 

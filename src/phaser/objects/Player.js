@@ -46,7 +46,7 @@ class Player {
     this.bat = new Bat(this.scene, {
       size: 100,
       color,
-      label: `${this.controlType} P${this.label}: ${this.trackPointsAngle.toFixed(1)}r`,
+      label: `${this.controlType} ${this.trackPointsAngle.toFixed(1)}r`,
     });
 
     // sound on bat collision
