@@ -23,7 +23,7 @@ class Wall {
     this.gameObject.setStatic(true);
   }
 
-  destroy() {
+  destroy () {
     this.body.destroy();
     this.poly.destroy();
     this.gameObject.destroy();

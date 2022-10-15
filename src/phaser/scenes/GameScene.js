@@ -1,6 +1,6 @@
 import Ball from '../objects/Ball';
-import Player from '../objects/Player';
 import Polygon from '../objects/Polygon';
+import Seat from '../objects/Seat';
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -80,7 +80,6 @@ class GameScene extends Phaser.Scene {
   }
 
   syncronizePlayers (players) {
-    // console.log('players before', this.players);
     // delete exisiting players not in new players (they logged off)
     const connectedIds = players.map(({ id }) => id);
     const deleteIds = Object.keys(this.players).filter(id => !connectedIds.includes(id));
@@ -101,7 +100,7 @@ class GameScene extends Phaser.Scene {
       const twoPi = 2 * Math.PI;
       const angle = (twoPi / connectedIds.length) * i;
       if (!this.players[id]) {
-        this.players[id] = new Player(this, index, type, line, angle, goal);
+        this.players[id] = new Seat(this, index, type, line, angle, goal);
       } else {
         this.players[id].index = index;
         this.players[id].axis = line;
@@ -113,6 +112,10 @@ class GameScene extends Phaser.Scene {
     });
 
     // console.log('players after', this.players);
+
+    // new!
+    // step 1: make a polygon based on number of connections
+    // step 2: make a seat for each side of the polygon which includes a wall (always) and a player and track (optionally)
   }
 
   setGameState(payload) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getUiIcon, getFlagIcon, getOsIcon, getPlatformIcon, getBrowserIcon, getTimeOfDayIcon } from '../utils/emoji';
+import { getUiIcon, getFlagIcon, getOsIcon, getPlatformIcon, getBrowserIcon, getTimeOfDayIcon, getPlayerTypeIcon } from '../utils/emoji';
 import { Tr, Td } from './styled/table';
 
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
@@ -38,19 +38,18 @@ const getStatus = (type, open) => {
 };
 
 
-const SystemInfo = props => {
-  const { connection, ...other } = props;
+const SystemInfo = ({ connection, ...other }) => {
   const { index, type, open, isHost, idCard = {}, ping = 0 } = other;
   const { browserName, city, countryCode, lat, long, osName, platformType, version } = idCard;
   const [openView, setOpenView] = useState(false);
-  const status = getStatus(type, open);
+  // const status = getStatus(type, open);
   const timeOfDay = getTimeOfDay(lat, long);
 
   return (
     <>
       <Tr onClick={() => setOpenView(!openView)}>
         <Td>{index}</Td>
-        <Td>{getUiIcon(status)}</Td>
+        <Td>{getPlayerTypeIcon(type)}</Td>
         <Td title={browserName}>{browserName && getBrowserIcon(browserName)}</Td>
         <Td title={osName}>{osName && getOsIcon(osName)}</Td>
         <Td title={platformType}>{platformType && getPlatformIcon(platformType)}</Td>

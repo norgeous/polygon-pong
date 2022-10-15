@@ -42,7 +42,6 @@ const ui = {
   default: '?',
   game: '🕹️',
   settings: '⚙️',
-  // toolbox: '🧰',
   reload: '♻️',
   reset: '🌀',
   info: 'ℹ️',
@@ -52,9 +51,7 @@ const ui = {
   battery_half: '🪫',
   connected: '✅',
   disconnected: '🚷',
-  self: '🫵',
   host: '👑',
-  cpu: '🦾',
   add: '➕',
   remove: '➖',
   about: 'ℹ️',
@@ -62,6 +59,13 @@ const ui = {
   play: '▶️',
   up: '🔺',
   down: '🔻',
+};
+
+const playerTypes = {
+  default: '🤷',
+  local: '🫵',
+  remote: '🙎',
+  cpu: '🦾',
 };
 
 const volume = '🔇,🔈,🔉,🔊,📣'.split(',');
@@ -97,11 +101,11 @@ const intlLetters = {
 };
 
 const times = {
+  default: '?',
   sunrise: '🌄', 
   daytime: '🏙️', 
   sunset: '🌇', 
   nighttime: '🌃',
-  default: '?',
 };
 
 export const getGameIcon = name => game[name.toLowerCase()] || game.default;
@@ -110,6 +114,7 @@ export const getClockIcon = i => clock[i-1] || clock[11];
 export const getOsIcon = name => os[name.toLowerCase()] || os.default;
 export const getPlatformIcon = name => platform[name.toLowerCase()] || platform.default;
 export const getBrowserIcon = name => browser[name.toLowerCase()] || browser.default;
+export const getPlayerTypeIcon = name => playerTypes[name.toLowerCase()] || playerTypes.default;
 export const getUiIcon = name => ui[name.toLowerCase()] || ui.default;
 export const getVolumeIcon = v => {
   if (v <= 0) return volume[0];

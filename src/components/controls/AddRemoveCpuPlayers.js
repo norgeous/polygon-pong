@@ -1,7 +1,9 @@
 import React from 'react';
-import { getUiIcon } from '../../utils/emoji';
+import { getPlayerTypeIcon } from '../../utils/emoji';
 import { useAppContext } from '../../contexts/AppContext';
 import AddRemove from '../AddRemove';
+
+const getNewId = () => Math.random().toString().replace('0.','');
 
 const AddRemoveCpuPlayers = () => {
   const {
@@ -10,26 +12,48 @@ const AddRemoveCpuPlayers = () => {
     deletePlayerById,
   } = useAppContext();
 
+  const localPlayers = players.filter(({ type }) => type === 'local');
+  const remotePlayers = players.filter(({ type }) => type === 'remote');
   const cpuPlayers = players.filter(({ type }) => type === 'cpu');
 
   return (
-    <AddRemove
-      item={`${getUiIcon('cpu')}`}
-      count={players.length}
-      add={() => {
-        const newId = Math.random().toString().replace('0.','');
-        setPlayerById(newId, {
-          type: 'cpu',
-          behaviour: 'nearestBall',
-          movementSpeed: 1,
-          idCard: {},
-        });
-      }}
-      remove={() => {
-        const firstAdded = cpuPlayers[0];
-        deletePlayerById(firstAdded.id);
-      }}
-    />
+    <>
+      <AddRemove
+        item={`${getPlayerTypeIcon('local')}`}
+        count={localPlayers.length}
+        add={() => {
+          setPlayerById(getNewId(), {
+            type: 'local',
+            idCard: {},
+          });
+        }}
+        remove={() => deletePlayerById(localPlayers[0].id)}
+      />
+      <AddRemove
+        item={`${getPlayerTypeIcon('remote')}`}
+        count={remotePlayers.length}
+        add={() => {
+          setPlayerById(getNewId(), {
+            type: 'remote',
+            idCard: {},
+          });
+        }}
+        remove={() => deletePlayerById(remotePlayers[0].id)}
+      />
+      <AddRemove
+        item={`${getPlayerTypeIcon('cpu')}`}
+        count={cpuPlayers.length}
+        add={() => {
+          setPlayerById(getNewId(), {
+            type: 'cpu',
+            behaviour: 'nearest ball',
+            movementSpeed: 1,
+            idCard: {},
+          });
+        }}
+        remove={() => deletePlayerById(cpuPlayers[0].id)}
+      />
+    </>
   );
 };
 

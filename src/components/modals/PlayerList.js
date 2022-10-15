@@ -7,7 +7,7 @@ import SystemInfo from '../SystemInfo';
 import { Button } from '../styled/menu';
 import AddRemoveCpuPlayers from '../controls/AddRemoveCpuPlayers';
 
-const Network = () => {
+const PlayerList = () => {
   const {
     setRoute,
     enableNetwork, setEnableNetwork,
@@ -21,23 +21,23 @@ const Network = () => {
     >
       <AddRemoveCpuPlayers />
 
-      {/* {!networkOverview.length && `${getUiIcon('disconnected')} No Connections`}
-      {!!networkOverview.length && (
+      {!players.length && `${getUiIcon('disconnected')} No Connections`}
+      {!!players.length && (
         <Container>
           <Table>
-            {networkOverview.map(connection => <SystemInfo {...connection} />)}
+            {players.map(player => <SystemInfo {...player} />)}
           </Table>
         </Container>
-      )} */}
+      )}
 
       <Button onClick={() => setEnableNetwork(!enableNetwork)}>
         <span>{getUiIcon(enableNetwork ? 'pause' : 'play')}</span>
         <span>{enableNetwork ? 'Pause Network' : 'Resume Network'}</span>
       </Button>
 
-      <pre>{JSON.stringify(players,null,2)}</pre>
+      {/* <pre>{JSON.stringify(players,null,2)}</pre> */}
     </Modal>
   );
 };
 
-export default Network;
+export default PlayerList;

@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import MainMenu from './modals/MainMenu';
 import Settings from './modals/Settings';
-import Network from './modals/Network';
+import PlayerList from './modals/PlayerList';
 import Profile from './modals/Profile';
 import HostControls from './modals/HostControls';
 import {
@@ -33,7 +33,7 @@ const App = () => {
     <>
       {route === 'MAINMENU' && <MainMenu />}
       {route === 'SETTINGS' && <Settings />}
-      {route === 'NETWORK' && <Network />}
+      {route === 'PLAYERS' && <PlayerList />}
       {route === 'PROFILE' && <Profile />}
       {route === 'HOSTCONTROLS' && <HostControls />}
 
@@ -56,7 +56,7 @@ const App = () => {
           </Button>
         )}
         <AddRemoveCpuPlayers />
-        <Button onClick={() => setRoute('NETWORK')}>
+        <Button onClick={() => setRoute('PLAYERS')}>
           {players.length ? `${getUiIcon('network')}×${players.length}` : getUiIcon('disconnected')}
         </Button>
         <Button onClick={() => setRoute('SETTINGS')}>{getUiIcon('settings')}</Button>
