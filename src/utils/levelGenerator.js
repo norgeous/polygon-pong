@@ -86,24 +86,20 @@ class Polygon {
     
     this.lineGraphics.fillStyle(0x001111, 1);
     this.goals.forEach(goal => this.lineGraphics.fillPoints(goal, true));
-
-    // this.lineGraphics.fillStyle(0xFFFF00, .1);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 3), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 4), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 5), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 6), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 7), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 8), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 9), true);
     
     this.lineGraphics.fillStyle(0xFF0000, 1);
     this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 1, 40), true);
     
     this.lineGraphics.fillStyle(0xFFFF00, .1);
-    const s = 4;
-    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, s), true);
-    this.scene.cameras.main.centerOn(0,calculatePolygonLines2(0,0, 600, s)[0].y);
-    console.log(this.scene);
+    const shape = calculatePolygonLines2(0,0, 600, this.playerCount);
+    const apothem = shape[0].y;
+    this.lineGraphics.fillPoints(shape, true);
+
+    const { height } = this.scene.scale;
+    if (height / 2 < apothem) {
+      const z = (height/2) / apothem;
+      this.scene.cameras.main.setZoom(z);
+    }
   }
 }
 
