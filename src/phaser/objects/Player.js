@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import createOscillator from '../../utils/createOscillator';
-import { getGameIcon } from '../../utils/emoji';
 import Bat from './Bat';
 
 const limit = (value, min, max) => {
@@ -46,7 +45,7 @@ class Player {
     this.bat = new Bat(this.scene, {
       size: 100,
       color,
-      label: `${this.controlType} ${getGameIcon('heart_on')} ${this.trackPointsAngle.toFixed(1)}r`,
+      label: `${this.controlType} ${this.trackPointsAngle.toFixed(1)}r`,
     });
 
     // sound on bat collision

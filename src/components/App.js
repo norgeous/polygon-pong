@@ -18,6 +18,7 @@ import { Button } from './styled/common';
 import { getUiIcon, getGameIcon } from '../utils/emoji';
 import { formatNumber } from '../utils/formatNumber';
 import AddRemoveCpuPlayers from './controls/AddRemoveCpuPlayers';
+import HealthBar from './HealthBar';
 
 const App = () => {
   const {
@@ -39,10 +40,6 @@ const App = () => {
       {route === 'HOSTCONTROLS' && <HostControls />}
 
       <TopLeft>
-        {getGameIcon('heart_on')}
-        {getGameIcon('heart_on')}
-        {getGameIcon('heart_off')}
-        &emsp;
         {getGameIcon('coin')}×{formatNumber(0,2)}
         &emsp;
         {formatNumber(1,7)}
@@ -56,15 +53,16 @@ const App = () => {
             {getUiIcon('host')}
           </Button>
         )}
-        <AddRemoveCpuPlayers />
         <Button onClick={() => setRoute('PLAYERS')}>
           {players.length ? `${getUiIcon('network')}×${players.length}` : getUiIcon('disconnected')}
         </Button>
         <Button onClick={() => setRoute('SETTINGS')}>{getUiIcon('settings')}</Button>
+        <AddRemoveCpuPlayers />
       </TopRight>
-      {/* <BottomRight>
-      </BottomRight> */}
+      <BottomRight>
+      </BottomRight>
       <Bottom>
+        <HealthBar value={2} max={5}/>
       </Bottom>
       <BottomLeft>
         {clock}
