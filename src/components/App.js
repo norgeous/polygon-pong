@@ -16,6 +16,7 @@ import {
 } from './styled/layout';
 import { Button } from './styled/common';
 import { getUiIcon, getGameIcon } from '../utils/emoji';
+import { formatNumber } from '../utils/formatNumber';
 import AddRemoveCpuPlayers from './controls/AddRemoveCpuPlayers';
 
 const App = () => {
@@ -42,9 +43,9 @@ const App = () => {
         {getGameIcon('heart_on')}
         {getGameIcon('heart_off')}
         &emsp;
-        {getGameIcon('coin')}×22
+        {getGameIcon('coin')}×{formatNumber(0,2)}
         &emsp;
-        1,000,024
+        {formatNumber(1,7)}
         <br/>
         <br/>
         {showFps && <FpsCounter>{fps}</FpsCounter>}
