@@ -96,10 +96,11 @@ class Polygon {
     this.lineGraphics.fillPoints(shape, true);
 
     const { height } = this.scene.scale;
-    if (height / 2 < apothem) {
-      const z = (height/2) / apothem;
+    const maxHeight = (height / 2) - 100;
+    // if (maxHeight < apothem) {
+      const z = maxHeight / apothem;
       this.scene.cameras.main.setZoom(z);
-    }
+    // }
   }
 }
 
