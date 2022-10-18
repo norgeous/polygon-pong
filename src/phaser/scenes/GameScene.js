@@ -42,7 +42,8 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setZoom(0.8);
     // this.cameras.main.setZoom(0.25);
     
-    this.cameras.main.centerOn(this.worldbounds.width / 2, this.worldbounds.height / 2);
+    // this.cameras.main.centerOn(this.worldbounds.width / 2, this.worldbounds.height / 2);
+    this.cameras.main.centerOn(0,0);
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
 
     this.poly = new Polygon(this);

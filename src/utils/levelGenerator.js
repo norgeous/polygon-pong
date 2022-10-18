@@ -88,15 +88,15 @@ class Polygon {
     this.goals.forEach(goal => this.lineGraphics.fillPoints(goal, true));
 
     this.lineGraphics.fillStyle(0xFFFF00, .1);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(this.cx,this.cy, 500, 7), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(this.cx,this.cy, 500, 6), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(this.cx,this.cy, 500, 5), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(this.cx,this.cy, 500, 4), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(this.cx,this.cy, 500, 3), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(this.cx,this.cy, 200, 100), true);
+    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 7), true);
+    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 6), true);
+    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 5), true);
+    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 4), true);
+    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 3), true);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 200, 100), true);
 
     this.lineGraphics.fillStyle(0xFF0000, 1);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(this.cx,this.cy, 1, 40), true);
+    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 1, 40), true);
   }
 }
 
