@@ -21,18 +21,18 @@ export const calculatePolygonLines = (cx,cy, apothem = 200, sideCount = 3) => {
 };
 
 const calculatePolygonLines2 = (cx,cy, sideLength, sideCount) => {
-  const twoPi = 2 * Math.PI;
   const radius = sideLength / (2 * Math.sin(Math.PI / sideCount));
   const sides = Array.from({ length: sideCount }, (_, i) => ({
     x: Math.round(cx + radius * Math.sin(Math.PI / sideCount * (1+2 * i))),
     y: Math.round(cy + radius * Math.cos(Math.PI / sideCount * (1+2 * i))),
   }));
+  console.log({sideCount,radius,sides, apothem: sides[0].y});
   return sides;
-  return Phaser.Geom.Line.RotateAroundXY(sides, cx, cy, twoPi/4);
 };
 
 class Polygon {
   constructor(scene) {
+    this.scene = scene;
     const { width, height } = scene.worldbounds;
 
     this.cx = width / 2;
@@ -87,16 +87,23 @@ class Polygon {
     this.lineGraphics.fillStyle(0x001111, 1);
     this.goals.forEach(goal => this.lineGraphics.fillPoints(goal, true));
 
-    this.lineGraphics.fillStyle(0xFFFF00, .1);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 7), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 6), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 5), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 4), true);
-    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 500, 3), true);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 200, 100), true);
-
+    // this.lineGraphics.fillStyle(0xFFFF00, .1);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 3), true);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 4), true);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 5), true);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 6), true);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 7), true);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 8), true);
+    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, 9), true);
+    
     this.lineGraphics.fillStyle(0xFF0000, 1);
     this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 1, 40), true);
+    
+    this.lineGraphics.fillStyle(0xFFFF00, .1);
+    const s = 4;
+    this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 600, s), true);
+    this.scene.cameras.main.centerOn(0,calculatePolygonLines2(0,0, 600, s)[0].y);
+    console.log(this.scene);
   }
 }
 

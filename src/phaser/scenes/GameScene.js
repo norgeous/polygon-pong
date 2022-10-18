@@ -47,7 +47,14 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
 
     this.poly = new Polygon(this);
-    // this.poly2 = new Polygon(this);
+
+    // resize game on window resize
+    window.addEventListener('resize', () => {
+      setTimeout(() => {
+        this.scale.setGameSize(window.innerWidth, window.innerHeight);
+        this.cameras.main.centerOn(0,0);
+      },100);
+    });
 
     this.game.setGameReady(true); // react state update
   }
