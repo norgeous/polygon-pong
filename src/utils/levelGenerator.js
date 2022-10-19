@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { regularPolygon } from './regularPolygonUtils';
+import { pointsToPhaserLines, regularPolygon } from './regularPolygonUtils';
 
 export const calculatePolygonLines = (cx,cy, apothem = 200, sideCount = 3) => {
   const twoPi = 2 * Math.PI;
@@ -27,7 +27,7 @@ const calculatePolygonLines2 = (cx,cy, sideLength, sideCount) => {
     x: Math.round(cx + radius * Math.sin(Math.PI / sideCount * (1+2 * i))),
     y: Math.round(cy + radius * Math.cos(Math.PI / sideCount * (1+2 * i))),
   }));
-  console.log({sideCount,radius,sides, apothem: sides[0].y});
+  // console.log({sideCount,radius,sides, apothem: sides[0].y});
   return sides;
 };
 
@@ -105,14 +105,24 @@ class Polygon {
       this.scene.cameras.main.setZoom(z);
     // }
 
+
+
+
     
     this.lineGraphics.fillStyle(0xFF00FF, .1);
     const shape2 = regularPolygon({
-      // sideLength: 600,
-      apothem: apothem + 100,
+      apothem: apothem,// + 100,
       sideCount: this.playerCount,
     });
     this.lineGraphics.fillPoints(shape2, true);
+
+    const lines = pointsToPhaserLines(shape2);
+    lines.forEach((line, i) => {
+      this.lineGraphics.lineStyle(40, 0xFFFF00, (i*.1)+.1);
+      this.lineGraphics.strokeLineShape(line);
+    });
+
+    console.log({ shape2, lines })
   }
 }
 
