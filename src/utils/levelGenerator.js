@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { regularPolygon } from './regularPolygonUtils';
 
 export const calculatePolygonLines = (cx,cy, apothem = 200, sideCount = 3) => {
   const twoPi = 2 * Math.PI;
@@ -61,7 +62,6 @@ class Polygon {
     if (Object.keys(overrides).includes(this.playerCount.toString())) this.lines = overrides[this.playerCount]();
     else this.lines = polygonLines;
 
-    // this.newPoly = calculatePolygonLines2(this.cx,this.cy, 100, 4); // NEW!!
     this.wallInnerLines = calculatePolygonLines(this.cx,this.cy, this.wallsApothem, adjustedPlayerCount);
     this.wallOuterLines = calculatePolygonLines(this.cx,this.cy, this.wallsOuterApothem, adjustedPlayerCount);
 
@@ -91,16 +91,28 @@ class Polygon {
     this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 1, 40), true);
     
     this.lineGraphics.fillStyle(0xFFFF00, .1);
-    const shape = calculatePolygonLines2(0,0, 600, this.playerCount);
-    const apothem = shape[0].y;
+    const shape = regularPolygon({
+      sideLength: 600,
+      sideCount: this.playerCount,
+    });
     this.lineGraphics.fillPoints(shape, true);
-
+    
+    const apothem = shape[0].y;
     const { height } = this.scene.scale;
     const maxHeight = (height / 2) - 100;
     // if (maxHeight < apothem) {
       const z = maxHeight / apothem;
       this.scene.cameras.main.setZoom(z);
     // }
+
+    
+    this.lineGraphics.fillStyle(0xFF00FF, .1);
+    const shape2 = regularPolygon({
+      // sideLength: 600,
+      apothem: apothem + 100,
+      sideCount: this.playerCount,
+    });
+    this.lineGraphics.fillPoints(shape2, true);
   }
 }
 
