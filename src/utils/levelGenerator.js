@@ -111,16 +111,18 @@ class Polygon {
     
     this.lineGraphics.fillStyle(0xFF00FF, .1);
     const shape2 = regularPolygon({
-      apothem: apothem + 100,
+      apothem: apothem,// + 100,
       sideCount: this.playerCount,
     });
     this.lineGraphics.fillPoints(shape2, true);
 
     const lines = pointsToPhaserLines(shape2);
-    lines.forEach((line, i) => {
-      this.lineGraphics.lineStyle(40, 0xFFFF00, (i*.1)+.1);
-      this.lineGraphics.strokeLineShape(line);
-    });
+    lines
+      .map(line => new Phaser.Geom.Line(...line))
+      .forEach((line, i) => {
+        this.lineGraphics.lineStyle(i, 0xFFFF00, (i*.1)+.1);
+        this.lineGraphics.strokeLineShape(line);
+      });
   }
 }
 

@@ -14,10 +14,14 @@ export const regularPolygon = ({ sideLength, apothem, sideCount }) => {
 export const pointsToPhaserLines = points => points.map(({ x, y }, i) => {
   const x2 = points[i+1]?.x;
   const y2 = points[i+1]?.y;
-  return new Phaser.Geom.Line(
+  return [
     x,
     y,
     x2 !== undefined ? x2 : points[0].x,
     y2 !== undefined ? y2 : points[0].y,
-  );
+  ];
 }).reverse();
+
+export const pointsToShapes = points => points.map(({ x, y }, i) => {
+
+});
