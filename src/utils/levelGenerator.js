@@ -111,7 +111,7 @@ class Polygon {
     
     this.lineGraphics.fillStyle(0xFF00FF, .1);
     const shape2 = regularPolygon({
-      apothem: apothem,// + 100,
+      apothem: apothem + 100,
       sideCount: this.playerCount,
     });
     this.lineGraphics.fillPoints(shape2, true);
@@ -121,8 +121,6 @@ class Polygon {
       this.lineGraphics.lineStyle(40, 0xFFFF00, (i*.1)+.1);
       this.lineGraphics.strokeLineShape(line);
     });
-
-    console.log({ shape2, lines })
   }
 }
 
