@@ -100,13 +100,18 @@ class GameScene extends Phaser.Scene {
     });
 
     // draw play area for this number of players
-    this.poly.set(250, 450, 1200, players.length); // set and redraw
+    this.poly.set({
+      trackLength: 600,
+      trackWallGap: 200,
+      wallDepth:1000,
+      playerCount: players.length,
+    });
 
     // add player object for newly connected players
     players.forEach(({ id, controlType }, i) => {
       const index = players.length === 2 && i === 1 ? 2 : i;
-      const trackPoints = this.poly.lines[i];
-      const goal = this.poly.goals[index];
+      const trackPoints = this.poly.tracks[i];
+      const goal = this.poly.walls[index];
 
       // draw the seat (wall+track+player)
       const seatConfig = { index, controlType, trackPoints, goal };
