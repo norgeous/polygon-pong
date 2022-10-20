@@ -18,7 +18,7 @@ class Seat {
       empty: 0x111111,
       local: 0x004444,
       remote: 0x440044,
-      cpu: 0x222222,
+      cpu: 0x222244,
     }[this.controlType];
 
 
