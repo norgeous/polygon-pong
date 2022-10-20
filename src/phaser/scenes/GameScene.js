@@ -1,6 +1,20 @@
 import Ball from '../objects/Ball';
-import Polygon from '../../utils/levelGenerator';
+import Level from '../../utils/levelGenerator';
 import Seat from '../objects/Seat';
+
+const seatPlayers = (players) => {
+  const empty = { controlType: 'empty' };
+  if (players.length === 0) {
+    return [empty, empty, empty, empty];
+  }
+  if (players.length === 1) {
+    return [players[0], empty, empty, empty];
+  }
+  if (players.length === 2) {
+    return [players[0], empty, players[1], empty];
+  }
+  return players;
+};
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -46,7 +60,7 @@ class GameScene extends Phaser.Scene {
     this.cameras.main.centerOn(0,0);
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
 
-    this.poly = new Polygon(this);
+    this.level = new Level(this);
 
     // resize game on window resize
     window.addEventListener('resize', () => {
@@ -68,7 +82,6 @@ class GameScene extends Phaser.Scene {
 
     [
       ...Object.values(this.balls),
-      // ...Object.values(this.players),
       ...Object.values(this.seats),
     ].forEach(item => item?.update(this));
   }
@@ -100,7 +113,7 @@ class GameScene extends Phaser.Scene {
     });
 
     // draw play area for this number of players
-    this.poly.set({
+    this.level.set({
       trackLength: 600,
       trackWallGap: 200,
       wallDepth:1000,
@@ -108,15 +121,61 @@ class GameScene extends Phaser.Scene {
     });
 
     // add player object for newly connected players
-    players.forEach(({ id, controlType }, i) => {
-      const index = players.length === 2 && i === 1 ? 2 : i;
-      const trackPoints = this.poly.tracks[i];
-      const goal = this.poly.walls[index];
+    // this.level.walls.forEach(({ id, controlType }, i) => {
+    //   const index = players.length === 2 && i === 1 ? 2 : i;
+    //   const trackPoints = this.level.tracks[i];
+    //   const goal = this.level.walls[index];
 
-      // draw the seat (wall+track+player)
-      const seatConfig = { index, controlType, trackPoints, goal };
-      if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
-      else this.seats[id].redraw(seatConfig);
+    //   // draw the seat (wall+track+player)
+    //   const seatConfig = { index, controlType, trackPoints, goal };
+    //   if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
+    //   else this.seats[id].redraw(seatConfig);
+    // });
+
+    // add player object for newly connected players
+    // this.level.walls.forEach((wall, i) => {
+    //   const trackPoints = this.level.tracks[i];
+
+    //   // skip second seat
+    //   if (this.players.length === 2 && i === 1) {
+    //     const seatConfig = { controlType: 'empty', trackPoints, goal: wall };
+    //     this.seats[id] = new Seat(this, seatConfig);
+    //   }
+
+    //   const player = this.players[position]
+    //   const { id, controlType } = player;
+
+    //   // draw the seat
+    //   const seatConfig = { controlType, trackPoints, goal: wall };
+    //   if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
+    //   else this.seats[id].redraw(seatConfig);
+    // });
+
+    // const seatedPlayers = this.players.reduce((acc, player) => {
+    //   if (this.players.length === 2) {
+
+    //   }
+    // }, []);
+
+    // const seats = Array.from({ length: this.level.walls.length }, (_, i) => {
+
+    //   const controlType = '';
+
+    // });
+
+    // calculate seats
+    const seatedPlayers = seatPlayers(players);
+    console.log(players, seatedPlayers);
+    const seatConfigs = this.level.walls.map((wall, i) => ({
+      ...seatedPlayers[i],
+      trackPoints: this.level.tracks[i],
+      goal: wall,
+    }));
+
+    // draw the seats
+    seatConfigs.forEach((seatConfig, i) => {
+      if (!this.seats?.[i]) this.seats[i] = new Seat(this, seatConfig);
+      else this.seats[i].redraw(seatConfig);
     });
   }
 
