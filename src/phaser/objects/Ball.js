@@ -6,13 +6,11 @@ class Ball {
     this.id = id;
     this.emojiId = emojiId;
     this.oscillator = createOscillator();
-
-    const { width, height } = scene.worldbounds;
   
     // create ball
     this.text = scene.add.text(
-      width / 2,
-      height / 2,
+      0,
+      0,
       ballEmojis[this.emojiId],
       { font: '50px Arial', align: 'center' },
     ).setOrigin(0.5);

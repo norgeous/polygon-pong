@@ -29,18 +29,6 @@ class Level {
     // if (Object.keys(overrides).includes(this.playerCount.toString())) this.lines = overrides[this.playerCount]();
     // else this.lines = polygonLines;
 
-    // this.wallInnerLines = calculatePolygonLines(this.cx,this.cy, this.wallsApothem, adjustedPlayerCount);
-    // this.wallOuterLines = calculatePolygonLines(this.cx,this.cy, this.wallsOuterApothem, adjustedPlayerCount);
-
-    // this.goals = this.wallInnerLines.map((inner, i) => {
-    //   const outer = this.wallOuterLines[i];
-    //   return [
-    //     { x: Math.round(inner.x1), y: Math.round(inner.y1) },
-    //     { x: Math.round(inner.x2), y: Math.round(inner.y2) },
-    //     { x: Math.round(outer.x2), y: Math.round(outer.y2) },
-    //     { x: Math.round(outer.x1), y: Math.round(outer.y1) },
-    //   ];
-    // });
     const trackShape = regularPolygon({
       sideLength: this.trackLength,
       sideCount: this.playerCount,
