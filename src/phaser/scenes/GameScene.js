@@ -116,7 +116,7 @@ class GameScene extends Phaser.Scene {
     this.level.set({
       trackLength: 600,
       trackWallGap: 200,
-      wallDepth:1000,
+      wallDepth: 1000,
       playerCount: players.length,
     });
 
