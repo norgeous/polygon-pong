@@ -5,7 +5,6 @@ import Player from './Player';
 class Seat {
   constructor (scene, args) {
     this.scene = scene;
-    console.log('new seat', args)
     this.redraw(args);
 	}
 

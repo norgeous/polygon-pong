@@ -7,7 +7,7 @@ class Wall {
     const midY = points.reduce((acc, { y }) => acc + y, 0) / points.length;
 
     // https://github.com/photonstorm/phaser/issues/6178#issuecomment-1198086878
-    this.body = this.scene.matter.add.fromVertices(scene.worldbounds.width / 2, scene.worldbounds.height / 2, points);
+    this.body = this.scene.matter.add.fromVertices(0, 0, points);
     const bx = this.body.position.x;
     const by = this.body.position.y;
     const cx = this.body.centerOffset.x;

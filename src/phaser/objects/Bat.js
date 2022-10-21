@@ -6,8 +6,6 @@ class Bat {
     this.color = color;
     this.label = label;
     
-    const { width, height } = this.scene.worldbounds;
-
     // the bat graphics
     const container = this.scene.add.container(0, 0);
     const graphics = this.scene.add.graphics();
@@ -34,7 +32,6 @@ class Bat {
         chamfer: { radius: 15 },
       },
     )
-      .setPosition(width/2, height/2)
       .setFrictionAir(0.001)
       .setBounce(0.9)
       .setMass(100);

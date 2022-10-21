@@ -20,11 +20,6 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
 
-    this.worldbounds = {
-      width: 4000,
-      height: 4000,
-    };
-
     this.balls = {};
     this.players = {};
     this.seats = {};
@@ -38,10 +33,7 @@ class GameScene extends Phaser.Scene {
   }
 
   create () {
-    // const { width, height } = this.sys.game.canvas;
-
     this.matter.world.disableGravity();
-    // this.matter.world.setBounds(0, 0, this.worldbounds.width, this.worldbounds.height, 1000);
 
     this.particles = {
       red: this.add.particles('red'),
@@ -50,14 +42,8 @@ class GameScene extends Phaser.Scene {
     };
 
     // camera
-    // this.cameras.main.setBounds(0, 0, width, height);
-    // this.cameras.main.centerOn(width/2, height/2);
-    // this.cameras.main.setZoom(0.705);
-    // this.cameras.main.setZoom(0.8);
-    // this.cameras.main.setZoom(0.25);
-    
-    // this.cameras.main.centerOn(this.worldbounds.width / 2, this.worldbounds.height / 2);
     this.cameras.main.centerOn(0,0);
+    // this.cameras.main.setZoom(0.25);    
     // this.cameras.main.setRotation(-(((2*Math.PI)/3)*1));
 
     this.level = new Level(this);
@@ -74,8 +60,6 @@ class GameScene extends Phaser.Scene {
   }
 
   update () {
-    // this.cameras.main.setRotation(this.cameras.main.rotation+0.001);
-
     if (this.game.visibilityState === 'hidden') this.matter.pause();
     if (this.game.visibilityState === 'visible') this.matter.resume();
     this.game.setFps?.(Math.round(this.game.loop.actualFps)); // react state update
@@ -120,52 +104,8 @@ class GameScene extends Phaser.Scene {
       playerCount: players.length,
     });
 
-    // add player object for newly connected players
-    // this.level.walls.forEach(({ id, controlType }, i) => {
-    //   const index = players.length === 2 && i === 1 ? 2 : i;
-    //   const trackPoints = this.level.tracks[i];
-    //   const goal = this.level.walls[index];
-
-    //   // draw the seat (wall+track+player)
-    //   const seatConfig = { index, controlType, trackPoints, goal };
-    //   if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
-    //   else this.seats[id].redraw(seatConfig);
-    // });
-
-    // add player object for newly connected players
-    // this.level.walls.forEach((wall, i) => {
-    //   const trackPoints = this.level.tracks[i];
-
-    //   // skip second seat
-    //   if (this.players.length === 2 && i === 1) {
-    //     const seatConfig = { controlType: 'empty', trackPoints, goal: wall };
-    //     this.seats[id] = new Seat(this, seatConfig);
-    //   }
-
-    //   const player = this.players[position]
-    //   const { id, controlType } = player;
-
-    //   // draw the seat
-    //   const seatConfig = { controlType, trackPoints, goal: wall };
-    //   if (!this.seats?.[id]) this.seats[id] = new Seat(this, seatConfig);
-    //   else this.seats[id].redraw(seatConfig);
-    // });
-
-    // const seatedPlayers = this.players.reduce((acc, player) => {
-    //   if (this.players.length === 2) {
-
-    //   }
-    // }, []);
-
-    // const seats = Array.from({ length: this.level.walls.length }, (_, i) => {
-
-    //   const controlType = '';
-
-    // });
-
     // calculate seats
     const seatedPlayers = seatPlayers(players);
-    console.log(players, seatedPlayers);
     const seatConfigs = this.level.walls.map((wall, i) => ({
       ...seatedPlayers[i],
       trackPoints: this.level.tracks[i],
