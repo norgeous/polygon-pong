@@ -37,6 +37,7 @@ class Seat {
         controlType,
         color,
       };
+      console.log('player config:', playerConfig);
       if (!this.player) this.player = new Player(this.scene, playerConfig);
       else this.player.redraw(playerConfig);
     }

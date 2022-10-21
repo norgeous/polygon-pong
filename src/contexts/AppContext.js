@@ -32,7 +32,8 @@ export const AppProvider = ({ children }) => {
     // INTERVAL: () => {},
   };
   const dataReducer = {
-    GREETING: ({ id }) => connections.find(({ id: cid }) => cid === id).send({ type:'IDCARD', payload: idCard }),
+    // GREETING: ({ id }) => connections.find(({ id: cid }) => cid === id).send({ type:'IDCARD', payload: idCard }),
+    GREETING: ({ id }) => console.log(connections),
     IDCARD: ({ id, payload }) => setPlayerById(id, { idCard: payload }),
     PING: ({ id }) => connections.find(({ id: cid }) => cid === id).send({ type: 'PONG' }),
     PONG: ({ id, peerData }) => setPlayerById(id, {
