@@ -49,15 +49,15 @@ class Level {
     }
     
     // this.scene.cameras.main.setZoom(0.7);
-    this.graphics.clear();
+    // this.graphics.clear();
 
-    this.graphics.setDepth(1);
+    // this.graphics.setDepth(1);
 
-    this.graphics.lineStyle(40, 0xFFFF00, .2);
-    this.tracks.forEach(track => this.graphics.strokeLineShape(track));
+    // this.graphics.lineStyle(40, 0xFFFF00, .2);
+    // this.tracks.forEach(track => this.graphics.strokeLineShape(track));
     
-    this.graphics.fillStyle(0xFFFF00, .2);
-    this.walls.forEach(wall => this.graphics.fillPoints(wall, true));
+    // this.graphics.fillStyle(0xFFFF00, .2);
+    // this.walls.forEach(wall => this.graphics.fillPoints(wall, true));
   }
 }
 
