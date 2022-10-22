@@ -15,19 +15,13 @@ class Ball {
       { font: '50px Arial', align: 'center' },
     ).setOrigin(0.5);
 
-    this.gameObject = scene.matter.add.gameObject(
-      this.text,
-      { shape: { type: 'circle', radius: 26 }},
-      // {
-      //   shape: { type: 'rectangle', width: 52, height: 52 }, 
-      //   chamfer: { radius: 15 },
-      // },
-    );
+    const gameObjectShape = { shape: { type: 'circle', radius: 26 }};
+    this.gameObject = scene.matter.add.gameObject(this.text, gameObjectShape);
     this.gameObject
-      .setVelocity(0, -4)
-      .setFrictionAir(0.001)
+      .setMass(10)
       .setBounce(0.5)
-      .setMass(10);
+      .setFrictionAir(0.001)
+      .setVelocity(0, -4);
     this.gameObject.body.label = 'ball';
 
     // sound on collision
@@ -53,9 +47,7 @@ class Ball {
     // ball min speed
     const minVelocity = 5;
     const { x: vx, y: vy } = this.gameObject.body.velocity;
-
     const speed = Math.hypot(vx, vy);
-
     if (speed < minVelocity) {
       const angle = Math.atan2(vy, vx);
       const newVx = Math.cos(angle) * minVelocity;
@@ -65,8 +57,6 @@ class Ball {
 
     // if velocity is fast, emit particle effect
     this.emitter.on = speed > 6;
-
-    // this.text.setText(Math.round(speed));
 	}
 
   getState() {
