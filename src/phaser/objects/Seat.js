@@ -37,10 +37,20 @@ class Seat {
         controlType,
         color,
       };
-      console.log('player config:', playerConfig);
+      // console.log('player config:', playerConfig);
       if (!this.player) this.player = new Player(this.scene, playerConfig);
       else this.player.redraw(playerConfig);
     }
+
+    // when something hits the wall
+    this.wall.gameObject.setOnCollide(data => {
+      if ([data.bodyA.label, data.bodyB.label].includes('ball')) {
+        this.player?.takeDamage?.();
+        // if (this.controlType !== 'empty') {
+          // console.log('ball collide with wall',this.player);
+        // }
+      }
+    });
   }
 
 	update () {

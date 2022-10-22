@@ -28,6 +28,7 @@ class Ball {
       .setFrictionAir(0.001)
       .setBounce(0.5)
       .setMass(10);
+    this.gameObject.body.label = 'ball';
 
     // sound on collision
     this.gameObject.setOnCollide(data => this.oscillator({

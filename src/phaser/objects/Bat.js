@@ -35,7 +35,12 @@ class Bat {
       .setFrictionAir(0.001)
       .setBounce(0.9)
       .setMass(100);
+    this.gameObject.body.label = 'bat';
 	}
+
+  setText(newText) {
+    this.text.setText(newText);
+  }
 
   destroy() {
     this.gameObject.destroy();

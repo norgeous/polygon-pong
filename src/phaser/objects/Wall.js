@@ -21,6 +21,7 @@ class Wall {
     this.gameObject.x = smallestX + comx;
     this.gameObject.y = smallestY + comy;
     this.gameObject.setStatic(true);
+    this.gameObject.body.label = 'wall';
   }
 
   destroy () {

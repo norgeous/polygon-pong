@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import HealthBar from '../../components/HealthBar';
 import createOscillator from '../../utils/createOscillator';
 import Bat from './Bat';
 
@@ -24,6 +25,8 @@ class Player {
     this.oscillatorImpact = createOscillator();
     this.pointer = {};
 
+    this.health = 5;
+
     this.redraw(args);
 	}
 
@@ -45,7 +48,7 @@ class Player {
     this.bat = new Bat(this.scene, {
       size: 100,
       color,
-      label: `${this.controlType}`,
+      label: `${HealthBar({ value: this.health, max: 5})}`,
     });
 
     // sound on bat collision
@@ -67,7 +70,15 @@ class Player {
     this.bat.gameObject.setPosition(middle.x, middle.y);
   }
 
+  takeDamage() {
+    this.health--;
+    this.bat.setText(`${HealthBar({ value: this.health, max: 5})}`);
+    if (this.health === 0) this.destroy();
+  }
+
 	update() {
+    if (!this.bat.gameObject) return;
+
     // calculate "return to track" velocity
     const nearestPoint = getNearestPointWithinLine(this.trackPoints, this.bat.gameObject);
     const rvx = (this.bat.gameObject.x - nearestPoint.x) * -0.5;
