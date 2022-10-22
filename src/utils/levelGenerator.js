@@ -48,38 +48,16 @@ class Level {
       this.scene.cameras.main.setZoom(z);
     }
     
+    // this.scene.cameras.main.setZoom(0.7);
     this.graphics.clear();
 
-    // this.lineGraphics.lineStyle(40, 0x110011, 1);
-    // this.lines.forEach(line => this.lineGraphics.strokeLineShape(line));
-    
-    // this.lineGraphics.fillStyle(0x001111, 1);
-    // this.goals.forEach(goal => this.lineGraphics.fillPoints(goal, true));
-    
-    // this.lineGraphics.fillStyle(0xFF0000, 1);
-    // this.lineGraphics.fillPoints(calculatePolygonLines2(0,0, 1, 40), true);
-    
-    // this.lineGraphics.fillStyle(0xFFFF00, .1);
-    // const shape = regularPolygon({
-    //   sideLength: 600,
-    //   sideCount: this.seatCount,
-    // });
-    // this.lineGraphics.fillPoints(shape, true);
-    
-    // this.graphics.fillStyle(0xFF00FF, .1);
-    // const shape2 = regularPolygon({
-    //   apothem: apothem,// + 100,
-    //   sideCount: this.seatCount,
-    // });
-    // this.graphics.fillPoints(shape2, true);
+    this.graphics.setDepth(1);
 
-    // const lines = pointsToLines(shape2);
-    // lines
-    //   .map(line => new Phaser.Geom.Line(...line))
-    //   .forEach((line, i) => {
-    //     this.graphics.lineStyle(i*10, 0xFFFF00, (i*.1)+.1);
-    //     this.graphics.strokeLineShape(line);
-    //   });
+    this.graphics.lineStyle(40, 0xFFFF00, .2);
+    this.tracks.forEach(track => this.graphics.strokeLineShape(track));
+    
+    this.graphics.fillStyle(0xFFFF00, .2);
+    this.walls.forEach(wall => this.graphics.fillPoints(wall, true));
   }
 }
 

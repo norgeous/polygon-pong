@@ -3,23 +3,23 @@ class Wall {
     this.scene = scene;
     this.points = points;
 
-    const midX = points.reduce((acc, { x }) => acc + x, 0) / points.length;
-    const midY = points.reduce((acc, { y }) => acc + y, 0) / points.length;
+    const smallestX = points.reduce((acc, { x }) => x < acc ? x : acc, Infinity);
+    const smallestY = points.reduce((acc, { y }) => y < acc ? y : acc, Infinity);
 
     // https://github.com/photonstorm/phaser/issues/6178#issuecomment-1198086878
     this.body = this.scene.matter.add.fromVertices(0, 0, points);
-    const bx = this.body.position.x;
-    const by = this.body.position.y;
-    const cx = this.body.centerOffset.x;
-    const cy = this.body.centerOffset.y;
+    const comx = this.body.centerOffset.x;
+    const comy = this.body.centerOffset.y;
 
-    const polyVerts = this.body.vertices.map(vert => ({ x: vert.x - bx + cx, y: vert.y - by + cy }));
-    this.poly = this.scene.add.polygon(bx, by, polyVerts, color);
-    this.poly.setDisplayOrigin(cx, cy);
+    const polyVerts = this.body.vertices.map(vert => ({
+      x: vert.x + comx,
+      y: vert.y + comy,
+    }));
+    this.poly = this.scene.add.polygon(0, 0, polyVerts, color);
     
     this.gameObject = this.scene.matter.add.gameObject(this.poly, this.body, false);
-    this.gameObject.x = midX;
-    this.gameObject.y = midY;
+    this.gameObject.x = smallestX + comx;
+    this.gameObject.y = smallestY + comy;
     this.gameObject.setStatic(true);
   }
 

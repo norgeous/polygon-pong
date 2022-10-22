@@ -99,7 +99,7 @@ class GameScene extends Phaser.Scene {
     // draw play area for this number of players
     this.level.set({
       trackLength: 600,
-      trackWallGap: 200,
+      trackWallGap: 100,
       wallDepth: 1000,
       playerCount: players.length,
     });
