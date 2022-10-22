@@ -44,11 +44,10 @@ class Seat {
 
     // when something hits the wall
     this.wall.gameObject.setOnCollide(data => {
-      if ([data.bodyA.label, data.bodyB.label].includes('ball')) {
-        this.player?.takeDamage?.();
-        // if (this.controlType !== 'empty') {
-          // console.log('ball collide with wall',this.player);
-        // }
+      if ([data.bodyA.label, data.bodyB.label].includes('ball') && this.player) {
+        this.player.takeDamage();
+        const ball = [data.bodyA, data.bodyB].find(({ label }) => label === 'ball');
+        ball.gameObject.setPosition(0,0);
       }
     });
   }
