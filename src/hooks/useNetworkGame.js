@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import useStateArray from './useStateArray';
+// import useStateArray from './useStateArray';
 
 const useNetworkGame = ({
   gameReady,
@@ -19,6 +19,10 @@ const useNetworkGame = ({
       // if hosting
       if (isHost) {
         const send = () => {
+          console.log('host sending', scene.seats);
+          const populatedSeats = Object.values(scene.seats).filter(({ controlType }) => controlType !== 'empty');
+          console.log('host sending', scene.seats, {players});
+          const playerStates = populatedSeats.map(seat => seat.player.getState());
           broadcast({
             type: 'SETGAMESTATE',
             payload: {

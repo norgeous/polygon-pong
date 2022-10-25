@@ -27,10 +27,11 @@ export const AppProvider = ({ children }) => {
 
   // peerjs plumbing
   const connectionReducer = {
-    OPEN: ({ id, payload }) => setPlayerById(id, payload),
+    OPEN: ({ id, payload }) => { console.log('conn OPEN', {id, payload}); setPlayerById(id, payload); },
     CLOSE: ({ id }) => deletePlayerById(id),
     // INTERVAL: () => {},
   };
+
   const dataReducer = {
     // GREETING: ({ id }) => connections.find(({ id: cid }) => cid === id).send({ type:'IDCARD', payload: idCard }),
     GREETING: ({ id }) => console.log(connections),

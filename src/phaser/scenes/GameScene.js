@@ -131,6 +131,7 @@ class GameScene extends Phaser.Scene {
     }
     
     if (players) {
+      console.log({ players });
       players.forEach(({ id, type, ...state }) => {
         // if (!this.players[id]) this.players[id] = new Player(this, id, type);
         this.players[id]?.setState(state);

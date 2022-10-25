@@ -21,5 +21,9 @@ export default {
     },
     minVelocity: 6,
   },
+  sound: {
+    frequency: 440, // A4
+    duration: 0.05,
+  },
   healthEffect: 0,
 };

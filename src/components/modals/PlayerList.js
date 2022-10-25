@@ -5,7 +5,7 @@ import Modal from '../Modal';
 import { Container, Table } from '../styled/table';
 import SystemInfo from '../SystemInfo';
 import { Button } from '../styled/menu';
-import AddRemoveCpuPlayers from '../controls/AddRemoveCpuPlayers';
+// import AddRemoveCpuPlayers from '../controls/AddRemoveCpuPlayers';
 
 const PlayerList = () => {
   const {
@@ -19,7 +19,7 @@ const PlayerList = () => {
       title={`${getUiIcon('network')} Players`}
       onClose={() => setRoute()}
     >
-      <AddRemoveCpuPlayers />
+      {/* <AddRemoveCpuPlayers /> */}
 
       {!players.length && `${getUiIcon('disconnected')} No Connections`}
       {!!players.length && (
@@ -35,7 +35,7 @@ const PlayerList = () => {
         <span>{enableNetwork ? 'Pause Network' : 'Resume Network'}</span>
       </Button>
 
-      {/* <pre>{JSON.stringify(players,null,2)}</pre> */}
+      <pre>{JSON.stringify(players,null,2)}</pre>
     </Modal>
   );
 };
